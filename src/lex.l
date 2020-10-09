@@ -45,6 +45,20 @@ third rule does not take input after the enter***/
     push(tokens, tok);
 }
 
+\( {
+    char *token = (char *) malloc(yyleng + 1);
+    strcpy (token, yytext);
+    TokenPtr tok = newToken(TToparen, token);
+    push(tokens, tok);
+}
+
+\) {
+    char *token = (char *) malloc(yyleng + 1);
+    strcpy (token, yytext);
+    TokenPtr tok = newToken(TTcparen, token);
+    push(tokens, tok);
+}
+
 <<EOF>> {
     yyterminate();
 }

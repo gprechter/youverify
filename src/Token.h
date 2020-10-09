@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-enum tokentype {TTnewline, TTidentifier, TTassign, TTop, TTnumber};
+enum tokentype {TTnewline, TTidentifier, TTassign, TTop, TTnumber, TToparen, TTcparen};
 
 typedef struct token Token;
 typedef struct token *TokenPtr;
