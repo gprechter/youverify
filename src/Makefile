@@ -4,3 +4,8 @@ lexer: Main.c lex.l DoubleLink.h DoubleLink.c Queue.h Queue.c Token.h Token.c le
 
 queue: DoubleLink.h DoubleLink.c Queue.h Queue.c
 	gcc DoubleLink.h DoubleLink.c Queue.h Queue.c
+
+parser: lex2.l parse.y
+	yacc -d parse.y
+	flex lex2.l
+	gcc lex.yy.c y.tab.c y.tab.h -ll

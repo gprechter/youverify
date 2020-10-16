@@ -15,18 +15,17 @@ summaiton(BitVec(32, 100))
 ---->
 
 ```
-summation(x): 
-  x (BitVec 32)
+summation(x (BitVec 32)) -> (BitVec 32): 
   _cond (Bool)
   _1 (BitVec 32)
   
-  _cond := x == 0 (BitVec 32)
+  _cond := x == 0
   IF _cond GOTO summation_base
-  _1 := x - 1 (BitVec 32)
-	RETURN x + summation(_1) (BitVec 32)
+  _1 := x - 1
+	RETURN x + summation(_1)
 summation_base:
-	RETURN 0 (BitVec 32)
+	RETURN 0
 	
-summation(100 (BitVec 32))
+summation(100)
 ```
 

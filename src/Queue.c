@@ -43,9 +43,9 @@ void *pop(QueuePtr queue) {
 bool isEmpty(QueuePtr queue) {
     return queue->size == 0;
 }
-void freeQueue(QueuePtr queue) {
+void freeQueue(QueuePtr queue, void (*freeElem)(void*)) {
     while (!isEmpty(queue)) {
-        pop(queue);
+        (*f)(pop(queue));
     }
     free(queue);
 }
