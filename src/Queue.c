@@ -45,7 +45,7 @@ bool isEmpty(QueuePtr queue) {
 }
 void freeQueue(QueuePtr queue, void (*freeElem)(void*)) {
     while (!isEmpty(queue)) {
-        (*f)(pop(queue));
+        (*freeElem)(pop(queue));
     }
     free(queue);
 }
