@@ -5,7 +5,7 @@ lexer: Main.c lex.l DoubleLink.h DoubleLink.c Queue.h Queue.c Token.h Token.c le
 queue: DoubleLink.h DoubleLink.c Queue.h Queue.c
 	gcc DoubleLink.h DoubleLink.c Queue.h Queue.c
 
-parser: lex2.l parse.y DoubleLink.h DoubleLink.c Queue.h Queue.c
+parser: AST.c lex2.l parse.y AST.h DoubleLink.h DoubleLink.c Queue.h Queue.c Execution.h Execution.c
 	yacc -d parse.y
 	flex lex2.l
-	gcc lex.yy.c y.tab.c y.tab.h DoubleLink.h DoubleLink.c Queue.h Queue.c -ll
+	gcc AST.h AST.c lex.yy.c y.tab.c y.tab.h DoubleLink.h DoubleLink.c Queue.h Queue.c Execution.h Execution.c -ll
