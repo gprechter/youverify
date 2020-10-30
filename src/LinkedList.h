@@ -24,7 +24,6 @@ struct linkedlist {
 LinkedListPtr newLinkedList();
 void add(LinkedListPtr lnk, void *elem);
 void *get(LinkedListPtr lnk, bool(*cond)(void *elem));
-void *getWithID(LinkedListPtr lnk, char *id);
 bool isEmptyLL(LinkedListPtr lnk);
 void freeLinkedList(LinkedListPtr lnk, void (*freeElem)(void*));
 

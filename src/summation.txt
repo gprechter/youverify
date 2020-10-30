@@ -1,3 +1,6 @@
+result: INT
+n: INT
+done: BOOL
 result = 0
 n = 5
 SUMMATION: if n == 0 goto END

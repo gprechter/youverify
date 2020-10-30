@@ -1,3 +1,6 @@
-hello = true
-goodbye = 100
-val = false
+hello: BOOL
+goodbye: INT
+val: BOOL
+hello = !false
+goodbye = -2
+val = hello && false

@@ -1,6 +1,7 @@
 %{
     #include <stdbool.h>
     #include <string.h>
+    #include "TypeChecker/TCInstruction.h"
     #include "AST/Value.h"
     #include "AST/Identifier.h"
     #include "AST/Expression.h"
@@ -18,6 +19,14 @@
 "!"	{return NOT;}
 "+"	{return PLUS;}
 "-"	{return MINUS;}
+"INT" {
+    yylval.type = VALUE_TYPE_integer;
+    return TYPE;
+}
+"BOOL" {
+    yylval.type = VALUE_TYPE_boolean;
+    return TYPE;
+}
 "false"   {
     VALUE value = newBooleanVALUE(false);
     yylval.value = value;
@@ -35,6 +44,7 @@
     char *id = (char *) malloc(yyleng + 1);
     strcpy (id, yytext);
     IDENTIFIER identifier = newIDENTIFIER(id, VALUE_TYPE_unknown);
+    yylval.id = identifier;
     return TOKEN_IDENTIFIER;
 }
 0|[1-9][0-9]* {

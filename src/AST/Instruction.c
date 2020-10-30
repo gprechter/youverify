@@ -23,3 +23,13 @@ INSTRUCTION newGOTO_INSTRUCTION(EXPRESSION predicate, IDENTIFIER destination) {
     i.contents.gotoInstruction = c;
     return i;
 }
+
+INSTRUCTION newDECLARATION_INSTRUCTION(IDENTIFIER id, VALUE_TYPE type) {
+    INSTRUCTION i;
+    i.type = I_declaration;
+    DECLARATION_INSTRUCTION d;
+    d.identifier = id;
+    d.type = type;
+    i.contents.declarationInstruction = d;
+    return i;
+}
