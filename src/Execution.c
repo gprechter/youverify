@@ -7,7 +7,7 @@
 
 #include "Execution.h"
 #include "LinkedList.h"
-
+/*
 Value evalAtom(struct atom* a, LinkedListPtr regFile) {
     if (a->type == A_id) {
         return ((struct reg*)getWithID(regFile, a->c.id))->val;
@@ -163,3 +163,4 @@ void initApplyFunctions() {
     apply[8] = applySUB;
 
 }
+*/

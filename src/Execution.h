@@ -9,9 +9,8 @@
 #define Execution_h
 
 #include <stdio.h>
-#include "AST.h"
 #include "LinkedList.h"
-
+/*
 Value evalAtom(struct atom* a, LinkedListPtr regFile);
 
 Value evalExpr(Expression* expr, LinkedListPtr regFile);
@@ -36,5 +35,5 @@ Value applySUB(Value lhs, Value rhs);
 void initExecuteFunctions();
 
 void initApplyFunctions();
-
+*/
 #endif /* Execution_h */

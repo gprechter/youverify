@@ -1,10 +1,3 @@
-hello = true && true
-a = 2 - 1
-hello = hello || false
-implies = true => false
-xor = false ^^ true
-ternary = false ? false : true
-if a == 1 goto L
-equals = true == true
-distinct = false != true
-L: goodbye = false || hello
+hello = true
+goodbye = 100
+val = false

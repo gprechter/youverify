@@ -6,7 +6,6 @@
 //
 
 #include "LinkedList.h"
-#include "AST.h"
 #include <string.h>
 
 LinkedListPtr newLinkedList() {
@@ -32,15 +31,6 @@ void *get(LinkedListPtr lnk, bool(*cond)(void *elem)) {
     DoubleLinkPtr ptr = lnk->head;
     while (ptr != NULL) {
         if ((*cond)(ptr->elem)) return ptr->elem;
-        ptr = ptr->next;
-    }
-    return NULL;
-}
-
-void *getWithID(LinkedListPtr lnk, char *id) {
-    DoubleLinkPtr ptr = lnk->head;
-    while (ptr != NULL) {
-        if (!strcmp(((struct reg*)(ptr->elem))->id, id)) return ptr->elem;
         ptr = ptr->next;
     }
     return NULL;

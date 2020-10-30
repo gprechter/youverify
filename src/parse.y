@@ -5,9 +5,12 @@
     #include <string.h>
     #include "Queue.h"
     #include "LinkedList.h"
-    #include "LinkedList.c"
     #include "DoubleLink.h"
-    #include "AST.h"
+    #include "AST/Value.h"
+    #include "AST/Identifier.h"
+    #include "AST/Expression.h"
+    #include "AST/Instruction.h"
+    #include "AST/Expressions/AtomicExpression.h"
     #include "Execution.h"
     int yylex();
     int yyerror();
@@ -15,189 +18,70 @@
     LinkedListPtr labels;
     int lineNumber = 0;
     extern FILE *yyin;
+
+    struct label {
+        char *id;
+        int dest;
+    };
     
 %}
 %union {
-    struct atom *val;
-    struct atom *id;
-    struct expression *e;
-    struct inst *i;
+    VALUE value;
+    IDENTIFIER id;
+    ATOMIC_EXPRESSION atom;
+    EXPRESSION expression;
+    INSTRUCTION instr;
     int num;
 }
-%token <val> BOOL INTEGER
-%token <id> IDENTIFIER
+%token <value> BOOL INTEGER
+%token <id> TOKEN_IDENTIFIER
 %token <num> NUMBER
 %token NOT IMPLIES AND OR XOR EQUALS DISTINCT
 %token PLUS MINUS
 %token QMARK COLON
 %token ASSIGN IF GOTO
 %token EOL
-%type <e> expr
-%type <val> term
-%type <i> stmt
-%type <i> stmtlabelized
+%type <expression> expr
+%type <atom> term
+%type <instr> stmt
 
 %%
 calclist:
-| calclist stmtlabelized {
+| calclist stmt {
     printf("ADDING INSTRUCTION\n");
-    push(instQueue, $2);
+    INSTRUCTION *iPtr = (INSTRUCTION *) malloc(sizeof(INSTRUCTION));
+    *iPtr = $2;
+    push(instQueue, iPtr);
     lineNumber++;
 }
-| calclist stmtlabelized EOL {
+| calclist stmt EOL {
     printf("ADDING INSTRUCTION\n");
-    push(instQueue, $2);
+    INSTRUCTION *iPtr = (INSTRUCTION *) malloc(sizeof(INSTRUCTION));
+    *iPtr = $2;
+    push(instQueue, iPtr);
     lineNumber++;
 }
 
-stmtlabelized: IDENTIFIER COLON stmt {
-    printf("ADDING LABEL\n");
-    struct label *l = malloc(sizeof(struct label));
-    l->id = $1->c.id;
-    l->dest = lineNumber;
-    add(labels, l);
-    $$ = $3;
+stmt: TOKEN_IDENTIFIER ASSIGN expr {
+    $$ = newASSIGNMENT_INSTRUCTION($1, $3);
 }
-| stmt
-
-stmt: IDENTIFIER ASSIGN expr {
-    struct inst* i = malloc(sizeof(struct inst));
-    i->type = I_assignment;
-    struct assign* a = malloc(sizeof(struct assign));
-    a->id = $1;
-    a->e = $3;
-    i->n.a = a;
-    $$ = i;
-}
-| IF expr GOTO IDENTIFIER {
-    struct inst* i = malloc(sizeof(struct inst));
-    i->type = I_branch;
-    struct branch* b = malloc(sizeof(struct branch));
-    b->e = $2;
-    b->dest = $4;
-    i->n.b = b;
-    $$ = i;
+| IF expr GOTO TOKEN_IDENTIFIER {
+    $$ = newGOTO_INSTRUCTION($2, $4);
 }
 
 expr: term {
-    Expression *e = malloc(sizeof(Expression));
-    e->type = E_atomic;
-    e->e.a = $1;
-    $$ = e;
+    $$ = newATOMIC_EXPRESSION($1);
 }
-| NOT term {
-    Expression *e = malloc(sizeof(Expression));
-    e->type = E_unary;
-    struct unary *u = malloc(sizeof(struct unary));
-    u->op = OP_not;
-    u->val = $2;
-    e->e.u = u;
-    $$ = e;
-}
-| term AND term {
-    Expression *e = malloc(sizeof(Expression));
-    e->type = E_binary;
-    struct binary *b = malloc(sizeof(struct binary));
-    b->op = OP_and;
-    b->lhs = $1;
-    b->rhs = $3;
-    e->e.b = b;
-    $$ = e;
-}
-| term OR term {
-    Expression *e = malloc(sizeof(Expression));
-    e->type = E_binary;
-    struct binary *b = malloc(sizeof(struct binary));
-    b->op = OP_or;
-    b->lhs = $1;
-    b->rhs = $3;
-    e->e.b = b;
-    $$ = e;
-}
-| term IMPLIES term {
-    Expression *e = malloc(sizeof(Expression));
-    e->type = E_binary;
-    struct binary *b = malloc(sizeof(struct binary));
-    b->op = OP_implies;
-    b->lhs = $1;
-    b->rhs = $3;
-    e->e.b = b;
-    $$ = e;
-}
-| term XOR term {
-    Expression *e = malloc(sizeof(Expression));
-    e->type = E_binary;
-    struct binary *b = malloc(sizeof(struct binary));
-    b->op = OP_xor;
-    b->lhs = $1;
-    b->rhs = $3;
-    e->e.b = b;
-    $$ = e;
-}
-| term EQUALS term {
-    Expression *e = malloc(sizeof(Expression));
-    e->type = E_binary;
-    struct binary *b = malloc(sizeof(struct binary));
-    b->op = OP_equals;
-    b->lhs = $1;
-    b->rhs = $3;
-    e->e.b = b;
-    $$ = e;
-}
-| term DISTINCT term {
-    Expression *e = malloc(sizeof(Expression));
-    e->type = E_binary;
-    struct binary *b = malloc(sizeof(struct binary));
-    b->op = OP_distinct;
-    b->lhs = $1;
-    b->rhs = $3;
-    e->e.b = b;
-    $$ = e;
-}
-| term QMARK term COLON term {
-    Expression *e = malloc(sizeof(Expression));
-    e->type = E_ternary;
-    struct ternary *t = malloc(sizeof(struct ternary));
-    t->first = $1;
-    t->second = $3;
-    t->third = $5;
-    e->e.t = t;
-    $$ = e;
-}
-| term PLUS term {
-    Expression *e = malloc(sizeof(Expression));
-    e->type = E_binary;
-    struct binary *b = malloc(sizeof(struct binary));
-    b->op = OP_add;
-    b->lhs = $1;
-    b->rhs = $3;
-    e->e.b = b;
-    $$ = e;
-}
-| term MINUS term {
-    Expression *e = malloc(sizeof(Expression));
-    e->type = E_binary;
-    struct binary *b = malloc(sizeof(struct binary));
-    b->op = OP_subtract;
-    b->lhs = $1;
-    b->rhs = $3;
-    e->e.b = b;
-    $$ = e;
-}
-;
 
-term: BOOL
-| INTEGER
-| IDENTIFIER
-;
+
+term: BOOL { $$ = newATOMIC_EXPRESSION_VALUE($1); }
+| INTEGER { $$ = newATOMIC_EXPRESSION_VALUE($1); }
+| TOKEN_IDENTIFIER { $$ = newATOMIC_EXPRESSION_IDENTIFIER($1); }
+
 %%
 
 yyerror(char *s) {
     fprintf(stderr, "error: %s\n", s);
-}
-
-void freeInst(void *ptr) {
-    free((struct inst *) ptr);
 }
 
 FILE *readFile(char *filename) {
@@ -208,50 +92,34 @@ FILE *readFile(char *filename) {
 
 struct inst *getProgramArray(char *filename, int *prgmSize) {
     instQueue = newQueue();
+    //labels = newLinkedList();
     yyin = readFile(filename);
     yyparse();
     printf("decoding program\n");
-    struct inst *prgmArr = (struct inst *) malloc(sizeof(struct inst) * instQueue->size);
+    INSTRUCTION *prgmArr = (INSTRUCTION *) malloc(sizeof(INSTRUCTION) * instQueue->size);
     *prgmSize = instQueue->size;
     int i = 0;
     while(!isEmpty(instQueue)) {
-        struct inst* inst = (struct inst*) pop(instQueue);
+        INSTRUCTION* inst = (INSTRUCTION*) pop(instQueue);
+        printf("%d\n", inst->type);
         prgmArr[i] = *inst;
         free(inst);
         i++;
     }
-    freeQueue(instQueue, freeInst);
+    //freeQueue(instQueue, freeInst);
+
     return prgmArr;
 }
 
 main(int argc, char **argv) {
     instQueue = newQueue();
-    labels = newLinkedList();
     int prgmSize;
     struct inst *prgmArr;
     if (argc > 1) {
         prgmArr = getProgramArray(argv[1], &prgmSize);
     }
-    initExecuteFunctions();
-    initApplyFunctions();
     int pc = 0;
     printf("Program Size: %d\n", prgmSize);
-    LinkedListPtr regFile = newLinkedList();
-    while (pc< prgmSize) {
-        pc = (*execute[prgmArr[pc].type])(pc, prgmArr[pc], regFile, labels);
-    }
-    int i = 0;
-    DoubleLinkPtr ptr = regFile->head;
-    printf("\n\nREG COUNT: %d\n-------------------\n", regFile->size);
-    while (i < regFile->size) {
-        Value val = ((struct reg*)ptr->elem)->val;
-        if (val.type == V_boolean) {
-            printf("%s (bool): %s\n",((struct reg*)ptr->elem)->id, *((bool *)val.value) ? "true" : "false");
-        } else {
-            printf("%s (int): %d\n",((struct reg*)ptr->elem)->id, *((int *)val.value));
-        }
-        ptr = ptr->next;
-        i++;
-    }
+
     free(prgmArr);
 }
