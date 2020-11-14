@@ -5,13 +5,13 @@
 #include <stdlib.h>
 #include "Identifier.h"
 
-IDENTIFIER newIDENTIFIER(char *id, VALUE_TYPE type) {
-    IDENTIFIER newID;
-    newID.type = type;
+Identifier newIDENTIFIER(char *id) {
+    Identifier newID;
     newID.id = id;
+    newID.index = -1;
     return newID;
 }
 
-void freeIDENTIFIER(IDENTIFIER identifier) {
+void freeIDENTIFIER(Identifier identifier) {
     free(identifier.id);
 }

@@ -7,142 +7,136 @@
 
 #include "Execution.h"
 #include "LinkedList.h"
-/*
-Value evalAtom(struct atom* a, LinkedListPtr regFile) {
-    if (a->type == A_id) {
-        return ((struct reg*)getWithID(regFile, a->c.id))->val;
-    } else {
-        return a->c.val;
+
+VALUE evalAtom(ATOMIC_EXPRESSION expression, SYMBOL_TABLE *table) {
+    switch (expression.type) {
+        case A_id:
+            return getVarByIndex(table, expression.contents.identifier.index);
+        case A_val:
+        default:
+            return expression.contents.value;
     }
 }
 
-Value evalExpr(Expression* expr, LinkedListPtr regFile) {
-    if (expr->type == E_atomic) {
-        return evalAtom(expr->e.a, regFile);
-    } else if (expr->type == E_unary) {
-        Value val = evalAtom(expr->e.u->val, regFile);
-        Value unused;
-        return (*apply[expr->e.u->op])(val, unused);
-    } else if (expr->type == E_binary) {
-        Value lhs = evalAtom(expr->e.b->lhs, regFile);
-        Value rhs = evalAtom(expr->e.b->rhs, regFile);
-        return (*apply[expr->e.b->op])(lhs, rhs);
-    } else {
-        Value pred = evalAtom(expr->e.t->first, regFile);
-        Value then = evalAtom(expr->e.t->second, regFile);
-        Value el = evalAtom(expr->e.t->third, regFile);
-        if (pred.type == V_boolean && *((bool *) pred.value)) {
-            return then;
-        } else {
-            return el;
+VALUE evalExpr(EXPRESSION expression, SYMBOL_TABLE *table) {
+    switch (expression.type) {
+        case E_atomic:
+            return evalAtom(expression.contents.atomicExpression, table);
+        case E_unary: {
+            VALUE value = evalAtom(expression.contents.atomicExpression, table);
+            VALUE unused;
+            return (*apply[expression.contents.unaryExpression.op])(value, unused);
+        }
+        case E_binary: {
+            VALUE lhs = evalAtom(expression.contents.binaryExpression.lhs, table);
+            VALUE rhs = evalAtom(expression.contents.binaryExpression.rhs, table);
+            return (*apply[expression.contents.binaryExpression.op])(lhs, rhs);
+        }
+        case E_ternary:
+        default: {
+            VALUE pred = evalAtom(expression.contents.ternaryExpression.first, table);
+            VALUE then = evalAtom(expression.contents.ternaryExpression.second, table);
+            VALUE el = evalAtom(expression.contents.ternaryExpression.third, table);
+            if (pred.type == VALUE_TYPE_boolean && pred.contents.BOOLEAN) {
+                return then;
+            } else {
+                return el;
+            }
         }
     }
 }
 
-PC executeAssignment(PC pc, Instruction instruction, LinkedListPtr regFile, LinkedListPtr labels) {
-    struct reg *existing = (struct reg *)getWithID(regFile, instruction.n.a->id->c.id);
-    if (existing == NULL) {
-        struct reg *r = malloc(sizeof(struct reg));
-        r->id = instruction.n.a->id->c.id;
-        r->val = evalExpr(instruction.n.a->e, regFile);
-        add(regFile, r);
-    } else {
-        existing->val = evalExpr(instruction.n.a->e, regFile);
-    }
+PC executeAssignment(PC pc, ASSIGNMENT_INSTRUCTION instruction, SYMBOL_TABLE *table) {
+    setVarByIndex(table,
+                  instruction.id.index,
+                  evalExpr(instruction.expression, table)
+                  );
     return pc + 1;
 }
 
-PC executeBranch(PC pc, Instruction instruction, LinkedListPtr regFile, LinkedListPtr labels) {
-    Value pred = evalExpr(instruction.n.b->e, regFile);
-    if (pred.type == V_boolean && *((bool *) pred.value)) {
-        return ((struct label *)getWithID(labels, instruction.n.b->dest->c.id))->dest;
+PC executeBranch(PC pc, GOTO_INSTRUCTION instruction, SYMBOL_TABLE *table) {
+    VALUE pred = evalExpr(instruction.predicate, table);
+    if (pred.type == VALUE_TYPE_boolean && pred.contents.BOOLEAN) {
+        return table->destinations[instruction.destination.index];
     } else {
         return pc + 1;
     }
 }
 
-Value applyAND(Value lhs, Value rhs) {
-    Value res;
-    res.type = V_boolean;
-    res.value = malloc(sizeof(bool));
-    *((bool *)res.value) = *((bool *)lhs.value) && *((bool *)rhs.value);
+VALUE applyAND(VALUE lhs, VALUE rhs) {
+    VALUE res;
+    res.type = VALUE_TYPE_boolean;
+    res.contents.BOOLEAN = lhs.contents.BOOLEAN && rhs.contents.BOOLEAN;
     return res;
 }
 
-Value applyOR(Value lhs, Value rhs) {
-    Value res;
-    res.type = V_boolean;
-    res.value = malloc(sizeof(bool));
-    *((bool *)res.value) = *((bool *)lhs.value) || *((bool *)rhs.value);
+VALUE applyOR(VALUE lhs, VALUE rhs) {
+    VALUE res;
+    res.type = VALUE_TYPE_boolean;
+    res.contents.BOOLEAN = lhs.contents.BOOLEAN || rhs.contents.BOOLEAN;
     return res;
 }
 
-Value applyNOT(Value lhs, Value rhs) {
-    Value res;
-    res.type = V_boolean;
-    res.value = malloc(sizeof(bool));
-    *((bool *)res.value) = !(*((bool *)lhs.value));
+VALUE applyNOT(VALUE lhs, VALUE rhs) {
+    VALUE res;
+    res.type = VALUE_TYPE_boolean;
+    res.contents.BOOLEAN = !lhs.contents.BOOLEAN;
     return res;
 }
 
-Value applyIMPLIES(Value lhs, Value rhs) {
-    Value res;
-    res.type = V_boolean;
-    res.value = malloc(sizeof(bool));
-    bool lhsVal = *((bool *)lhs.value);
-    bool rhsVal = *((bool *)rhs.value);
-    *((bool *)res.value) = !lhsVal || (lhsVal && rhsVal);
+VALUE applyIMPLIES(VALUE lhs, VALUE rhs) {
+    VALUE res;
+    res.type = VALUE_TYPE_boolean;
+    bool lhsVal = lhs.contents.BOOLEAN;
+    bool rhsVal = rhs.contents.BOOLEAN;
+    res.contents.BOOLEAN = !lhsVal || (lhsVal && rhsVal);
     return res;
 }
 
-Value applyXOR(Value lhs, Value rhs) {
-    Value res;
-    res.type = V_boolean;
-    res.value = malloc(sizeof(bool));
-    bool lhsVal = *((bool *)lhs.value);
-    bool rhsVal = *((bool *)rhs.value);
-    *((bool *)res.value) = lhsVal != rhsVal;
+VALUE applyXOR(VALUE lhs, VALUE rhs) {
+    VALUE res;
+    res.type = VALUE_TYPE_boolean;
+    bool lhsVal = lhs.contents.BOOLEAN;
+    bool rhsVal = rhs.contents.BOOLEAN;
+    res.contents.BOOLEAN = lhsVal != rhsVal;
     return res;
 }
 
-Value applyEQUALS(Value lhs, Value rhs) {
-    Value res;
-    res.type = V_boolean;
-    res.value = malloc(sizeof(bool));
-    if (lhs.type == V_boolean && rhs.type == V_boolean) {
-        bool lhsVal = *((bool *)lhs.value);
-        bool rhsVal = *((bool *)rhs.value);
-        *((bool *)res.value) = lhsVal == rhsVal;
-    } else if (lhs.type == V_integer && rhs.type == V_integer) {
-        int lhsVal = *((int *)lhs.value);
-        int rhsVal = *((int *)rhs.value);
-        *((bool *)res.value) = lhsVal == rhsVal;
+VALUE applyEQUALS(VALUE lhs, VALUE rhs) {
+    VALUE res;
+    res.type = VALUE_TYPE_boolean;
+    if (lhs.type == VALUE_TYPE_boolean && rhs.type == VALUE_TYPE_boolean) {
+        bool lhsVal = lhs.contents.BOOLEAN;
+        bool rhsVal = rhs.contents.BOOLEAN;
+        res.contents.BOOLEAN = lhsVal == rhsVal;
+    } else if (lhs.type == VALUE_TYPE_integer && rhs.type == VALUE_TYPE_integer) {
+        int lhsVal = lhs.contents.INT;
+        int rhsVal = rhs.contents.INT;
+        res.contents.INT = lhsVal == rhsVal;
     }
     
     return res;
 }
 
-Value applyDISTINCT(Value lhs, Value rhs) {
+VALUE applyDISTINCT(VALUE lhs, VALUE rhs) {
     return applyXOR(lhs, rhs);
 }
 
-Value applyADD(Value lhs, Value rhs) {
-    Value res;
-    res.type = V_integer;
-    res.value = malloc(sizeof(int));
-    int lhsVal = *((int *)lhs.value);
-    int rhsVal = *((int *)rhs.value);
-    *((int *)res.value) = lhsVal + rhsVal;
+VALUE applyADD(VALUE lhs, VALUE rhs) {
+    VALUE res;
+    res.type = VALUE_TYPE_integer;
+    int lhsVal = lhs.contents.INT;
+    int rhsVal = rhs.contents.INT;
+    res.contents.INT = lhsVal + rhsVal;
     return res;
 }
 
-Value applySUB(Value lhs, Value rhs) {
-    Value res;
-    res.type = V_integer;
-    res.value = malloc(sizeof(int));
-    int lhsVal = *((int *)lhs.value);
-    int rhsVal = *((int *)rhs.value);
-    *((int *)res.value) = lhsVal - rhsVal;
+VALUE applySUB(VALUE lhs, VALUE rhs) {
+    VALUE res;
+    res.type = VALUE_TYPE_integer;
+    int lhsVal = lhs.contents.INT;
+    int rhsVal = rhs.contents.INT;
+    res.contents.INT = lhsVal - rhsVal;
     return res;
 }
 
@@ -163,4 +157,3 @@ void initApplyFunctions() {
     apply[8] = applySUB;
 
 }
-*/

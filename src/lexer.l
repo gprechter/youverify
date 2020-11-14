@@ -19,6 +19,10 @@
 "!"	{return NOT;}
 "+"	{return PLUS;}
 "-"	{return MINUS;}
+"(" {return OPAREN;}
+")" {return CPAREN;}
+"," {return COMMA;}
+"->" {return ARROW;}
 "INT" {
     yylval.type = VALUE_TYPE_integer;
     return TYPE;
@@ -40,12 +44,15 @@
 "="     {return ASSIGN;}
 "if"    {return IF;}
 "goto"  {return GOTO;}
+"LABEL" {return LAB;}
+"def"   {return DEFINE;}
+"endef" {return END_FUNC;}
+
 [a-zA-Z]+ {
     char *id = (char *) malloc(yyleng + 1);
     strcpy (id, yytext);
-    IDENTIFIER identifier = newIDENTIFIER(id, VALUE_TYPE_unknown);
-    yylval.id = identifier;
-    return TOKEN_IDENTIFIER;
+    yylval.id = newIDENTIFIER(id);
+    return IDENTIFIER;
 }
 0|[1-9][0-9]* {
     VALUE value = newIntegerVALUE(atoi(yytext));

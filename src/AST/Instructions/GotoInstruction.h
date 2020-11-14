@@ -10,7 +10,7 @@
 
 typedef struct gotoinstruction {
     EXPRESSION predicate;
-    IDENTIFIER destination;
+    Identifier destination;
 } GOTO_INSTRUCTION;
 
 #endif //YOUVERIFY_GOTOINSTRUCTION_H

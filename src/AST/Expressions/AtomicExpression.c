@@ -4,7 +4,7 @@
 
 #include "AtomicExpression.h"
 
-ATOMIC_EXPRESSION newATOMIC_EXPRESSION_IDENTIFIER(IDENTIFIER identifier) {
+ATOMIC_EXPRESSION newATOMIC_EXPRESSION_IDENTIFIER(Identifier identifier) {
     ATOMIC_EXPRESSION s;
     s.type = A_id;
     s.contents.identifier = identifier;

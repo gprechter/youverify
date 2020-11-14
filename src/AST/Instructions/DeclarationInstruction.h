@@ -9,7 +9,7 @@
 #include "AST/Expressions/AtomicExpression.h"
 
 typedef struct declinstruction {
-    IDENTIFIER identifier;
+    Identifier identifier;
     VALUE_TYPE type;
 } DECLARATION_INSTRUCTION;
 

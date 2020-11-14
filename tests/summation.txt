@@ -1,0 +1,26 @@
+result: INT
+n: INT
+done: BOOL
+def add() -> INT :
+    x:INT
+    y:INT
+    result: INT
+    x = 10
+    y = 5
+    result = x + y
+endef
+def sub() -> INT :
+    x:INT
+    y:INT
+    result: INT
+    x = 10
+    y = 5
+    result = x - y
+endef
+result = 0
+n = 5
+LABEL SUMMATION: if n == 0 goto END
+result = result + n
+n = n - 1
+if true goto SUMMATION
+LABEL END: done = true

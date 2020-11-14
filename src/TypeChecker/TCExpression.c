@@ -4,26 +4,26 @@
 #include <stdio.h>
 #include "TCExpression.h"
 
-bool checkEXPRESSION(EXPRESSION expression, VALUE_TYPE *expressionType) {
+bool checkEXPRESSION(EXPRESSION expression, VALUE_TYPE *expressionType, SYMBOL_TABLE *table) {
     switch (expression.type) {
         case E_atomic:
-            return checkATOMIC_EXPRESSION(expression.contents.atomicExpression, expressionType);
+            return checkATOMIC_EXPRESSION(expression.contents.atomicExpression, expressionType, table);
         case E_unary:
-            return checkUNARY_EXPRESSION(expression.contents.unaryExpression, expressionType);
+            return checkUNARY_EXPRESSION(expression.contents.unaryExpression, expressionType, table);
         case E_binary:
-            return checkBINARY_EXPRESSION(expression.contents.binaryExpression, expressionType);
+            return checkBINARY_EXPRESSION(expression.contents.binaryExpression, expressionType, table);
         case E_ternary:
-            return checkTERNARY_EXPRESSION(expression.contents.ternaryExpression, expressionType);
+            return checkTERNARY_EXPRESSION(expression.contents.ternaryExpression, expressionType, table);
         default:
             return false;
     }
 }
 
-bool checkBINARY_EXPRESSION(BINARY_EXPRESSION expression, VALUE_TYPE *expressionType) {
+bool checkBINARY_EXPRESSION(BINARY_EXPRESSION expression, VALUE_TYPE *expressionType, SYMBOL_TABLE *table) {
     VALUE_TYPE lhsType;
     VALUE_TYPE rhsType;
-    bool lhsCheck = checkATOMIC_EXPRESSION(expression.lhs, &lhsType);
-    bool rhsCheck = checkATOMIC_EXPRESSION(expression.rhs, &rhsType);
+    bool lhsCheck = checkATOMIC_EXPRESSION(expression.lhs, &lhsType, table);
+    bool rhsCheck = checkATOMIC_EXPRESSION(expression.rhs, &rhsType, table);
     bool bothSame = lhsType == rhsType;
     bool bothBoolean = lhsType == VALUE_TYPE_boolean && bothSame;
     bool bothInteger = lhsType == VALUE_TYPE_integer && bothSame;
@@ -47,9 +47,9 @@ bool checkBINARY_EXPRESSION(BINARY_EXPRESSION expression, VALUE_TYPE *expression
     }
 }
 
-bool checkUNARY_EXPRESSION(UNARY_EXPRESSION expression, VALUE_TYPE *expressionType) {
+bool checkUNARY_EXPRESSION(UNARY_EXPRESSION expression, VALUE_TYPE *expressionType, SYMBOL_TABLE *table) {
     VALUE_TYPE operandType;
-    bool operandCheck = checkATOMIC_EXPRESSION(expression.operand, &operandType);
+    bool operandCheck = checkATOMIC_EXPRESSION(expression.operand, &operandType, table);
     switch (expression.op) {
         case OP_not:
             *expressionType = VALUE_TYPE_boolean;
@@ -62,14 +62,14 @@ bool checkUNARY_EXPRESSION(UNARY_EXPRESSION expression, VALUE_TYPE *expressionTy
     }
 }
 
-bool checkTERNARY_EXPRESSION(TERNARY_EXPRESSION expression, VALUE_TYPE *expressionType) {
+bool checkTERNARY_EXPRESSION(TERNARY_EXPRESSION expression, VALUE_TYPE *expressionType, SYMBOL_TABLE *table) {
 
 }
 
-bool checkATOMIC_EXPRESSION(ATOMIC_EXPRESSION expression, VALUE_TYPE *expressionType) {
+bool checkATOMIC_EXPRESSION(ATOMIC_EXPRESSION expression, VALUE_TYPE *expressionType, SYMBOL_TABLE *table) {
     switch (expression.type) {
         case A_id:
-            *expressionType = expression.contents.identifier.type;
+            *expressionType = getVar(table, expression.contents.identifier.id).type;
             return true;
         case A_val:
             *expressionType = expression.contents.value.type;

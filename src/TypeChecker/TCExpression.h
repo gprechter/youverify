@@ -6,15 +6,16 @@
 
 #include <stdbool.h>
 #include "AST/Expression.h"
+#include "Analyze/SymbolTable.h"
 
-bool checkEXPRESSION(EXPRESSION expression, VALUE_TYPE *expressionType);
+bool checkEXPRESSION(EXPRESSION expression, VALUE_TYPE *expressionType, SYMBOL_TABLE *table);
 
-bool checkBINARY_EXPRESSION(BINARY_EXPRESSION expression, VALUE_TYPE *expressionType);
+bool checkBINARY_EXPRESSION(BINARY_EXPRESSION expression, VALUE_TYPE *expressionType, SYMBOL_TABLE *table);
 
-bool checkUNARY_EXPRESSION(UNARY_EXPRESSION expression, VALUE_TYPE *expressionType);
+bool checkUNARY_EXPRESSION(UNARY_EXPRESSION expression, VALUE_TYPE *expressionType, SYMBOL_TABLE *table);
 
-bool checkTERNARY_EXPRESSION(TERNARY_EXPRESSION expression, VALUE_TYPE *expressionType);
+bool checkTERNARY_EXPRESSION(TERNARY_EXPRESSION expression, VALUE_TYPE *expressionType, SYMBOL_TABLE *table);
 
-bool checkATOMIC_EXPRESSION(ATOMIC_EXPRESSION expression, VALUE_TYPE *expressionType);
+bool checkATOMIC_EXPRESSION(ATOMIC_EXPRESSION expression, VALUE_TYPE *expressionType, SYMBOL_TABLE *table);
 
 #endif //YOUVERIFY_EXPRESSION_H

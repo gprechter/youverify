@@ -1,6 +1,0 @@
-hello: BOOL
-goodbye: INT
-val: BOOL
-hello = !false
-goodbye = -2
-val = hello && false

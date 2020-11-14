@@ -9,7 +9,7 @@
 #include "AST/Expressions/AtomicExpression.h"
 
 typedef struct assignmentinstruction {
-    IDENTIFIER id;
+    Identifier id;
     EXPRESSION expression;
 } ASSIGNMENT_INSTRUCTION;
 

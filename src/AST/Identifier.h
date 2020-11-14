@@ -7,11 +7,11 @@
 #include "Value.h"
 
 typedef struct identifier {
-    VALUE_TYPE type;
     char *id;
-} IDENTIFIER;
+    int index;
+} Identifier;
 
-IDENTIFIER newIDENTIFIER(char *id, VALUE_TYPE type);
-void freeIDENTIFIER(IDENTIFIER identifier);
+Identifier newIDENTIFIER(char *id);
+void freeIDENTIFIER(Identifier identifier);
 
 #endif //YOUVERIFY_IDENTIFIER_H

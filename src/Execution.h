@@ -9,31 +9,31 @@
 #define Execution_h
 
 #include <stdio.h>
-#include "LinkedList.h"
-/*
-Value evalAtom(struct atom* a, LinkedListPtr regFile);
+#include "Analyze/SymbolTable.h"
 
-Value evalExpr(Expression* expr, LinkedListPtr regFile);
+VALUE evalAtom(ATOMIC_EXPRESSION expression, SYMBOL_TABLE *table);
 
-PC executeAssignment(PC pc, Instruction instruction, LinkedListPtr regFile, LinkedListPtr labels);
+VALUE evalExpr(EXPRESSION expr, SYMBOL_TABLE *table);
 
-PC executeBranch(PC pc, Instruction instruction, LinkedListPtr regFile, LinkedListPtr labels);
+PC executeAssignment(PC pc, ASSIGNMENT_INSTRUCTION instruction, SYMBOL_TABLE *table);
 
-PC (*execute[2])(PC pc, Instruction instruction, LinkedListPtr regFile, LinkedListPtr labels);
-Value (*apply[9])(Value lhs, Value rhs);
+PC executeBranch(PC pc, GOTO_INSTRUCTION instruction, SYMBOL_TABLE *table);
 
-Value applyAND(Value lhs, Value rhs);
-Value applyOR(Value lhs, Value rhs);
-Value applyNOT(Value lhs, Value rhs);
-Value applyIMPLIES(Value lhs, Value rhs);
-Value applyXOR(Value lhs, Value rhs);
-Value applyEQUALS(Value lhs, Value rhs);
-Value applyDISTINCT(Value lhs, Value rhs);
-Value applyADD(Value lhs, Value rhs);
-Value applySUB(Value lhs, Value rhs);
+PC (*execute[2])(PC pc, INSTRUCTION instruction, SYMBOL_TABLE *table);
+VALUE (*apply[9])(VALUE lhs, VALUE rhs);
+
+VALUE applyAND(VALUE lhs, VALUE rhs);
+VALUE applyOR(VALUE lhs, VALUE rhs);
+VALUE applyNOT(VALUE lhs, VALUE rhs);
+VALUE applyIMPLIES(VALUE lhs, VALUE rhs);
+VALUE applyXOR(VALUE lhs, VALUE rhs);
+VALUE applyEQUALS(VALUE lhs, VALUE rhs);
+VALUE applyDISTINCT(VALUE lhs, VALUE rhs);
+VALUE applyADD(VALUE lhs, VALUE rhs);
+VALUE applySUB(VALUE lhs, VALUE rhs);
 
 void initExecuteFunctions();
 
 void initApplyFunctions();
-*/
+
 #endif /* Execution_h */
