@@ -1,4 +1,4 @@
-#YouVerify
+# YouVerify
 
 YouVerify is a simple imperative programming language based on the SMT-LIB set of theories and operators as a foundation.
 
@@ -43,7 +43,7 @@ f: STRUCTURE
 ... CODE ...
 ```
 
-###Functions
+###  Functions
 
 There are functions that may be defined at the beginning of the program. A function can be declared with any number of parameters, a return type, declared local variables, and any number of instructions including at least one `return` instruction (only available in afunction body). 
 
