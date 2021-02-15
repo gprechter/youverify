@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <stdbool.h>
 
 
 unsigned long hash(char *str) {
@@ -20,38 +20,41 @@ unsigned long hash(char *str) {
 HashMap *newHashMap() {
     HashMap *hashMap = malloc(sizeof(HashMap));
     hashMap->numBuckets = NUMBER_OF_BUCKETS;
+    hashMap->numElements = 0;
     for (int i = 0; i < NUMBER_OF_BUCKETS; i++) {
         hashMap->buckets[i] = NULL;
     }
     return hashMap;
 }
 
-void HM_put(HashMap *map, char *str, int val) {
+void HM_put(HashMap *map, char *str, void* data) {
     int i = hash(str) % map->numBuckets;
     ELEM *bucket = map->buckets[i];
     ELEM *newElem = (ELEM *) malloc(sizeof(ELEM));
-    newElem->str = str;
-    newElem->value = val;
+    newElem->id = str;
+    newElem->data = data;
     newElem->next = bucket;
     map->buckets[i] = newElem;
+    map->numElements++;
 }
 
-int HM_get(HashMap *map, char *str) {
+bool HM_get(HashMap *map, char *str, void** data) {
     int i = hash(str) % map->numBuckets;
     ELEM *bucket = map->buckets[i];
     while (bucket != NULL) {
-        if (strcmp(str, bucket->str) == 0) {
-            return bucket->value;
+        if (strcmp(str, (char *) bucket->id) == 0) {
+            *data = bucket->data;
+            return true;
         }
         bucket = bucket->next;
     }
-    return -1;
+    return false;
 }
 
 void freeElem(ELEM *elem) {
     if (elem != NULL) {
         freeElem(elem->next);
-        free(elem->str);
+        free(elem->id);
         free(elem);
     }
 }

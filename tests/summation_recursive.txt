@@ -1,0 +1,11 @@
+result:INT
+def summation(n:INT)->INT:
+    recursive: INT
+    next: INT
+    if n == 0 goto END
+        next = n - 1
+        recursive = summation(next)
+        return n + recursive
+    LABEL END: return 0
+endef
+result = summation(50)

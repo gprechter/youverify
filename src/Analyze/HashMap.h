@@ -4,20 +4,26 @@
 
 #ifndef YOUVERIFY_HASHMAP_H
 #define YOUVERIFY_HASHMAP_H
+
+#include <stdbool.h>
+#include "Queue.h"
+
 #define NUMBER_OF_BUCKETS 10
+
 typedef struct elem {
-    char *str;
-    int value;
+    void* id;
+    void* data;
     struct elem * next;
 } ELEM;
 
 typedef struct hashmap {
     int numBuckets;
+    int numElements;
     ELEM *buckets[NUMBER_OF_BUCKETS];
 } HashMap;
 
 HashMap *newHashMap();
-void HM_put(HashMap *map, char *str, int val);
-int HM_get(HashMap *map, char *str);
+void HM_put(HashMap *map, char *str, void* data);
+bool HM_get(HashMap *map, char *str, void** data);
 void freeHashMap(HashMap *map);
 #endif //YOUVERIFY_HASHMAP_H

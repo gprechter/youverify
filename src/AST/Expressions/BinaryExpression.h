@@ -5,12 +5,12 @@
 #ifndef YOUVERIFY_BINARYEXPRESSION_H
 #define YOUVERIFY_BINARYEXPRESSION_H
 
-#include "AST/Operator.h"
+#include "Operators/Operator.h"
 #include "AtomicExpression.h"
 
 typedef struct binaryexpression {
     ATOMIC_EXPRESSION lhs;
-    OPERATOR_TYPE op;
+    BinaryOperatorType op;
     ATOMIC_EXPRESSION rhs;
 } BINARY_EXPRESSION;
 

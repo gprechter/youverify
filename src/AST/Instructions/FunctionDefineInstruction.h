@@ -10,7 +10,8 @@
 
 typedef struct function_define_instruction {
     Identifier name;
-    VALUE_TYPE returnType;
+    QueuePtr parameters;
+    TYPE returnType;
     QueuePtr declarations;
     QueuePtr body;
 } FUNCTION_DEFINE_INSTRUCTION;

@@ -6,9 +6,13 @@
 #define YOUVERIFY_IDENTIFIER_H
 #include "Value.h"
 
+typedef enum scope {local, global} NAME_SCOPE;
+
 typedef struct identifier {
+    NAME_SCOPE scope;
     char *id;
     int index;
+    TYPE type;
 } Identifier;
 
 Identifier newIDENTIFIER(char *id);

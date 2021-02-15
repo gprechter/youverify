@@ -3,54 +3,71 @@
 //
 
 #include "SymbolTable.h"
-SYMBOL_TABLE *createSymbolTable(QueuePtr declarations) {
-    SYMBOL_TABLE *globalSymbolTable = malloc(sizeof(SYMBOL_TABLE));
-    globalSymbolTable->num = declarations->size;
-    HashMap *hashMap = newHashMap();
-    VARIABLE *variables = malloc(sizeof(VARIABLE) * declarations->size);
-    int i = 0;
+#include "AST/Instruction.h"
+#include "Utilities.h"
+SYMBOL_TABLE *createSymbolTable() {
+    SYMBOL_TABLE *symbolTable = malloc(sizeof(SYMBOL_TABLE));
+    symbolTable->functions = newHashMap();
+    symbolTable->identifiers = newHashMap();
+    symbolTable->labels = newHashMap();
+    symbolTable->LocalArrayBindings = newLinkedList();
+    symbolTable->parent = NULL;
+    return symbolTable;
+}
+
+void addLabel(SYMBOL_TABLE* symbolTable, char* str, int instNum) {
+    LabelData *labelData = malloc(sizeof(LabelData));
+    labelData->pc_nxt = instNum;
+    HM_put(symbolTable->labels, str, (void *) labelData);
+}
+
+void fillIdentifiers(SYMBOL_TABLE* symbolTable, QueuePtr declarations, QueuePtr parameters, QueuePtr functions, TYPE** parameterTypes) {
     INSTRUCTION *instruction;
+    IdentifierData* identifierData;
+    int d_i = 0;
+    if (parameters != NULL) {
+        TYPE* parameterTypeArray = malloc(sizeof(TYPE) * parameters->size);
+        *parameterTypes = parameterTypeArray;
+        int t_i = 0;
+        while (!isEmpty(parameters)) {
+            instruction = ((INSTRUCTION *) pop(parameters));
+            DECLARATION_INSTRUCTION inst = instruction->contents.declarationInstruction;
+            identifierData = malloc(sizeof(IdentifierData));
+            d_i = d_i + rUB(inst.type.bits);
+            identifierData->index = d_i;
+            identifierData->type = inst.type;
+            HM_put(symbolTable->identifiers, inst.identifier.id, (void *) identifierData);
+            parameterTypeArray[t_i] = inst.type;
+            t_i++;
+        }
+    }
+
     while(!isEmpty(declarations)) {
         instruction = ((INSTRUCTION *)pop(declarations));
         if (instruction->type == I_declaration) {
             DECLARATION_INSTRUCTION inst = instruction->contents.declarationInstruction;
-            variables[i].type = inst.type;
-            HM_put(hashMap, inst.identifier.id, i++);
+            identifierData = malloc(sizeof(IdentifierData));
+            d_i = d_i + rUB(inst.type.bits);
+            identifierData->index = d_i;
+            identifierData->type = inst.type;
+            if (identifierData->type.id == TID_array) {
+                struct LocalArrayBindingInfo* info = malloc(sizeof(struct LocalArrayBindingInfo));
+                info->arrayMeta = identifierData->type.metadata.array_info;
+                info->variableIndex = identifierData->index;
+                addFirst(symbolTable->LocalArrayBindings, info);
+            }
+            HM_put(symbolTable->identifiers, inst.identifier.id, (void *) identifierData);
         } else {
-            printf("FUNCTION \'%s\' WITH:\n", instruction->contents.functionDefineInstruction.name.id);
-            printf("\t %d Declarations,\n",instruction->contents.functionDefineInstruction.declarations->size);
-            printf("\t %d Statements,\n",instruction->contents.functionDefineInstruction.body->size);
+            push(functions, (void *) instruction);
         }
-
     }
-    globalSymbolTable->table = hashMap;
-    globalSymbolTable->variables = variables;
-    globalSymbolTable->labels = NULL;
-    return  globalSymbolTable;
-}
-VARIABLE getVar(SYMBOL_TABLE *table, char *str) {
-    return table->variables[HM_get(table->table, str)];
+    symbolTable->totalRequiredBits = d_i;
 }
 
-int getIndex(SYMBOL_TABLE *table, char *str) {
-    return HM_get(table->table, str);
-}
-
-void setVar(SYMBOL_TABLE *table, char *str, VALUE value) {
-    table->variables[HM_get(table->table, str)] = value;
-}
-
-VARIABLE getVarByIndex(SYMBOL_TABLE *table, int index) {
-    return table->variables[index];
-}
-
-void setVarByIndex(SYMBOL_TABLE *table, int index, VALUE value) {
-    table->variables[index] = value;
+bool getIdentifierData(SYMBOL_TABLE *table, char *str, IdentifierData** data) {
+    return HM_get(table->identifiers, str, data);
 }
 
 void freeSymbolTable(SYMBOL_TABLE *table) {
-    free(table->variables);
-    freeHashMap(table->table);
-    free(table);
 
 }

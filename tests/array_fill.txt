@@ -1,0 +1,10 @@
+arr: [INT]
+n: INT
+result: INT
+arr = $mem(10)
+n = 0
+LABEL LOOP: if n == 10 goto END
+   arr[n] = 100
+   n = n + 1
+   if true goto LOOP
+LABEL END: result = arr[3]

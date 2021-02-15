@@ -1,0 +1,2 @@
+result: INT
+result = 4 * 5

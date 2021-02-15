@@ -1,0 +1,16 @@
+arr: [INT]
+result: INT
+def ADD(arr: [INT], i: INT, j: INT) -> INT:
+    x: INT
+    y: INT
+    x = arr[i]
+    y = arr[j]
+    return x + y
+endef
+arr = $mem(5)
+arr[0] = 1
+arr[1] = 2
+arr[2] = 3
+arr[3] = 4
+arr[4] = 5
+result = ADD(arr, 2, 4)

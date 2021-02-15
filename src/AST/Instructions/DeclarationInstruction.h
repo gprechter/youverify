@@ -10,7 +10,7 @@
 
 typedef struct declinstruction {
     Identifier identifier;
-    VALUE_TYPE type;
+    TYPE type;
 } DECLARATION_INSTRUCTION;
 
 #endif //YOUVERIFY_DECLARATIONINSTRUCTION_H

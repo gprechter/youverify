@@ -8,6 +8,7 @@
 #include "AtomicExpression.h"
 
 typedef struct ternaryexpression {
+    TernaryOperatorType op;
     ATOMIC_EXPRESSION first;
     ATOMIC_EXPRESSION second;
     ATOMIC_EXPRESSION third;

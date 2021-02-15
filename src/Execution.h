@@ -9,28 +9,36 @@
 #define Execution_h
 
 #include <stdio.h>
+
 #include "Analyze/SymbolTable.h"
+#include "Analyze/Function.h"
+#include "Memory.h"
 
-VALUE evalAtom(ATOMIC_EXPRESSION expression, SYMBOL_TABLE *table);
+RT_Value evalAtom(RT_AtomicExpression expression, RuntimeEnvironment *env);
 
-VALUE evalExpr(EXPRESSION expr, SYMBOL_TABLE *table);
+RT_Value evalExpr(RT_Expression expr, RuntimeEnvironment *env);
 
-PC executeAssignment(PC pc, ASSIGNMENT_INSTRUCTION instruction, SYMBOL_TABLE *table);
+PC executeAssignment(PC pc, RT_AssignmentInstruction instruction, RuntimeEnvironment *env);
+RT_Value executeFunction(FUNCTION function, RuntimeEnvironment *env);
+PC executeBranch(PC pc, RT_GotoInstruction instruction, RuntimeEnvironment *env);
 
-PC executeBranch(PC pc, GOTO_INSTRUCTION instruction, SYMBOL_TABLE *table);
+PC (*execute[2])(PC pc, RT_Instruction instruction, SYMBOL_TABLE *table);
+RT_Value (*apply[9])(RT_Value lhs, RT_Value rhs);
 
-PC (*execute[2])(PC pc, INSTRUCTION instruction, SYMBOL_TABLE *table);
-VALUE (*apply[9])(VALUE lhs, VALUE rhs);
+RT_Value applyAND(RT_Value lhs, RT_Value rhs);
+RT_Value applyOR(RT_Value lhs, RT_Value rhs);
+RT_Value applyNOT(RT_Value lhs, RT_Value rhs);
+RT_Value applyIMPLIES(RT_Value lhs, RT_Value rhs);
+RT_Value applyXOR(RT_Value lhs, RT_Value rhs);
+RT_Value applyEQUALS(RT_Value lhs, RT_Value rhs);
+RT_Value applyDISTINCT(RT_Value lhs, RT_Value rhs);
+RT_Value applyADD(RT_Value lhs, RT_Value rhs);
+RT_Value applySUB(RT_Value lhs, RT_Value rhs);
 
-VALUE applyAND(VALUE lhs, VALUE rhs);
-VALUE applyOR(VALUE lhs, VALUE rhs);
-VALUE applyNOT(VALUE lhs, VALUE rhs);
-VALUE applyIMPLIES(VALUE lhs, VALUE rhs);
-VALUE applyXOR(VALUE lhs, VALUE rhs);
-VALUE applyEQUALS(VALUE lhs, VALUE rhs);
-VALUE applyDISTINCT(VALUE lhs, VALUE rhs);
-VALUE applyADD(VALUE lhs, VALUE rhs);
-VALUE applySUB(VALUE lhs, VALUE rhs);
+void *getVarPointer(NAME_SCOPE scope, int n, RuntimeEnvironment *env);
+
+RT_Value evaluateAsType(void *ptr, TYPE type);
+void assignVariable(void *ptr, RT_Value value);
 
 void initExecuteFunctions();
 

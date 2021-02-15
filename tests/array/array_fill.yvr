@@ -1,0 +1,19 @@
+arr: [INT]
+n: INT
+r1,r2,r3,r4,r5,r6,r7,r8,r9,r10: INT
+arr = $mem(10)
+n = 0
+LABEL LOOP: if n == 10 goto END
+   arr[n] = 100 + n
+   n = n + 1
+   if true goto LOOP
+LABEL END: r1 = arr[0]
+r2 = arr[1]
+r3 = arr[2]
+r4 = arr[3]
+r5 = arr[4]
+r6 = arr[5]
+r7 = arr[6]
+r8 = arr[7]
+r9 = arr[8]
+r10 = arr[9]

@@ -40,6 +40,18 @@ void *pop(QueuePtr queue) {
     queue->size--;
     return elem;
 }
+
+QueuePtr combineQueues(QueuePtr queue, QueuePtr other) {
+    QueuePtr new = newQueue();
+    while(!isEmpty(other)) {
+        push(new, pop(other));
+    }
+    while(!isEmpty(queue)) {
+        push(new, pop(queue));
+    }
+    return new;
+}
+
 bool isEmpty(QueuePtr queue) {
     return queue->size == 0;
 }
@@ -49,18 +61,3 @@ void freeQueue(QueuePtr queue, void (*freeElem)(void*)) {
     }
     free(queue);
 }
-/*
-int main() {
-    QueuePtr queue = newQueue();
-    push(queue, "hello");
-    push(queue, "goodbye");
-    printf("SIZE: %d\n", queue->size);
-    printf("ELEMENT PEEKED: %s\n", (char *)peek(queue));
-    printf("ELEMENT POPPED: %s\n", (char *)pop(queue));
-    printf("SIZE: %d\n", queue->size);
-    printf("ELEMENT POPPED: %s\n", (char *)pop(queue));
-    printf("SIZE: %d\n", queue->size);
-    freeQueue(queue);
-    printf("\n");
-}
-*/

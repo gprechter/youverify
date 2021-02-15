@@ -5,11 +5,11 @@
 #ifndef YOUVERIFY_UNARYEXPRESSION_H
 #define YOUVERIFY_UNARYEXPRESSION_H
 
-#include "AST/Operator.h"
 #include "AtomicExpression.h"
+#include "Operators/Operator.h"
 
 typedef struct unaryexpression {
-    OPERATOR_TYPE op;
+    UnaryOperatorType op;
     ATOMIC_EXPRESSION operand;
 } UNARY_EXPRESSION;
 

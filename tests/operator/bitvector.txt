@@ -1,0 +1,4 @@
+a: BITVEC 16
+result: BITVEC 8
+a = #xdead
+result = bv_extract 4 11 a

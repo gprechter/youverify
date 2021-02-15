@@ -1,0 +1,5 @@
+arr: [INT]
+result: INT
+arr = [1, 2, 3, 4, 5]
+arr[3] = 100
+result = arr[3]

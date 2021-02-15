@@ -1,0 +1,14 @@
+struct STRUCTURE {
+    x, y:INT
+}
+str, other: STRUCTURE
+x, y, result: INT
+
+str.x = 10
+str.y = 5
+other = str
+x = str.x
+y = str.y
+str.x = x + y
+str.y = str.x
+result = str.y

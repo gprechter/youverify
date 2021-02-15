@@ -1,0 +1,7 @@
+predicate: BOOL
+result: INT
+result = 0
+predicate = true
+if predicate == false goto END
+    result = result + 1
+LABEL END: result = result + 1

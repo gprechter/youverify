@@ -27,6 +27,9 @@ void push(QueuePtr queue, void *elem);
 void *peek(QueuePtr queue);
 void *pop(QueuePtr queue);
 bool isEmpty(QueuePtr queue);
+
+QueuePtr combineQueues(QueuePtr queue, QueuePtr other);
+
 void freeQueue(QueuePtr queue, void (*freeElem)(void*));
 
 #endif /* Queue_h */

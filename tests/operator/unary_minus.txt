@@ -1,0 +1,6 @@
+x:INT
+res1: INT
+res2: INT
+x = 10
+res1 = -x
+res2 = -res1

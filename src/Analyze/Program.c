@@ -2,58 +2,42 @@
 // Created by Griffin Prechter on 11/13/20.
 //
 
-#include <TypeChecker/TCInstruction.h>
-#include "Transform.h"
 #include "Program.h"
 
-INSTRUCTION *makeProgramArray(QueuePtr instructions, int *programSize) {
+INSTRUCTION *makeProgramArray(QueuePtr instructions, SYMBOL_TABLE* symbolTable, int *programSize) {
     INSTRUCTION *program = malloc(sizeof(INSTRUCTION) * instructions->size);
     *programSize = instructions->size;
+    INSTRUCTION * instructionPtr;
     INSTRUCTION instruction;
     int i = 0;
     while(!isEmpty(instructions)) {
-        instruction = *((INSTRUCTION *)pop(instructions));
+        instructionPtr = (INSTRUCTION *) pop(instructions);
+        instruction = *(instructionPtr);
+        free(instructionPtr);
+        if (instruction.label != NULL) {
+            addLabel(symbolTable, instruction.label, i);
+        }
         program[i++] = instruction;
     }
+    free(instructions);
     return program;
 }
 
-
-void getLabelHashMap(INSTRUCTION *program, int programSize, SYMBOL_TABLE *table) {
-    HashMap *hashMap = newHashMap();
-    int num = 0;
-    int i;
-    for (i = 0; i < programSize; i++) {
-        char * label = program[i].label;
-        if (label != NULL)
-            num++;
-        printf("LABEL: %s\n", label);
-    }
-    int *destinations = malloc(sizeof(int)*num);
-    num = 0;
-    for (i = 0; i < programSize; i++) {
-        char * label = program[i].label;
-        if (label != NULL)
-            HM_put(hashMap, label, num);
-            destinations[num] = i;
-            num++;
-    }
-    table->numLabels = num;
-    table->labels = hashMap;
-    table->destinations = destinations;
-}
-
-INSTRUCTION *generateAndCheckProgramArray(QueuePtr instructions, SYMBOL_TABLE *table, int *programSize) {
-    INSTRUCTION *program = makeProgramArray(instructions, programSize);
-    getLabelHashMap(program,*programSize,  table);
+RT_Instruction *generateProgramArray(QueuePtr instructions, SYMBOL_TABLE *table, int *programSize, NAME_SCOPE scope) {
+    INSTRUCTION *program = makeProgramArray(instructions, table, programSize);
+    RT_Instruction* runtimeProgram = malloc(sizeof(RT_Instruction) * (*programSize));
     INSTRUCTION instruction;
     int i;
     for(i = 0; i < *programSize; i++) {
         instruction = program[i];
+        /* TODO: Integrate Type Checking here!
         if (!checkINSTRUCTION(instruction, table)) {
             printf("Instruction: %d failed typechecking", i);
         }
-        program[i] = transformINSTRUCTION(instruction, table);
+        */
+        bool isValid;
+        runtimeProgram[i] = newRT_Instruction(instruction, table, scope);
     }
-    return program;
+    free(program);
+    return runtimeProgram;
 }

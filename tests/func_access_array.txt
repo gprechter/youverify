@@ -1,0 +1,11 @@
+arr: [INT]
+result: INT
+def accessAdd(arr: [INT])->INT:
+    x: INT
+    y: INT
+    x = arr[2]
+    y = arr[6]
+    return x + y
+endef
+arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+result = accessAdd(arr)

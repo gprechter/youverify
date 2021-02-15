@@ -1,0 +1,6 @@
+predicate: BOOL
+ifresult, elseresult, result: INT
+predicate = false
+ifresult = 1
+elseresult = 2
+result = predicate ? ifresult : elseresult

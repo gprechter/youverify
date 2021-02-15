@@ -1,0 +1,5 @@
+result: INT
+def add(x:INT, y:INT)->INT:
+    return x + y
+endef
+result = add(1, 2)

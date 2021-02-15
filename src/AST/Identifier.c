@@ -9,6 +9,7 @@ Identifier newIDENTIFIER(char *id) {
     Identifier newID;
     newID.id = id;
     newID.index = -1;
+    newID.scope = local;
     return newID;
 }
 

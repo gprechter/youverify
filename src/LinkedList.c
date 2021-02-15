@@ -15,7 +15,7 @@ LinkedListPtr newLinkedList() {
     lnk->tail = NULL;
     return lnk;
 }
-void add(LinkedListPtr lnk, void *elem) {
+void addFirst(LinkedListPtr lnk, void *elem) {
     DoubleLinkPtr newHead = newLink(elem);
     DoubleLinkPtr oldHead = lnk->head;
     newHead->next = oldHead;
@@ -27,6 +27,56 @@ void add(LinkedListPtr lnk, void *elem) {
     }
     lnk->size++;
 }
+
+void addLast(LinkedListPtr lnk, void *elem) {
+    DoubleLinkPtr newTail = newLink(elem);
+    DoubleLinkPtr oldTail = lnk->tail;
+    newTail->prev = oldTail;
+    lnk->tail = newTail;
+    if (oldTail == NULL) {
+        lnk->head = newTail;
+    } else {
+        oldTail->next = newTail;
+    }
+    lnk->size++;
+}
+
+void *removeFirst(LinkedListPtr lnk) {
+    if (lnk->head != NULL) {
+        DoubleLinkPtr head = lnk->head;
+        void* element = head->elem;
+        lnk->head = head->next;
+        if (lnk->head == NULL) {
+            lnk->tail = NULL;
+        } else {
+            lnk->head->prev = NULL;
+        }
+        free(head);
+        lnk->size--;
+        return element;
+    } else {
+        return NULL;
+    }
+}
+
+void *removeLast(LinkedListPtr lnk) {
+    if (lnk->tail != NULL) {
+        DoubleLinkPtr tail = lnk->tail;
+        void* element = tail->elem;
+        lnk->tail = tail->prev;
+        if (lnk->tail == NULL) {
+            lnk->head = NULL;
+        } else {
+            lnk->tail->next = NULL;
+        }
+        free(tail);
+        lnk->size--;
+        return element;
+    } else {
+        return NULL;
+    }
+}
+
 void *get(LinkedListPtr lnk, bool(*cond)(void *elem)) {
     DoubleLinkPtr ptr = lnk->head;
     while (ptr != NULL) {
@@ -34,6 +84,19 @@ void *get(LinkedListPtr lnk, bool(*cond)(void *elem)) {
         ptr = ptr->next;
     }
     return NULL;
+}
+
+LinkedListPtr concat(LinkedListPtr a, LinkedListPtr b) {
+    a->size = a->size + b->size;
+    a->tail->next = b->head;
+    if (b->head != NULL) {
+        b->head->prev = a->tail;
+    }
+    if (b->tail != NULL) {
+        a->tail = b->tail;
+    }
+    free(b);
+    return a;
 }
 
 bool isEmptyLL(LinkedListPtr lnk) {

@@ -5,11 +5,19 @@
 #ifndef YOUVERIFY_ASSIGNMENTINSTRUCTION_H
 #define YOUVERIFY_ASSIGNMENTINSTRUCTION_H
 
+#include "AST/Identifier.h"
 #include "AST/Expression.h"
-#include "AST/Expressions/AtomicExpression.h"
+
+typedef enum _AssignmentInstructionLHS {AI_variable, AI_array_elem, AI_field, AI_deref} AssignmentInstructionLHS;
 
 typedef struct assignmentinstruction {
-    Identifier id;
+    AssignmentInstructionLHS lhsType;
+    union AssignmentInstructionDestination {
+        Identifier id;
+        ARRAY_ACCESS_EXPRESSION arrayAccessExpression;
+        FIELD_ACCESS_EXPRESSION fieldAccessExpression;
+        DEREFERENCE_EXPRESSION dereferenceExpression;
+    } destination;
     EXPRESSION expression;
 } ASSIGNMENT_INSTRUCTION;
 

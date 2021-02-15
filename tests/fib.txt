@@ -1,0 +1,17 @@
+result:INT
+done:BOOL
+n:INT
+curr:INT
+next:INT
+temp:INT
+n = 10
+curr = 0
+next = 1
+LABEL FIB: if n == 0 goto END
+temp = curr
+curr = next
+next = temp + next
+n = n - 1
+if true goto FIB
+LABEL END: result = curr
+done = true

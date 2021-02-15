@@ -1,0 +1,9 @@
+a, b: BITVEC 16
+c, d: BITVEC 32
+r1, r2: BITVEC 16
+a = #xdead
+b = #xbeef
+c = #xdeadbeef
+d = #x00000001
+r1 = a bv_add b
+r2 = c bv_add d

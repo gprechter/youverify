@@ -1,0 +1,6 @@
+ptr: INT*
+result: INT
+
+ptr = $mem(1)
+*ptr = 100
+result = *ptr
