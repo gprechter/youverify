@@ -1,0 +1,20 @@
+struct POINT {
+    x, y:INT
+}
+def ADDPOINTS(a: POINT, b: POINT)->POINT:
+    t1, t2: INT
+    new: POINT
+    t1 = a.x
+    t2 = b.x
+    new.x = t1 + t2
+    t1 = a.y
+    t2 = b.y
+    new.y = t1 + t2
+    return new
+endef
+a, b, result: POINT
+a.x = 1
+a.y = 2
+b.x = 3
+b.y = 4
+result = ADDPOINTS(a, b)

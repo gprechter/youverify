@@ -20,36 +20,21 @@ int main(int argc, char **argv) {
     if (argc > 1) {
         prgm = parseProgram(argv[1]);
     }
-    SYMBOL_TABLE* globalTable = createSymbolTable();
-    QueuePtr functions = newQueue();
-    fillIdentifiers(globalTable, prgm->declarations, NULL, functions, NULL);
-    IdentifierData* data;
-    //printf("Index for \'done\'(%d): %d, type: %d\n", getIdentifierData(globalTable, "result", &data),  data->index, data->valueType);
-    int programSize;
-    int functionSize = functions->size;
-    FUNCTION* functionData;
-    if (!isEmpty(functions)) {
-        functionData = malloc(sizeof(FUNCTION) * functions->size);
-    } else {
-        functionData = NULL;
-    }
-    int f_i = 0;
-    while (!isEmpty(functions)) {
-        FUNCTION_DEFINE_INSTRUCTION functionDefineInstruction = ((INSTRUCTION*) pop(functions))->contents.functionDefineInstruction;
-        functionData[f_i] = fillFunction(globalTable, f_i, functionDefineInstruction);
-        f_i++;
-    }
+    FUNCTION* functions;
+    int numFunctions;
+    SYMBOL_TABLE* globalTable = newGlobalSymbolTable(prgm->declarations, &functions, &numFunctions);
     initializeOperators();
+
+    int programSize;
     RT_Instruction* program = generateProgramArray(prgm->statements, globalTable, &programSize, global);
-    for (int i = 0; i < functionSize; i++) {
-        functionData[i].body = generateProgramArray(functionData[i].rawBody, functionData[i].symbolTable, &functionData[i].size, local);
+    for (int i = 0; i < numFunctions; i++) {
+        functions[i].body = generateProgramArray(functions[i].rawBody, functions[i].symbolTable, &functions[i].size, local);
     }
-    //printf("Number of Labels: %d\n", globalTable->labels->numElements);
 
     int pc = 0;
 
-    RuntimeEnvironment *environment = newRuntimeEnvironment(2048, globalTable);
-    environment->functions = functionData;
+    RuntimeEnvironment *environment = newRuntimeEnvironment(32, globalTable);
+    environment->functions = functions;
     int i;
     while(pc < programSize) {
         if (program[pc].type == RT_assignment) {

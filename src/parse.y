@@ -31,25 +31,6 @@
     int funcLineNumber = 0;
     extern FILE *yyin;
     SYMBOL_TABLE attributes;
-
-    struct inst *getInstructionArray(QueuePtr instQueue, int *prgmSize) {
-        INSTRUCTION *prgmArr = (INSTRUCTION *) malloc(sizeof(INSTRUCTION) * instQueue->size);
-        *prgmSize = instQueue->size;
-        int i = 0;
-        while(!isEmpty(instQueue)) {
-            INSTRUCTION* inst = (INSTRUCTION*) pop(instQueue);
-            prgmArr[i] = *inst;
-            free(inst);
-            i++;
-        }
-        //freeQueue(instQueue, freeInst);
-        return prgmArr;
-    }
-
-    typedef struct label {
-        char *id;
-        int dest;
-    } LABEL;
     
 %}
 %union {

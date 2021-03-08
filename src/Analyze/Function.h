@@ -8,7 +8,7 @@
 #include <Queue.h>
 #include "AST/Identifier.h"
 #include "Runtime/RT_Instruction.h"
-#include "SymbolTable.h"
+
 
 typedef struct function {
     Identifier name;

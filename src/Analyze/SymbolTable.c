@@ -5,7 +5,9 @@
 #include "SymbolTable.h"
 #include "AST/Instruction.h"
 #include "Utilities.h"
-SYMBOL_TABLE *createSymbolTable() {
+#include "Function.h"
+
+SYMBOL_TABLE *newSymbolTable() {
     SYMBOL_TABLE *symbolTable = malloc(sizeof(SYMBOL_TABLE));
     symbolTable->functions = newHashMap();
     symbolTable->identifiers = newHashMap();
@@ -13,6 +15,25 @@ SYMBOL_TABLE *createSymbolTable() {
     symbolTable->LocalArrayBindings = newLinkedList();
     symbolTable->parent = NULL;
     return symbolTable;
+}
+
+SYMBOL_TABLE *newGlobalSymbolTable(QueuePtr declarations, FUNCTION** functions, int* numFunctions) {
+    SYMBOL_TABLE* globalTable = newSymbolTable();
+    QueuePtr functionsQueue = newQueue();
+    fillIdentifiers(globalTable, declarations, NULL, functionsQueue, NULL);
+    *numFunctions = functionsQueue->size;
+    if (!isEmpty(functionsQueue)) {
+        *functions = malloc(sizeof(FUNCTION) * functionsQueue->size);
+    } else {
+        *functions = NULL;
+    }
+    int f_i = 0;
+    while (!isEmpty(functionsQueue)) {
+        FUNCTION_DEFINE_INSTRUCTION functionDefineInstruction = ((INSTRUCTION*) pop(functionsQueue))->contents.functionDefineInstruction;
+        *functions[f_i] = fillFunction(globalTable, f_i, functionDefineInstruction);
+        f_i++;
+    }
+    return globalTable;
 }
 
 void addLabel(SYMBOL_TABLE* symbolTable, char* str, int instNum) {
@@ -62,6 +83,22 @@ void fillIdentifiers(SYMBOL_TABLE* symbolTable, QueuePtr declarations, QueuePtr 
         }
     }
     symbolTable->totalRequiredBits = d_i;
+}
+
+FUNCTION fillFunction(SYMBOL_TABLE* globalTable, int index, FUNCTION_DEFINE_INSTRUCTION instruction) {
+    FUNCTION function;
+    FunctionData* functionData = malloc(sizeof(FunctionData));
+    functionData->numParameters = instruction.parameters->size;
+    functionData->returnType = instruction.returnType;
+    functionData->index = index;
+    HM_put(globalTable->functions, instruction.name.id, functionData);
+    function.name = instruction.name;
+    function.symbolTable = newSymbolTable();
+    function.symbolTable->parent = globalTable;
+    function.returnType = instruction.returnType;
+    function.rawBody = instruction.body;
+    fillIdentifiers(function.symbolTable, instruction.declarations, instruction.parameters, NULL, &(functionData->parameterTypes));
+    return function;
 }
 
 bool getIdentifierData(SYMBOL_TABLE *table, char *str, IdentifierData** data) {
