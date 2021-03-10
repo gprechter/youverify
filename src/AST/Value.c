@@ -72,6 +72,7 @@ int getNextID() {
 VALUE newBooleanVALUE(bool value) {
     VALUE s;
     s.type = getType("BOOL");
+    s.isSymbol = false;
     s.contents.BOOLEAN = value;
     return s;
 }

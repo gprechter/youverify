@@ -11,6 +11,7 @@
 
 typedef struct _RT_Value {
     TYPE type;
+    bool isSymbol;
     uint8_t* content;
     /*union CONTENTS {
         int integer;

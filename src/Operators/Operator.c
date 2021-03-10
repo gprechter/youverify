@@ -14,12 +14,12 @@
 void initializeOperators() {
     UnaryOperators[U_OP_NOT] = UnaryNotOperation;
 
-    UnaryOperators[U_OP_MINUS] = UnaryMinusOperation;
-    UnaryOperators[U_OP_ABS] = UnaryAbsOperation;
+    //UnaryOperators[U_OP_MINUS] = UnaryMinusOperation;
+    //UnaryOperators[U_OP_ABS] = UnaryAbsOperation;
 
-    UnaryOperators[U_BV2NAT] = UnaryBV2NatOperation;
-    UnaryOperators[U_NAT2BV] = UnaryNat2BVOperation;
-
+    //UnaryOperators[U_BV2NAT] = UnaryBV2NatOperation;
+    //UnaryOperators[U_NAT2BV] = UnaryNat2BVOperation;
+/*
     UnaryOperators[U_BVNOT] = UnaryBVNotOperation;
     UnaryOperators[U_BVNEG] = UnaryBVNegOperation;
 
@@ -42,21 +42,23 @@ void initializeOperators() {
 
 
     BinaryOperators[B_OP_ADD] = BinaryAddOperation;
+    */
     BinaryOperators[B_OP_AND] = BinaryAndOperation;
     BinaryOperators[B_OP_DISTINCT] = BinaryDistinctOperation;
     BinaryOperators[B_OP_EQUALS] = BinaryEqualsOperation;
+
     BinaryOperators[B_OP_IMPLIES] = BinaryImpliesOperation;
     BinaryOperators[B_OP_OR] = BinaryOrOperation;
-    BinaryOperators[B_OP_SUB] = BinarySubOperation;
+    //BinaryOperators[B_OP_SUB] = BinarySubOperation;
     BinaryOperators[B_OP_XOR] = BinaryXorOperation;
-    BinaryOperators[B_OP_MUL] = BinaryMulOperation;
-    BinaryOperators[B_OP_DIV] = BinaryDivOperation;
-    BinaryOperators[B_OP_MOD] = BinaryModOperation;
-    BinaryOperators[B_OP_LEQ] = BinaryLEQOperation;
-    BinaryOperators[B_OP_LE] = BinaryLEOperation;
-    BinaryOperators[B_OP_GEQ] = BinaryGEQOperation;
-    BinaryOperators[B_OP_GE] = BinaryGEOperation;
-
+    //BinaryOperators[B_OP_MUL] = BinaryMulOperation;
+    //BinaryOperators[B_OP_DIV] = BinaryDivOperation;
+    //BinaryOperators[B_OP_MOD] = BinaryModOperation;
+    //BinaryOperators[B_OP_LEQ] = BinaryLEQOperation;
+    //BinaryOperators[B_OP_LE] = BinaryLEOperation;
+    //BinaryOperators[B_OP_GEQ] = BinaryGEQOperation;
+    //BinaryOperators[B_OP_GE] = BinaryGEOperation;
+/*
     BinaryOperators[B_BVCONCAT] = BinaryBVConcatOperation;
     BinaryOperators[B_BVAND] = BinaryBVAndOperation;
     BinaryOperators[B_BVOR] = BinaryBVOrOperation;
@@ -97,5 +99,5 @@ void initializeOperators() {
     TernaryOperators[T_FPSUB] = TernaryFPSubOperation;
     TernaryOperators[T_FPMUL] = TernaryFPMulOperation;
     TernaryOperators[T_FPDIV] = TernaryFPDivOperation;
-
+*/
 }

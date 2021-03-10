@@ -33,16 +33,27 @@ int main(int argc, char **argv) {
 
     int pc = 0;
 
-    RuntimeEnvironment *environment = newRuntimeEnvironment(32, globalTable);
-    environment->functions = functions;
+    //RuntimeEnvironment *environment = newRuntimeEnvironment(32, globalTable);
+    //environment->functions = functions;
     int i;
-    while(pc < programSize) {
-        if (program[pc].type == RT_assignment) {
-            pc = executeAssignment(pc, program[pc].contents.assignmentInstruction, environment);
+    DSEState state;
+    state.pc = 0;
+    state.variables = malloc(sizeof(SymbolicExpression) * 2);
+    SymbolicExpression trueSymbolicExpression;
+    trueSymbolicExpression.type = atom;
+    trueSymbolicExpression.first = "true";
+    state.pathCondition = trueSymbolicExpression;
+
+    while(state.pc < programSize) {
+        if (program[state.pc].type == RT_assignment) {
+            state = executeAssignment(state.pc, program[state.pc].contents.assignmentInstruction, state);
+            printf("Assignment");
         } else {
-            pc = executeBranch(pc, program[pc].contents.gotoInstruction, environment);
+            DSEState *states = executeBranch(state.pc, program[state.pc].contents.gotoInstruction, state);
+            state = states[0];
         }
     }
+     /*
     if (argc <= 2) {
         for (i = (32 - 1); i >= 0; i--) {
             printf("0x%016" PRIx64 " || %08x", ((char *) environment->memory + i * 4),
@@ -56,6 +67,7 @@ int main(int argc, char **argv) {
     if (argc > 2 && getIdentifierData(globalTable, argv[2], &resultData)) {
         printf("%s: 0x%016" PRIx64, argv[2], *((long *) getGlobalVar(resultData->index / 32, environment)));
     }
+     */
     return 0;
     //freeSymbolTable(table);
 }

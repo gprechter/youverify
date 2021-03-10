@@ -56,6 +56,7 @@ int getNextID();
 
 typedef struct value {
     TYPE type;
+    bool isSymbol;
     union VALUE_CONTENTS {
         int INT;
         unsigned long BV;

@@ -6,15 +6,16 @@
 #define YOUVERIFY_COREOPERATORS_H
 
 #include "Runtime/RT_Value.h"
+#include "DSEState/DSEState.h"
 
-RT_Value UnaryNotOperation(RT_Value operand);
+SymbolicExpression UnaryNotOperation(SymbolicExpression symbolicExpression);
 
-RT_Value BinaryImpliesOperation(RT_Value left, RT_Value right);
-RT_Value BinaryAndOperation(RT_Value left, RT_Value right);
-RT_Value BinaryOrOperation(RT_Value left, RT_Value right);
-RT_Value BinaryXorOperation(RT_Value left, RT_Value right);
-RT_Value BinaryEqualsOperation(RT_Value left, RT_Value right);
-RT_Value BinaryDistinctOperation(RT_Value left, RT_Value right);
+SymbolicExpression BinaryImpliesOperation(SymbolicExpression left, SymbolicExpression right);
+SymbolicExpression BinaryAndOperation(SymbolicExpression left, SymbolicExpression right);
+SymbolicExpression BinaryOrOperation(SymbolicExpression left, SymbolicExpression right);
+SymbolicExpression BinaryXorOperation(SymbolicExpression left, SymbolicExpression right);
+SymbolicExpression BinaryEqualsOperation(SymbolicExpression left, SymbolicExpression right);
+SymbolicExpression BinaryDistinctOperation(SymbolicExpression left, SymbolicExpression right);
 
 RT_Value TernaryITEOperation(RT_Value first, RT_Value second, RT_Value third);
 

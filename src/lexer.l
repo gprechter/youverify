@@ -61,6 +61,13 @@
     yylval.value = value;
     return BOOL;
 }
+<LINE>"$BOOL" {
+    VALUE value = newBooleanVALUE(false);
+    value.isSymbol = true;
+    yylval.value = value;
+    return BOOL;
+}
+
 <LINE>"true"  {
     VALUE value = newBooleanVALUE(true);
     yylval.value = value;

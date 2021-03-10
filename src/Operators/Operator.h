@@ -6,9 +6,10 @@
 #define YOUVERIFY_OPERATOR_H
 
 #include "Runtime/RT_Value.h"
+#include "DSEState/DSEState.h"
 
-typedef RT_Value (*UnaryOperation)(RT_Value operand);
-typedef RT_Value (*BinaryOperation)(RT_Value left, RT_Value right);
+typedef SymbolicExpression (*UnaryOperation)(SymbolicExpression symbolicExpression);
+typedef SymbolicExpression (*BinaryOperation)(SymbolicExpression left, SymbolicExpression right);
 typedef RT_Value (*TernaryOperation)(RT_Value first, RT_Value second, RT_Value third);
 
 typedef enum _UnaryOperatorType {

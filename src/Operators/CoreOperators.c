@@ -5,50 +5,80 @@
 #include "CoreOperators.h"
 #include "ConsumeValue.h"
 
-RT_Value UnaryNotOperation(RT_Value operand) {
-    return newRT_BooleanValue( !consumeValueAsBoolean(operand) );
+SymbolicExpression UnaryNotOperation(SymbolicExpression symbolicExpression) {
+    SymbolicExpression newSymbolicExpression;
+    newSymbolicExpression.type = combination;
+    newSymbolicExpression.first = "not";
+    newSymbolicExpression.numRest = 1;
+    newSymbolicExpression.rest = malloc(sizeof(SymbolicExpression));
+    newSymbolicExpression.rest[0] = symbolicExpression;
+    return newSymbolicExpression;
 }
 
-RT_Value BinaryImpliesOperation(RT_Value left, RT_Value right) {
-    bool lVal = consumeValueAsBoolean(left);
-    bool rVal = consumeValueAsBoolean(right);
-    return newRT_BooleanValue( !lVal || (lVal && rVal) );
+SymbolicExpression BinaryImpliesOperation(SymbolicExpression left, SymbolicExpression right) {
+    SymbolicExpression newSymbolicExpression;
+    newSymbolicExpression.type = combination;
+    newSymbolicExpression.first = "=>";
+    newSymbolicExpression.numRest = 2;
+    newSymbolicExpression.rest = malloc(sizeof(SymbolicExpression) * 2);
+    newSymbolicExpression.rest[0] = left;
+    newSymbolicExpression.rest[1] = right;
+    return newSymbolicExpression;
 }
 
-RT_Value BinaryAndOperation(RT_Value left, RT_Value right) {
-    bool lVal = consumeValueAsBoolean(left);
-    bool rVal = consumeValueAsBoolean(right);
-    return newRT_BooleanValue( lVal && rVal );
+SymbolicExpression BinaryAndOperation(SymbolicExpression left, SymbolicExpression right) {
+    SymbolicExpression newSymbolicExpression;
+    newSymbolicExpression.type = combination;
+    newSymbolicExpression.first = "and";
+    newSymbolicExpression.numRest = 2;
+    newSymbolicExpression.rest = malloc(sizeof(SymbolicExpression) * 2);
+    newSymbolicExpression.rest[0] = left;
+    newSymbolicExpression.rest[1] = right;
+    return newSymbolicExpression;
 }
 
-RT_Value BinaryOrOperation(RT_Value left, RT_Value right) {
-    bool lVal = consumeValueAsBoolean(left);
-    bool rVal = consumeValueAsBoolean(right);
-    return newRT_BooleanValue( lVal || rVal );
+SymbolicExpression BinaryOrOperation(SymbolicExpression left, SymbolicExpression right) {
+    SymbolicExpression newSymbolicExpression;
+    newSymbolicExpression.type = combination;
+    newSymbolicExpression.first = "or";
+    newSymbolicExpression.numRest = 2;
+    newSymbolicExpression.rest = malloc(2 * sizeof(SymbolicExpression));
+    newSymbolicExpression.rest[0] = left;
+    newSymbolicExpression.rest[1] = right;
+    return newSymbolicExpression;
 }
 
-RT_Value BinaryXorOperation(RT_Value left, RT_Value right) {
-    bool lVal = consumeValueAsBoolean(left);
-    bool rVal = consumeValueAsBoolean(right);
-    return newRT_BooleanValue( lVal != rVal );
+SymbolicExpression BinaryXorOperation(SymbolicExpression left, SymbolicExpression right) {
+    SymbolicExpression newSymbolicExpression;
+    newSymbolicExpression.type = combination;
+    newSymbolicExpression.first = "xor";
+    newSymbolicExpression.numRest = 2;
+    newSymbolicExpression.rest = malloc(sizeof(SymbolicExpression) * 2);
+    newSymbolicExpression.rest[0] = left;
+    newSymbolicExpression.rest[1] = right;
+    return newSymbolicExpression;
 }
 
-RT_Value BinaryEqualsOperation(RT_Value left, RT_Value right) {
-    RT_Value res;
-    if (left.type.id == TID_boolean && right.type.id == TID_boolean) {
-        bool lVal = consumeValueAsBoolean(left);
-        bool rVal = consumeValueAsBoolean(right);
-        res = newRT_BooleanValue(lVal == rVal);
-    } else if (left.type.id == TID_integer && right.type.id == TID_integer) {
-        int lVal = consumeValueAsInteger(left);
-        int rVal = consumeValueAsInteger(right);
-        res = newRT_BooleanValue(lVal == rVal);
-    }
-    return res;
+SymbolicExpression BinaryEqualsOperation(SymbolicExpression left, SymbolicExpression right) {
+    SymbolicExpression newSymbolicExpression;
+    newSymbolicExpression.type = combination;
+    newSymbolicExpression.first = "=";
+    newSymbolicExpression.numRest = 2;
+    newSymbolicExpression.rest = malloc(sizeof(SymbolicExpression) * 2);
+    newSymbolicExpression.rest[0] = left;
+    newSymbolicExpression.rest[1] = right;
+    return newSymbolicExpression;
 }
 
-RT_Value BinaryDistinctOperation(RT_Value left, RT_Value right) {
-    return newRT_BooleanValue( !consumeValueAsBoolean(BinaryEqualsOperation(left, right)) );
+SymbolicExpression BinaryDistinctOperation(SymbolicExpression left, SymbolicExpression right) {
+    SymbolicExpression newSymbolicExpression;
+    newSymbolicExpression.type = combination;
+    newSymbolicExpression.first = "distinct";
+    newSymbolicExpression.numRest = 2;
+    newSymbolicExpression.rest = malloc(sizeof(SymbolicExpression) * 2);
+    newSymbolicExpression.rest[0] = left;
+    newSymbolicExpression.rest[1] = right;
+    return newSymbolicExpression;
 }
 
 RT_Value TernaryITEOperation(RT_Value first, RT_Value second, RT_Value third) {

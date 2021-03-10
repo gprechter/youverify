@@ -1,0 +1,5 @@
+x: BOOL
+y: BOOL
+x = false
+y = true
+x = y || x

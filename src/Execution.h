@@ -13,14 +13,15 @@
 #include "Analyze/SymbolTable.h"
 #include "Analyze/Function.h"
 #include "Memory.h"
+#include "DSEState/DSEState.h"
 
-RT_Value evalAtom(RT_AtomicExpression expression, RuntimeEnvironment *env);
+SymbolicExpression evalAtom(RT_AtomicExpression expression, DSEState state);
 
-RT_Value evalExpr(RT_Expression expr, RuntimeEnvironment *env);
+SymbolicExpression evalExpr(RT_Expression expr, DSEState state);
 
-PC executeAssignment(PC pc, RT_AssignmentInstruction instruction, RuntimeEnvironment *env);
+DSEState executeAssignment(PC pc, RT_AssignmentInstruction instruction, DSEState state);
 RT_Value executeFunction(FUNCTION function, RuntimeEnvironment *env);
-PC executeBranch(PC pc, RT_GotoInstruction instruction, RuntimeEnvironment *env);
+DSEState* executeBranch(PC pc, RT_GotoInstruction instruction, DSEState state);
 
 PC (*execute[2])(PC pc, RT_Instruction instruction, SYMBOL_TABLE *table);
 RT_Value (*apply[9])(RT_Value lhs, RT_Value rhs);

@@ -8,11 +8,15 @@
 RT_Value newRT_Value(VALUE value, SYMBOL_TABLE* symbolTable, NAME_SCOPE lexicalScope) {
     RT_Value RT_value;
     RT_value.type = value.type;
+    RT_value.isSymbol = value.isSymbol;
     switch(value.type.id) {
         case TID_integer:
             return newRT_IntegerValue(value.contents.INT);
-        case TID_boolean:
-            return newRT_BooleanValue(value.contents.BOOLEAN);
+        case TID_boolean: {
+            RT_value = newRT_BooleanValue(value.contents.BOOLEAN);
+            RT_value.isSymbol = value.isSymbol;
+            return RT_value;
+        }
         case TID_bitvector: {
             RT_value.content = malloc(rUB(RT_value.type.bits) / 8);
             *((unsigned long*)RT_value.content) = value.contents.BV;

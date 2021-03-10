@@ -9,41 +9,42 @@
 #include "LinkedList.h"
 #include "Analyze/Function.h"
 #include "Utilities.h"
+#include "DSEState/DSEState.h"
 #include <string.h>
 
-RT_Value evalAtom(RT_AtomicExpression expression, RuntimeEnvironment *env) {
+SymbolicExpression evalAtom(RT_AtomicExpression expression, DSEState state) {
     switch (expression.type) {
         case A_id: {
             NAME_SCOPE scope = expression.contents.variable.scope;
             int offset = rUB(expression.contents.variable.index) / 32;
-            void* ptr = getVarPointer(scope, offset, env);
-            return evaluateAsType(ptr, expression.contents.variable.type);
+            SymbolicExpression symbolicExpression;
+            symbolicExpression = state.variables[offset];
+            return symbolicExpression;
         }
         case A_val:
         default: {
-            RT_Value value;
-            value = expression.contents.value;
-            uint8_t * newContent = malloc(rUB(value.type.bits) / 8);
-            memcpy(newContent, value.content, rUB(value.type.bits) / 8);
-            value.content = newContent;
-            return value;
+            SymbolicExpression symbolicExpression;
+            symbolicExpression.type = atom;
+            symbolicExpression.first = *((bool*)expression.contents.value.content) ? "true" : "false";
+            return symbolicExpression;
         }
     }
 }
 
-RT_Value evalExpr(RT_Expression expression, RuntimeEnvironment *env) {
+SymbolicExpression evalExpr(RT_Expression expression, DSEState state) {
     switch (expression.type) {
         case E_atomic:
-            return evalAtom(expression.contents.atomicExpression, env);
+            return evalAtom(expression.contents.atomicExpression, state);
         case E_unary: {
-            RT_Value operand = evalAtom(expression.contents.unaryExpression.operand, env);
+            SymbolicExpression operand = evalAtom(expression.contents.unaryExpression.operand, state);
             return (expression.contents.unaryExpression.op)(operand);
         }
         case E_binary: {
-            RT_Value left = evalAtom(expression.contents.binaryExpression.lhs, env);
-            RT_Value right = evalAtom(expression.contents.binaryExpression.rhs, env);
+            SymbolicExpression left = evalAtom(expression.contents.binaryExpression.lhs, state);
+            SymbolicExpression right = evalAtom(expression.contents.binaryExpression.rhs, state);
             return (expression.contents.binaryExpression.op)(left, right);
         }
+        /*
         case E_call: {
             int i;
             FUNCTION function = env->functions[expression.contents.callExpression.index];
@@ -64,7 +65,7 @@ RT_Value evalExpr(RT_Expression expression, RuntimeEnvironment *env) {
 
             int numElems = expression.contents.newArrayExpression.numElems;
             uint8_t* ptr = allocate(numElems, env);
-            /*for (int i = 0; i < numElems; i++) {
+            for (int i = 0; i < numElems; i++) {
                 RT_Value value = evalAtom(expression.contents.newArrayExpression.elements[i], env);
                 switch (value.type.id) {
                     case TID_boolean: {
@@ -76,7 +77,7 @@ RT_Value evalExpr(RT_Expression expression, RuntimeEnvironment *env) {
                         break;
                     }
                 }
-            }*/
+            }
             return newRT_ArrayRefValue(ptr);
         }
         case E_arracc: {
@@ -118,9 +119,10 @@ RT_Value evalExpr(RT_Expression expression, RuntimeEnvironment *env) {
             RT_Value el = evalAtom(expression.contents.ternaryExpression.third, env);
             return (expression.contents.ternaryExpression.op)(pred, then, el);
         }
+        */
     }
 }
-
+/*
 RT_Value executeFunction(FUNCTION function, RuntimeEnvironment *env) {
     int pc = 0;
     while(pc < function.size) {
@@ -134,9 +136,14 @@ RT_Value executeFunction(FUNCTION function, RuntimeEnvironment *env) {
     }
     return newRT_EmptyValue(function.returnType);
 }
-
-PC executeAssignment(PC pc, RT_AssignmentInstruction instruction, RuntimeEnvironment *env) {
+*/
+DSEState executeAssignment(PC pc, RT_AssignmentInstruction instruction, DSEState state) {
     void * ptr;
+    DSEState nextState;
+    nextState.pc = state.pc + 1;
+    nextState.pathCondition = state.pathCondition;
+    nextState.variables = state.variables;
+    /*
     switch (instruction.type) {
         case AI_variable: {
             NAME_SCOPE scope = instruction.destination.variable.scope;
@@ -144,6 +151,7 @@ PC executeAssignment(PC pc, RT_AssignmentInstruction instruction, RuntimeEnviron
             ptr = getVarPointer(scope, offset, env);
             break;
         }
+
         case AI_array_elem: {
             void* arrPtr = getVarPointer(instruction.destination.arrayAccessExpression.arr.scope, rUB(instruction.destination.arrayAccessExpression.arr.index) / 32, env);
 
@@ -173,10 +181,12 @@ PC executeAssignment(PC pc, RT_AssignmentInstruction instruction, RuntimeEnviron
             ptr = *((uint8_t**) ptrRef);
             break;
         }
-    }
-    RT_Value rhs = evalExpr(instruction.expression, env);
-    assignVariable(ptr, rhs);
-    return pc + 1;
+
+    }*/
+    int offset = rUB(instruction.destination.variable.index) / 32;
+    SymbolicExpression rhs = evalExpr(instruction.expression, state);
+    nextState.variables[offset] = rhs;
+    return nextState;
 }
 
 void *getVarPointer(NAME_SCOPE scope, int n, RuntimeEnvironment *env) {
@@ -190,7 +200,7 @@ void *getVarPointer(NAME_SCOPE scope, int n, RuntimeEnvironment *env) {
 void assignVariable(void *ptr, RT_Value value) {
     int bytes = rUB(value.type.bits) / 8;
     memcpy(ptr, value.content, bytes);
-    free(value.content);
+    //free(value.content);
 }
 
 RT_Value evaluateAsType(void *ptr, TYPE type) {
@@ -201,13 +211,36 @@ RT_Value evaluateAsType(void *ptr, TYPE type) {
     return value;
 }
 
-PC executeBranch(PC pc, RT_GotoInstruction instruction, RuntimeEnvironment *env) {
-    RT_Value predValue = evalExpr(instruction.predicate, env);
-    bool pred = *((bool *)predValue.content);
-    free(predValue.content);
-    if (predValue.type.id == TID_boolean && pred) {
-        return instruction.pc_next;
-    } else {
-        return pc + 1;
-    }
+DSEState *executeBranch(PC pc, RT_GotoInstruction instruction, DSEState state) {
+    DSEState ifState;
+    DSEState elseState;
+    SymbolicExpression predicate = evalExpr(instruction.predicate, state);
+    SymbolicExpression ifSymbolicExpression;
+    SymbolicExpression elseSymbolicExpression;
+    ifSymbolicExpression.type = combination;
+    ifSymbolicExpression.first = "and";
+    ifSymbolicExpression.numRest = 2;
+    ifSymbolicExpression.rest = malloc(sizeof(SymbolicExpression) * 2);
+    ifSymbolicExpression.rest[0] = state.pathCondition;
+    ifSymbolicExpression.rest[1] = predicate;
+    ifState.pathCondition = ifSymbolicExpression;
+    ifState.variables = malloc(sizeof(SymbolicExpression) * 2);
+    memcpy(ifState.variables, state.variables, sizeof(SymbolicExpression) * 2);
+    SymbolicExpression notPC;
+    notPC.type = combination;
+    notPC.first = "not";
+    notPC.numRest = 1;
+    notPC.rest[0] = ifState.pathCondition;
+    elseSymbolicExpression.type = combination;
+    elseSymbolicExpression.first = "and";
+    elseSymbolicExpression.numRest = 2;
+    elseSymbolicExpression.rest = malloc(sizeof(SymbolicExpression) * 2);
+    elseSymbolicExpression.rest[0] = state.pathCondition;
+    elseSymbolicExpression.rest[1] = notPC;
+    elseState.pathCondition = elseSymbolicExpression;
+    elseState.variables = state.variables;
+    DSEState *states = malloc(sizeof(DSEState) * 2);
+    states[0] = ifState;
+    states[1] = elseState;
+    return states;
 }
