@@ -24,7 +24,7 @@ typedef enum _UnaryOperatorType {
 
     U_OP_FPABS, U_OP_FPNEG, U_OP_FPISNORMAL, U_OP_FPISSUBNORMAL, U_OP_FPISZERO, U_OP_FPISINFINITE, U_OP_FPISNAN, U_OP_FPISNEGATIVE, U_OP_FPISPOSITIVE, U_OP_TOFP
 } UnaryOperatorType;
-UnaryOperation UnaryOperators[21];
+extern UnaryOperation UnaryOperators[21];
 
 typedef enum _BinaryOperatorType {
     B_OP_AND, B_OP_OR, B_OP_IMPLIES, B_OP_XOR, B_OP_DISTINCT, B_OP_EQUALS,
@@ -37,7 +37,7 @@ typedef enum _BinaryOperatorType {
 
     B_OP_FPSQRT, B_OP_FPREM, B_OP_FPRound, B_OP_FPMIN, B_OP_FPMAX, B_OP_FPLEQ, B_OP_FPLT, B_OP_FPGEQ, B_OP_FPGT, B_OP_FPEQ, B_OP_TOFP
 } BinaryOperatorType;
-BinaryOperation BinaryOperators[44];
+extern BinaryOperation BinaryOperators[44];
 
 typedef enum _TernaryOperatorType {
     T_ITE,
@@ -46,7 +46,7 @@ typedef enum _TernaryOperatorType {
     T_FPADD, T_FPSUB, T_FPMUL, T_FPDIV
 
 } TernaryOperatorType;
-TernaryOperation TernaryOperators[6];
+extern TernaryOperation TernaryOperators[6];
 
 void initializeOperators();
 

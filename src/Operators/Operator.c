@@ -10,6 +10,9 @@
 #include "RealsIntsOperators.h"
 #include "FloatingPointOperators.h"
 
+UnaryOperation UnaryOperators[21];
+BinaryOperation BinaryOperators[44];
+TernaryOperation TernaryOperators[6];
 
 void initializeOperators() {
     UnaryOperators[U_OP_NOT] = UnaryNotOperation;
