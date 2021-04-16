@@ -1,21 +1,6 @@
 %{
-    #include <stdio.h>
-    #include <stdlib.h>
-    #include <stdbool.h>
-    #include <string.h>
     #include "parse.h"
-    #include "Queue.h"
-    #include "LinkedList.h"
-    #include "DoubleLink.h"
-    #include "AST/Identifier.h"
-    #include "AST/Expression.h"
-    #include "AST/Instruction.h"
-    #include "AST/Expressions/AtomicExpression.h"
-    #include "Analyze/HashMap.h"
-    #include "Analyze/SymbolTable.h"
-    #include "Analyze/Program.h"
-    #include "Execution.h"
-    #include "Analyze/Function.h"
+
 
     int yylex();
     int yyerror();
