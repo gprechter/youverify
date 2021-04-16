@@ -11,6 +11,11 @@ ADD_FLEX_BISON_DEPENDENCY(MyLexer MyParser)
 include_directories(src)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
+# TODO: make debug build with address sanitizer an option instead of the default!
+set(CMAKE_BUILD_TYPE "Debug")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address")
 
 
 add_executable(youverify
