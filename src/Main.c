@@ -14,7 +14,6 @@
 #include "Execution.h"
 #include "inttypes.h"
 #include "Analyze/HashMap.h"
-#include "json-c/json.h"
 
 int main(int argc, char **argv) {
     PROGRAM *prgm;

@@ -5,7 +5,7 @@
 		<Option title="youverify"/>
 		<Option makefile_is_custom="1"/>
 		<Option compiler="gcc"/>
-		<Option virtualFolders="CMake Files\;CMake Files\src\;CMake Files\src\json-c\;CMake Files\src\json-c\cmake\;CMake Files\src\json-c\apps\;CMake Files\src\json-c\apps\cmake\;CMake Files\src\json-c\doc\;"/>
+		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
 				<Option working_dir="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug"/>
@@ -17,51 +17,11 @@
 					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="install/local">
-				<Option working_dir="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug"/>
-				<Option type="4"/>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/Makefile&quot;  VERBOSE=1 install/local"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="install/strip">
-				<Option working_dir="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug"/>
-				<Option type="4"/>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/Makefile&quot;  VERBOSE=1 install/strip"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="install">
-				<Option working_dir="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug"/>
-				<Option type="4"/>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/Makefile&quot;  VERBOSE=1 install"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
 			<Target title="package">
 				<Option working_dir="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
 					<Build command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/Makefile&quot;  VERBOSE=1 package"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="package_source">
-				<Option working_dir="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug"/>
-				<Option type="4"/>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/Makefile&quot;  VERBOSE=1 package_source"/>
 					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
@@ -87,11 +47,11 @@
 					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="list_install_components">
+			<Target title="package_source">
 				<Option working_dir="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/Makefile&quot;  VERBOSE=1 list_install_components"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/Makefile&quot;  VERBOSE=1 package_source"/>
 					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
@@ -141,216 +101,12 @@
 					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="json-c-static">
-				<Option output="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug/src/json-c-build/libjson-c.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug/src/json-c-build"/>
-				<Option object_output="./"/>
-				<Option type="2"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add option="-D_GNU_SOURCE"/>
-					<Add directory="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c"/>
-					<Add directory="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug/src/json-c-build"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/12.0.0/include"/>
-					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
-					<Add directory="/System/Library/Frameworks"/>
-					<Add directory="/Library/Frameworks"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 json-c-static"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="json-c-static/fast">
-				<Option output="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug/src/json-c-build/libjson-c.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug/src/json-c-build"/>
-				<Option object_output="./"/>
-				<Option type="2"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add option="-D_GNU_SOURCE"/>
-					<Add directory="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c"/>
-					<Add directory="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug/src/json-c-build"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/12.0.0/include"/>
-					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
-					<Add directory="/System/Library/Frameworks"/>
-					<Add directory="/Library/Frameworks"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 json-c-static/fast"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="distcheck">
-				<Option working_dir="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug/src/json-c-build"/>
-				<Option type="4"/>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 distcheck"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="json-c">
-				<Option output="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug/src/json-c-build/libjson-c.dylib" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug/src/json-c-build"/>
-				<Option object_output="./"/>
-				<Option type="3"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add option="-D_GNU_SOURCE"/>
-					<Add directory="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c"/>
-					<Add directory="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug/src/json-c-build"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/12.0.0/include"/>
-					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
-					<Add directory="/System/Library/Frameworks"/>
-					<Add directory="/Library/Frameworks"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 json-c"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="json-c/fast">
-				<Option output="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug/src/json-c-build/libjson-c.dylib" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug/src/json-c-build"/>
-				<Option object_output="./"/>
-				<Option type="3"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add option="-D_GNU_SOURCE"/>
-					<Add directory="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c"/>
-					<Add directory="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug/src/json-c-build"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/12.0.0/include"/>
-					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
-					<Add directory="/System/Library/Frameworks"/>
-					<Add directory="/Library/Frameworks"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 json-c/fast"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="uninstall">
-				<Option working_dir="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug/src/json-c-build"/>
-				<Option type="4"/>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 uninstall"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="Nightly">
-				<Option working_dir="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug/src/json-c-build"/>
-				<Option type="4"/>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 Nightly"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="Continuous">
-				<Option working_dir="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug/src/json-c-build"/>
-				<Option type="4"/>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 Continuous"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="Experimental">
-				<Option working_dir="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug/src/json-c-build"/>
-				<Option type="4"/>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 Experimental"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="json_parse">
-				<Option output="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug/src/json-c-build/apps/json_parse" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug/src/json-c-build/apps"/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/apps/PUBLIC"/>
-					<Add directory="/Users/griffinprechter/Documents/School/Research/SE Research/youverify"/>
-					<Add directory="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c"/>
-					<Add directory="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug/src/json-c-build"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/12.0.0/include"/>
-					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
-					<Add directory="/System/Library/Frameworks"/>
-					<Add directory="/Library/Frameworks"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/apps/Makefile&quot;  VERBOSE=1 json_parse"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/apps/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/apps/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/apps/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="json_parse/fast">
-				<Option output="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug/src/json-c-build/apps/json_parse" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug/src/json-c-build/apps"/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/apps/PUBLIC"/>
-					<Add directory="/Users/griffinprechter/Documents/School/Research/SE Research/youverify"/>
-					<Add directory="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c"/>
-					<Add directory="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug/src/json-c-build"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/12.0.0/include"/>
-					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
-					<Add directory="/System/Library/Frameworks"/>
-					<Add directory="/Library/Frameworks"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/apps/Makefile&quot;  VERBOSE=1 json_parse/fast"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/apps/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/apps/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/apps/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="doc">
-				<Option working_dir="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug/src/json-c-build/doc"/>
-				<Option type="4"/>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/doc/Makefile&quot;  VERBOSE=1 doc"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/doc/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/doc/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/griffinprechter/Documents/School/Research/SE\ Research/youverify/cmake-build-debug/src/json-c-build/doc/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
 		</Build>
 		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug/lex.yy.c">
 			<Option target="youverify"/>
 		</Unit>
 		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug/lex.yy.c.rule">
 			<Option target="youverify"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug/src/json-c-build/json_config.h">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
 		</Unit>
 		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/cmake-build-debug/y.tab.c">
 			<Option target="youverify"/>
@@ -613,181 +369,11 @@
 		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/Utilities.h">
 			<Option target="youverify"/>
 		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/apps/json_parse.c">
-			<Option target="json_parse"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/arraylist.c">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/arraylist.h">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/debug.c">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/debug.h">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/json.h">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/json_c_version.c">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/json_c_version.h">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/json_inttypes.h">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/json_object.c">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/json_object.h">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/json_object_iterator.c">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/json_object_iterator.h">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/json_object_private.h">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/json_pointer.c">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/json_pointer.h">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/json_tokener.c">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/json_tokener.h">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/json_types.h">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/json_util.c">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/json_util.h">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/json_visit.c">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/json_visit.h">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/linkhash.c">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/linkhash.h">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/math_compat.h">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/printbuf.c">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/printbuf.h">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/random_seed.c">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/random_seed.h">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/snprintf_compat.h">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/strdup_compat.h">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/strerror_override.c">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/strerror_override.h">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/strerror_override_private.h">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/vasprintf_compat.h">
-			<Option target="json-c-static"/>
-			<Option target="json-c"/>
-		</Unit>
 		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/parse.h">
 			<Option target="youverify"/>
 		</Unit>
 		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/CMakeLists.txt">
-			<Option virtualFolder="CMake Files\src\json-c\"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/json-c.pc.in">
-			<Option virtualFolder="CMake Files\src\json-c\"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/cmake/Config.cmake.in">
-			<Option virtualFolder="CMake Files\src\json-c\cmake\"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/cmake/config.h.in">
-			<Option virtualFolder="CMake Files\src\json-c\cmake\"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/cmake/json_config.h.in">
-			<Option virtualFolder="CMake Files\src\json-c\cmake\"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/apps/CMakeLists.txt">
-			<Option virtualFolder="CMake Files\src\json-c\apps\"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/apps/cmake/apps_config.h.in">
-			<Option virtualFolder="CMake Files\src\json-c\apps\cmake\"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/doc/CMakeLists.txt">
-			<Option virtualFolder="CMake Files\src\json-c\doc\"/>
-		</Unit>
-		<Unit filename="/Users/griffinprechter/Documents/School/Research/SE Research/youverify/src/json-c/doc/Doxyfile.in">
-			<Option virtualFolder="CMake Files\src\json-c\doc\"/>
 		</Unit>
 	</Project>
 </CodeBlocks_project_file>
