@@ -65,3 +65,15 @@ void freeHashMap(HashMap *map) {
     }
     free(map);
 }
+
+QueuePtr HM_getKeys(HashMap *map) {
+    QueuePtr queue = newQueue();
+    for (int i = 0; i < map->numBuckets; i++) {
+        ELEM *bucket = map->buckets[i];
+        while(bucket != NULL) {
+            push(queue, bucket->id);
+            bucket = bucket->next;
+        }
+    }
+    return queue;
+}

@@ -8,12 +8,13 @@
 #include "RT_Value.h"
 
 typedef struct _RT_Environment {
+    NAME_SCOPE frameType;
     struct _RT_environment* parent;
     RT_Value* variables;
     FUNCTION* functions;
 }RT_Environment;
 
-RT_Environment createRT_Environment(RT_Environment* parent, int numVariables, FUNCTION* functions);
+RT_Environment createRT_Environment(RT_Environment* parent, int numVariables, FUNCTION* functions, NAME_SCOPE type);
 
 RT_Environment createChildEnvironment(RT_Environment* parent, int numVariables);
 

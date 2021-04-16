@@ -25,5 +25,6 @@ typedef struct hashmap {
 HashMap *newHashMap();
 void HM_put(HashMap *map, char *str, void* data);
 bool HM_get(HashMap *map, char *str, void** data);
+QueuePtr HM_getKeys(HashMap *map);
 void freeHashMap(HashMap *map);
 #endif //YOUVERIFY_HASHMAP_H

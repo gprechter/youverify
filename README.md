@@ -1,4 +1,4 @@
-# YouVerify
+# YouVerify Language Overview
 
 YouVerify is a simple imperative programming language based on the SMT-LIB set of theories and operators as a foundation.
 
@@ -123,8 +123,264 @@ YouVerify has arrays that can reference a specified amount of memory on the heap
 
 ```
 arr, result: [INT]
-arr = $mem(10) // 10 WORDS of memory allocated on the heap
+arr = $mem(10) // 10 elements of memory allocated
 arr[4] = 100
 result = arr[4] // result will equal 100
+```
+
+This reflects the two possible operations available in the SMT-LIB arrays with extensionality. An array can be selected from, retrieving a single element. It can also be stored to creating a new array, inserting an eleemnt at a given index.
+
+### Core ([SMT-LIB "Core"](http://smtlib.cs.uiowa.edu/theories-Core.shtml))
+
+The Core theory defines the sort of boolean values and operators.
+
+There are two boolean values:
+
+```
+t: BOOL
+f: BOOL
+t = true // the true value
+f = false // the false value
+```
+
+Here are the operators available:
+
+#### Unary Operators
+
+##### `!` : not
+
+```
+t: BOOL
+f: BOOL
+t = true
+f = !t // f will equal false
+```
+
+#### Binary Operators
+
+##### `=>` : implies
+
+```
+t: BOOL
+f: BOOL
+r1, r2, r3, r4: BOOL
+t = true
+f = false
+r1 = t => t // true
+r2 = t => f // false
+r3 = f => t // true
+r4 = f => f // true
+```
+
+##### `&&` : and
+
+```
+t: BOOL
+f: BOOL
+r1, r2, r3, r4: BOOL
+t = true
+f = false
+r1 = t && t // true
+r2 = t && f // false
+r3 = f && t // false
+r4 = f && f // false
+```
+
+##### `||` : or
+
+```
+t: BOOL
+f: BOOL
+r1, r2, r3, r4: BOOL
+t = true
+f = false
+r1 = t || t // true
+r2 = t || f // true
+r3 = f || t // true
+r4 = f || f // false
+```
+
+##### `^` : xor
+
+```
+t: BOOL
+f: BOOL
+r1, r2, r3, r4: BOOL
+t = true
+f = false
+r1 = t ^ t // false
+r2 = t ^ f // true
+r3 = f ^ t // true
+r4 = f ^ f // false
+```
+
+##### `==` : equivalence
+
+```
+t: BOOL
+f: BOOL
+r1, r2, r3, r4: BOOL
+t = true
+f = false
+r1 = t == t // true
+r2 = t == f // false
+r3 = f == t // false
+r4 = f == f // true
+```
+
+##### `!=` : distinct
+
+```
+t: BOOL
+f: BOOL
+r1, r2, r3, r4: BOOL
+t = true
+f = false
+r1 = t != t // false
+r2 = t != f // true
+r3 = f != t // true
+r4 = f != f // false
+```
+
+#### Ternary Operators
+
+##### `... ? ... : ...` : ite
+
+```
+i1, i2: BOOL
+t, e, r: INT
+i1 = true
+i2 = false
+t = 1
+e = 2
+
+r = i1 ? t : e // r will equal 1
+r = i2 ? t : e // r will equal 2
+```
+
+### Integers ([SMT-LIB "Integers"](http://smtlib.cs.uiowa.edu/theories-Ints.shtml))
+
+The theory of integers provides the integer sort, and the following operators:
+
+#### Unary Operators
+
+##### `-` : Unary Minus
+
+```
+i, r: INT
+i = 10
+r = -i // r will equal negative 10
+i = -20 // i will equal negative 20
+r = -i // r will equal 20
+```
+
+##### `abs`: Absolute Value
+
+```
+i, r: INT
+i = -10
+r = abs i // r will equal 10
+r = abs 10 // will equal 10
+```
+
+#### Binary Operators
+
+##### `-` : Subtract
+
+```
+x, y: INT
+r: INT
+x = 10
+y = 5
+r = x - y // r will equal 5
+r = y - x // r will equal -5
+```
+
+##### `+` : Add
+
+```
+x, y: INT
+r: INT
+x = 10
+y = 5
+r = x + y // r will equal 15
+r = 100 + 10 // r will equal 110
+```
+
+##### `*` : Multiply
+
+```
+x, y: INT
+r: INT
+x = 10
+y = 5
+r = x * y // r will equal 50
+r = 100 * 10 // r will equal 1000
+```
+
+##### `//` : Divide
+
+```
+x, y: INT
+r: INT
+x = 10
+y = 5
+r = x // y // r will equal 2
+r = 100 // 10 // r will equal 10
+```
+
+##### `%` : Modulo (Remainder)
+
+```
+x, y: INT
+r: INT
+x = 10
+y = 6
+r = x % y // r will equal 4
+r = 100 % 10 // r will equal 0
+```
+
+##### `<=` : Less than or equal
+
+```
+x, y: INT
+r: BOOL
+x = 10
+y = 5
+r = x <= y // r will equal false
+r = y <= x // r will equal true
+```
+
+##### `<` : Less than
+
+```
+x, y: INT
+r: BOOL
+x = 10
+y = 5
+r = x < y // r will equal false
+r = y < x // r will equal true
+```
+
+##### `>=` : Greater than or equal
+
+```
+x, y: INT
+r: BOOL
+x = 10
+y = 5
+r = x >= y // r will equal true
+r = y >= x // r will equal false
+```
+
+##### `<` : Less than
+
+```
+x, y: INT
+r: BOOL
+x = 10
+y = 5
+r = x > y // r will equal true
+r = y > x // r will equal false
 ```
 

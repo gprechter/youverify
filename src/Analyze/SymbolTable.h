@@ -36,8 +36,7 @@ struct LocalArrayBindingInfo {
 
 typedef struct symbolTable {
     HashMap* identifiers;
-    LinkedListPtr LocalArrayBindings;
-    int totalRequiredBits;
+    int totalVariables;
     HashMap* functions;
     HashMap* labels;
     struct symbolTable *parent;

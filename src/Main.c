@@ -13,6 +13,8 @@
 #include "Memory.h"
 #include "Execution.h"
 #include "inttypes.h"
+#include "Analyze/HashMap.h"
+#include "json-c/json.h"
 
 int main(int argc, char **argv) {
     PROGRAM *prgm;
@@ -32,9 +34,8 @@ int main(int argc, char **argv) {
     }
 
     int pc = 0;
-
-    RuntimeEnvironment *environment = newRuntimeEnvironment(32, globalTable);
-    environment->functions = functions;
+    RT_Environment environment = createRT_Environment(NULL, globalTable->totalVariables, functions, global);
+    environment.frameType = global;
     int i;
     while(pc < programSize) {
         if (program[pc].type == RT_assignment) {
@@ -43,19 +44,28 @@ int main(int argc, char **argv) {
             pc = executeBranch(pc, program[pc].contents.gotoInstruction, environment);
         }
     }
-    if (argc <= 2) {
-        for (i = (32 - 1); i >= 0; i--) {
-            printf("0x%016" PRIx64 " || %08x", ((char *) environment->memory + i * 4),
-                   *(((int *) environment->memory) + i));
-            printf(((char *) environment->memory + i * 4) == environment->sp ? "<- sp\n" : "\n");
+    RT_Value *global_variables = environment.variables;
+    int num_variables = globalTable->totalVariables;
+    QueuePtr keys = HM_getKeys(globalTable->identifiers);
+    printf("{\n");
+    while (!isEmpty(keys)) {
+        char *name = (char *) pop(keys);
+        IdentifierData *identifierData;
+        bool exists = HM_get(globalTable->identifiers, name, &identifierData);
+        if (exists) {
+            switch (identifierData->type.id) {
+                case TID_integer: {
+                    printf("\"%s\": %d", name, *((int *)global_variables[identifierData->index].content));
+                    break;
+                }
+                case TID_boolean: {
+                    printf("\"%s\": %s", name, *((bool *)global_variables[identifierData->index].content) ? "true" : "false");
+                }
+            }
+            printf("%s\n", !isEmpty(keys) ? "," : "");
         }
-
     }
-    IdentifierData* resultData;
-
-    if (argc > 2 && getIdentifierData(globalTable, argv[2], &resultData)) {
-        printf("%s: 0x%016" PRIx64, argv[2], *((long *) getGlobalVar(resultData->index / 32, environment)));
-    }
+    printf("}");
     return 0;
     //freeSymbolTable(table);
 }

@@ -9,29 +9,29 @@
 #include "LinkedList.h"
 #include "Analyze/Function.h"
 #include "Utilities.h"
+#include "Runtime/RT_Environment.h"
 #include <string.h>
 
-RT_Value evalAtom(RT_AtomicExpression expression, RuntimeEnvironment *env) {
+RT_Value evalAtom(RT_AtomicExpression expression, RT_Environment env) {
     switch (expression.type) {
         case A_id: {
             NAME_SCOPE scope = expression.contents.variable.scope;
-            int offset = rUB(expression.contents.variable.index) / 32;
-            void* ptr = getVarPointer(scope, offset, env);
-            return evaluateAsType(ptr, expression.contents.variable.type);
+            int offset = expression.contents.variable.index;
+            if (scope == global && env.frameType == local) {
+                env = *((RT_Environment *)env.parent);
+            }
+            return retrieveVariable(env, offset);
         }
         case A_val:
         default: {
             RT_Value value;
             value = expression.contents.value;
-            uint8_t * newContent = malloc(rUB(value.type.bits) / 8);
-            memcpy(newContent, value.content, rUB(value.type.bits) / 8);
-            value.content = newContent;
             return value;
         }
     }
 }
 
-RT_Value evalExpr(RT_Expression expression, RuntimeEnvironment *env) {
+RT_Value evalExpr(RT_Expression expression, RT_Environment env) {
     switch (expression.type) {
         case E_atomic:
             return evalAtom(expression.contents.atomicExpression, env);
@@ -44,6 +44,7 @@ RT_Value evalExpr(RT_Expression expression, RuntimeEnvironment *env) {
             RT_Value right = evalAtom(expression.contents.binaryExpression.rhs, env);
             return (expression.contents.binaryExpression.op)(left, right);
         }
+        /*
         case E_call: {
             int i;
             FUNCTION function = env->functions[expression.contents.callExpression.index];
@@ -64,7 +65,7 @@ RT_Value evalExpr(RT_Expression expression, RuntimeEnvironment *env) {
 
             int numElems = expression.contents.newArrayExpression.numElems;
             uint8_t* ptr = allocate(numElems, env);
-            /*for (int i = 0; i < numElems; i++) {
+            for (int i = 0; i < numElems; i++) {
                 RT_Value value = evalAtom(expression.contents.newArrayExpression.elements[i], env);
                 switch (value.type.id) {
                     case TID_boolean: {
@@ -76,9 +77,11 @@ RT_Value evalExpr(RT_Expression expression, RuntimeEnvironment *env) {
                         break;
                     }
                 }
-            }*/
+            }
             return newRT_ArrayRefValue(ptr);
         }
+        */
+        /*
         case E_arracc: {
             void* ptr = getVarPointer(expression.contents.arrayAccessExpression.arr.scope, rUB(expression.contents.arrayAccessExpression.arr.index) / 32, env);
 
@@ -111,7 +114,7 @@ RT_Value evalExpr(RT_Expression expression, RuntimeEnvironment *env) {
         case E_malloc: {
             uint8_t* ptr = allocate(expression.contents.memoryAllocateExpression.words, env);
             return newRT_ArrayRefValue(ptr);
-        }
+        }*/
         case E_ternary: {
             RT_Value pred = evalAtom(expression.contents.ternaryExpression.first, env);
             RT_Value then = evalAtom(expression.contents.ternaryExpression.second, env);
@@ -121,7 +124,7 @@ RT_Value evalExpr(RT_Expression expression, RuntimeEnvironment *env) {
     }
 }
 
-RT_Value executeFunction(FUNCTION function, RuntimeEnvironment *env) {
+RT_Value executeFunction(FUNCTION function, RT_Environment env) {
     int pc = 0;
     while(pc < function.size) {
         if (function.body[pc].type == RT_assignment) {
@@ -135,15 +138,19 @@ RT_Value executeFunction(FUNCTION function, RuntimeEnvironment *env) {
     return newRT_EmptyValue(function.returnType);
 }
 
-PC executeAssignment(PC pc, RT_AssignmentInstruction instruction, RuntimeEnvironment *env) {
-    void * ptr;
+PC executeAssignment(PC pc, RT_AssignmentInstruction instruction, RT_Environment env) {
+    RT_Environment containingEnvironment;
+    int index;
     switch (instruction.type) {
         case AI_variable: {
             NAME_SCOPE scope = instruction.destination.variable.scope;
-            int offset = rUB(instruction.destination.variable.index) / 32;
-            ptr = getVarPointer(scope, offset, env);
+            containingEnvironment = env;
+            if (scope == global && env.frameType == local) {
+                containingEnvironment = *((RT_Environment *) env.parent);
+            }
+            index = instruction.destination.variable.index;
             break;
-        }
+        }/*
         case AI_array_elem: {
             void* arrPtr = getVarPointer(instruction.destination.arrayAccessExpression.arr.scope, rUB(instruction.destination.arrayAccessExpression.arr.index) / 32, env);
 
@@ -172,36 +179,22 @@ PC executeAssignment(PC pc, RT_AssignmentInstruction instruction, RuntimeEnviron
             void* ptrRef = getVarPointer(scope, n, env);
             ptr = *((uint8_t**) ptrRef);
             break;
-        }
+        }*/
     }
     RT_Value rhs = evalExpr(instruction.expression, env);
-    assignVariable(ptr, rhs);
+    assignVariable(containingEnvironment, index, rhs);
     return pc + 1;
 }
 
-void *getVarPointer(NAME_SCOPE scope, int n, RuntimeEnvironment *env) {
-    if (scope == global) {
-        return getGlobalVar(n, env);
-    } else {
-        return getLocalVar(n, env);
-    }
+void assignVariable(RT_Environment env, int index, RT_Value value) {
+    env.variables[index] = value;
 }
 
-void assignVariable(void *ptr, RT_Value value) {
-    int bytes = rUB(value.type.bits) / 8;
-    memcpy(ptr, value.content, bytes);
-    free(value.content);
+RT_Value retrieveVariable(RT_Environment env, int index) {
+    return env.variables[index];
 }
 
-RT_Value evaluateAsType(void *ptr, TYPE type) {
-    RT_Value value;
-    value.type = type;
-    value.content = malloc(rUB(value.type.bits) / 8);
-    memcpy(value.content, ptr, rUB(value.type.bits) / 8);
-    return value;
-}
-
-PC executeBranch(PC pc, RT_GotoInstruction instruction, RuntimeEnvironment *env) {
+PC executeBranch(PC pc, RT_GotoInstruction instruction, RT_Environment env) {
     RT_Value predValue = evalExpr(instruction.predicate, env);
     bool pred = *((bool *)predValue.content);
     free(predValue.content);

@@ -1,0 +1,8 @@
+x: INT
+y: INT
+result: INT
+done: BOOL
+x = 10
+y = 4
+result = x - y
+done = true

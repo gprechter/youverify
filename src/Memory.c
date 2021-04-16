@@ -33,25 +33,6 @@ void *getLocalVar(int n, RuntimeEnvironment *environment) {
     return (cntrlLink - (n) * WORD_SIZE);
 }
 
-RuntimeEnvironment *newRuntimeEnvironment(int size, SYMBOL_TABLE* symbolTable) {
-    RuntimeEnvironment *newEnvironment = (RuntimeEnvironment *) malloc(sizeof(RuntimeEnvironment));
-    newEnvironment->memory = malloc(size * WORD_SIZE);
-    newEnvironment->sp = newEnvironment->memory + size * WORD_SIZE;
-    newEnvironment->heap_base = newEnvironment->memory;
-    newEnvironment->top = newEnvironment->sp;
-
-    newEnvironment->sp = newEnvironment->sp - (symbolTable->totalRequiredBits / 32) * WORD_SIZE;
-
-    DoubleLinkPtr curr = symbolTable->LocalArrayBindings->head;
-    while (curr != NULL) {
-        struct LocalArrayBindingInfo info = *( (struct LocalArrayBindingInfo *) curr->elem);
-        newEnvironment->sp = newEnvironment->sp - (info.arrayMeta.elementType->bits / 8) * info.arrayMeta.elements;
-        *((uint8_t **)getGlobalVar((info.variableIndex / 32 + 2), newEnvironment)) = newEnvironment->sp;
-        curr = curr->next;
-    }
-    return newEnvironment;
-}
-
 void *getGlobalVar(int wordOffset, RuntimeEnvironment *environment) {
     return environment->top - (wordOffset) * WORD_SIZE;
 }

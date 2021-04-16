@@ -10,9 +10,9 @@
 SYMBOL_TABLE *newSymbolTable() {
     SYMBOL_TABLE *symbolTable = malloc(sizeof(SYMBOL_TABLE));
     symbolTable->functions = newHashMap();
+    symbolTable->totalVariables = 0;
     symbolTable->identifiers = newHashMap();
     symbolTable->labels = newHashMap();
-    symbolTable->LocalArrayBindings = newLinkedList();
     symbolTable->parent = NULL;
     return symbolTable;
 }
@@ -54,8 +54,8 @@ void fillIdentifiers(SYMBOL_TABLE* symbolTable, QueuePtr declarations, QueuePtr 
             instruction = ((INSTRUCTION *) pop(parameters));
             DECLARATION_INSTRUCTION inst = instruction->contents.declarationInstruction;
             identifierData = malloc(sizeof(IdentifierData));
-            d_i = d_i + rUB(inst.type.bits);
             identifierData->index = d_i;
+            d_i = d_i + 1;
             identifierData->type = inst.type;
             HM_put(symbolTable->identifiers, inst.identifier.id, (void *) identifierData);
             parameterTypeArray[t_i] = inst.type;
@@ -68,21 +68,15 @@ void fillIdentifiers(SYMBOL_TABLE* symbolTable, QueuePtr declarations, QueuePtr 
         if (instruction->type == I_declaration) {
             DECLARATION_INSTRUCTION inst = instruction->contents.declarationInstruction;
             identifierData = malloc(sizeof(IdentifierData));
-            d_i = d_i + rUB(inst.type.bits);
             identifierData->index = d_i;
+            d_i = d_i + 1;
             identifierData->type = inst.type;
-            if (identifierData->type.id == TID_array) {
-                struct LocalArrayBindingInfo* info = malloc(sizeof(struct LocalArrayBindingInfo));
-                info->arrayMeta = identifierData->type.metadata.array_info;
-                info->variableIndex = identifierData->index;
-                addFirst(symbolTable->LocalArrayBindings, info);
-            }
             HM_put(symbolTable->identifiers, inst.identifier.id, (void *) identifierData);
         } else {
             push(functions, (void *) instruction);
         }
     }
-    symbolTable->totalRequiredBits = d_i;
+    symbolTable->totalVariables = d_i;
 }
 
 FUNCTION fillFunction(SYMBOL_TABLE* globalTable, int index, FUNCTION_DEFINE_INSTRUCTION instruction) {

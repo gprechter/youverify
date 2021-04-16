@@ -1,0 +1,13 @@
+x,y: BOOL
+r1: BOOL
+r2: BOOL
+r3: BOOL
+r4: BOOL
+r5: BOOL
+
+x = true
+y = false
+r1 = !x
+r2 = !y
+
+

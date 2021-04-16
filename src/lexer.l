@@ -74,32 +74,7 @@
 <LINE>"endef" {return END_FUNC;}
 <LINE>"struct" {return STRUCT;}
 <LINE>"endstruct" {return ENDSTRUCT;}
-<LINE>"bv2nat" {return BV2NAT;}
-<LINE>"nat2bv" {return NAT2BV;}
-<LINE>"bv_concat" {return BVCONCAT;}
-<LINE>"bv_extract" {return BVEXTRACT;}
-<LINE>"bv_not" {return BVNOT;}
-<LINE>"bv_and" {return BVAND;}
-<LINE>"bv_or" {return BVOR;}
-<LINE>"bv_neg" {return BVNEG;}
-<LINE>"bv_add" {return BVADD;}
-<LINE>"bv_mul" {return BVMUL;}
-<LINE>"bv_udiv" {return BVUDIV;}
-<LINE>"bv_urem" {return BVUREM;}
-<LINE>"bv_shl" {return BVSHL;}
-<LINE>"bv_lshr" {return BVLSHR;}
-<LINE>"bv_ult" {return BVULT;}
-<LINE>"r_+" {return RADD;}
-<LINE>"r_-" {return RMINUS;}
-<LINE>"r_*" {return RMUL;}
-<LINE>"r_/" {return RDIV;}
-<LINE>"r_<=" {return RLEQ;}
-<LINE>"r_<" {return RLE;}
-<LINE>"r_>=" {return RGEQ;}
-<LINE>"r_>" {return RGE;}
-<LINE>"toreal" {return RITOREAL;}
-<LINE>"toint" {return RITOINT;}
-<LINE>"isint" {return RIISINT;}
+
 <LINE>[a-zA-Z][a-zA-Z0-9]* {
     char *id = (char *) malloc(yyleng + 1);
     strcpy (id, yytext);

@@ -12,33 +12,20 @@
 
 #include "Analyze/SymbolTable.h"
 #include "Analyze/Function.h"
+#include "Runtime/RT_Environment.h"
 #include "Memory.h"
 
-RT_Value evalAtom(RT_AtomicExpression expression, RuntimeEnvironment *env);
+RT_Value evalAtom(RT_AtomicExpression expression, RT_Environment env);
 
-RT_Value evalExpr(RT_Expression expr, RuntimeEnvironment *env);
+RT_Value evalExpr(RT_Expression expr, RT_Environment env);
 
-PC executeAssignment(PC pc, RT_AssignmentInstruction instruction, RuntimeEnvironment *env);
-RT_Value executeFunction(FUNCTION function, RuntimeEnvironment *env);
-PC executeBranch(PC pc, RT_GotoInstruction instruction, RuntimeEnvironment *env);
+PC executeAssignment(PC pc, RT_AssignmentInstruction instruction, RT_Environment env);
+RT_Value executeFunction(FUNCTION function, RT_Environment);
+PC executeBranch(PC pc, RT_GotoInstruction instruction, RT_Environment env);
 
-PC (*execute[2])(PC pc, RT_Instruction instruction, SYMBOL_TABLE *table);
-RT_Value (*apply[9])(RT_Value lhs, RT_Value rhs);
+void assignVariable(RT_Environment env, int index, RT_Value value);
 
-RT_Value applyAND(RT_Value lhs, RT_Value rhs);
-RT_Value applyOR(RT_Value lhs, RT_Value rhs);
-RT_Value applyNOT(RT_Value lhs, RT_Value rhs);
-RT_Value applyIMPLIES(RT_Value lhs, RT_Value rhs);
-RT_Value applyXOR(RT_Value lhs, RT_Value rhs);
-RT_Value applyEQUALS(RT_Value lhs, RT_Value rhs);
-RT_Value applyDISTINCT(RT_Value lhs, RT_Value rhs);
-RT_Value applyADD(RT_Value lhs, RT_Value rhs);
-RT_Value applySUB(RT_Value lhs, RT_Value rhs);
-
-void *getVarPointer(NAME_SCOPE scope, int n, RuntimeEnvironment *env);
-
-RT_Value evaluateAsType(void *ptr, TYPE type);
-void assignVariable(void *ptr, RT_Value value);
+RT_Value retrieveVariable(RT_Environment env, int index);
 
 void initExecuteFunctions();
 

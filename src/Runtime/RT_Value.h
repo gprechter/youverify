@@ -12,11 +12,6 @@
 typedef struct _RT_Value {
     TYPE type;
     uint8_t* content;
-    /*union CONTENTS {
-        int integer;
-        bool boolean;
-        uint8_t* arr_ref;
-    } contents;*/
 } RT_Value;
 
 RT_Value newRT_Value(VALUE value, SYMBOL_TABLE* symbolTable, NAME_SCOPE lexicalScope);
