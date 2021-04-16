@@ -1,5 +1,5 @@
+#!/usr/bin/env bash
 for filename in ./tests/*.yvr; do
     echo "Running " $(basename "$filename") "..."
-    ./youverify "$filename" | python3 tests.py $(basename "$filename" .yvr)
-    
+    ../build/youverify "$filename" | python3 tests.py $(basename "$filename" .yvr)
 done
