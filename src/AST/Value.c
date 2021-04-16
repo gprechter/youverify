@@ -4,6 +4,8 @@
 
 #include "Value.h"
 
+HashMap* idToType;
+
 VALUE newIntegerVALUE(int value) {
     VALUE s;
     s.type = getType("INT");
@@ -63,6 +65,7 @@ void addType(char* id, TYPE type) {
     HM_put(idToType, id, typePtr);
 }
 
+int next_id = 8;
 int getNextID() {
     int next = next_id;
     next_id++;

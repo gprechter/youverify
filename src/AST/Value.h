@@ -43,8 +43,7 @@ typedef struct _FIELDINFO {
     TYPE type;
 } FIELDINFO;
 
-static int next_id = 8;
-HashMap* idToType;
+extern HashMap* idToType;
 
 void initialize();
 
