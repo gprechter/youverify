@@ -428,7 +428,7 @@ expr: term {
     $$ = newFieldAccessExpression($1, $3);
 }
 | MEMALLOC OPAREN INTEGER CPAREN {
-    $$ = newMemoryAllocateExpression($3.contents.INT)
+    $$ = newMemoryAllocateExpression($3.contents.INT);
 }
 | ASTERISK IDENTIFIER {
     $$ = newDereferenceExpression($2);
