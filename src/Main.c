@@ -3,9 +3,8 @@
 //
 
 #include "Main.h"
-#include "y.tab.h"
-
 #include "parse.h"
+#include "y.tab.h"
 #include "AST/Value.h"
 #include "Analyze/SymbolTable.h"
 #include "Analyze/Function.h"
