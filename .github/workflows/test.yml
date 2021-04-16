@@ -19,8 +19,13 @@ jobs:
           cmake ..
           make -j4
 
-      - name: Test
+      - name: Run On Examples
         run: |
           cd test
           ../build/youverify tests/add.yvr
           ../build/youverify tests/sub.yvr
+
+      - name: Tests
+        run: |
+          cd test
+          ./run_tests.sh
