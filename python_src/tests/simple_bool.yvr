@@ -1,0 +1,13 @@
+a: BOOL
+b: BOOL
+done: BOOL
+privateData: ARRAY[INT]
+a = true
+b = false
+privateData = ARRAY[]{$sym{INT}}
+privateData[0] = $sym{INT}
+if $sym{BOOL} goto ELSE
+a = a | b
+goto END
+LABEL ELSE: a = a & b
+LABEL END: done = true

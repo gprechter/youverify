@@ -1,0 +1,6 @@
+# PYTHON RELATED #
+venv
+__pycache__
+
+# OS RELATED #
+.DS_Store
