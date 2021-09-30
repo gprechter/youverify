@@ -43,6 +43,14 @@ class UniqueSymbol(Value):
     def eval(self, state):
         return FreshSymbol(self.type)
 
+class UnaryExpression(Expression):
+    def __init__(self, op, arg):
+        self.op = op
+        self.arg = arg
+
+    def eval(self, state):
+        return self.op(self.arg.eval(state))
+
 class BinaryExpression(Expression):
     def __init__(self, lhs, op, rhs):
         self.lhs = lhs
@@ -51,6 +59,16 @@ class BinaryExpression(Expression):
 
     def eval(self, state):
         return self.op(self.lhs.eval(state), self.rhs.eval(state))
+
+class TernaryExpression(Expression):
+    def __init__(self, op, first, second, third):
+        self.op = op
+        self.first = first
+        self.second = second
+        self.third = third
+
+    def eval(self, state):
+        return self.op(self.first.eval(state), self.second.eval(state), self.third.eval(state))
 
 class ArrayIndexExpression(Expression):
     def __init__(self, arr, index):
@@ -66,6 +84,17 @@ class NewArrayExpression(Expression):
 
     def eval(self, state):
         return Array(INT, self.default.eval(state))
+
+class Function:
+    def __init__(self, name, params, vars, statements, labels):
+        self.name = name
+        self.params = params
+        self.local_variables = vars
+        self.statements = statements
+        self.labels = labels
+
+    def __str__(self):
+        return f"define {self.name}({', '.join(self.params)}): {', '.join(self.local_variables)}"
 
 class Statement:
     def exec(self, state):

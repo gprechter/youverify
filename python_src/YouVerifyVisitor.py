@@ -14,6 +14,21 @@ class YouVerifyVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by YouVerifyParser#GLOBAL_VAR.
+    def visitGLOBAL_VAR(self, ctx:YouVerifyParser.GLOBAL_VARContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YouVerifyParser#GLOBAL_FUNC.
+    def visitGLOBAL_FUNC(self, ctx:YouVerifyParser.GLOBAL_FUNCContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YouVerifyParser#function.
+    def visitFunction(self, ctx:YouVerifyParser.FunctionContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by YouVerifyParser#LABELED.
     def visitLABELED(self, ctx:YouVerifyParser.LABELEDContext):
         return self.visitChildren(ctx)
@@ -81,6 +96,16 @@ class YouVerifyVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by YouVerifyParser#NAMED_SYMBOL.
     def visitNAMED_SYMBOL(self, ctx:YouVerifyParser.NAMED_SYMBOLContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YouVerifyParser#TERNARY.
+    def visitTERNARY(self, ctx:YouVerifyParser.TERNARYContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YouVerifyParser#UNARY.
+    def visitUNARY(self, ctx:YouVerifyParser.UNARYContext):
         return self.visitChildren(ctx)
 
 

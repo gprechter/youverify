@@ -1,6 +1,11 @@
 grammar YouVerify;
 
-program: ((decls+=decl NEWLINE)* (decls+=decl)?) ((stmts+=labeled_stmt NEWLINE)* (stmts+=labeled_stmt)?) EOF;
+program: ((decls+=global_decl NEWLINE)* (decls+=global_decl)?) ((stmts+=labeled_stmt NEWLINE)* (stmts+=labeled_stmt)?) EOF;
+global_decl: var=decl       #GLOBAL_VAR
+           | func=function  #GLOBAL_FUNC;
+function: 'define' name=IDENTIFIER OPAREN ((params+=decl COMMA)* (params+=decl)?) CPAREN COLON NEWLINE
+                                                ((TAB decls+=decl NEWLINE)* (TAB decls+=decl)?)
+                                                ((TAB stmts+=labeled_stmt NEWLINE)* (TAB stmts+=labeled_stmt)?);
 labeled_stmt: 'LABEL' identifier=IDENTIFIER ':' statement=stmt # LABELED
             | statement=stmt # UNLABELED;
 stmt: target=assign_target '=' expression=expr # ASSIGN
@@ -14,12 +19,21 @@ expr: (atom=BOOLEAN | atom=INTEGER | atom=IDENTIFIER) # ATOMIC
     | '$sym' '{' s=sort '}' # SYMBOL
     | '$sym' '{' identifier=IDENTIFIER ',' s=sort '}' # NAMED_SYMBOL
     | expression=array_index_expr # ARRAY_INDEX
-    | lhs=expr op=OPERATOR rhs=expr # BINARY;
+    | op=UNARY_OPERATOR e=expr # UNARY
+    | lhs=expr op=BINARY_OPERATOR rhs=expr # BINARY
+    | op=TERNARY_OPERATOR first=expr second=expr third=expr #TERNARY;
 array_index_expr: array=IDENTIFIER '[' index=expr ']';
 sort: (s='BOOL' | s='INT') | (s='ARRAY' '[' contained_sort=sort ']');
 BOOLEAN: 'true' | 'false';
-OPERATOR: '&' | '|' | '+' | '-' | '>=' | '<';
+UNARY_OPERATOR: '!' | '@';
+BINARY_OPERATOR: '&' | '|' | '+' | '-' | '*' | '/' | '%' | '<=' | '<' | '>=' | '>' | '==' | '!=';
+TERNARY_OPERATOR: '?';
 IDENTIFIER: [a-zA-Z]([a-zA-Z0-9]|'_')*;
-INTEGER: ('0'|[1-9])[0-9]*;
+INTEGER: '0'|([1-9][0-9]*);
 NEWLINE		: ('\r'? '\n' | '\r')+ ;
+COMMA       : ',' ;
+OPAREN      : '(' ;
+CPAREN      : ')' ;
+COLON       : ':' ;
+TAB         : '\t' ;
 WHITESPACE	: ' ' -> skip ;

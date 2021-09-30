@@ -1,0 +1,8 @@
+define f(x: INT, y: INT):
+	z: INT
+	z = x + y
+define f2(x: BOOL):
+	y: BOOL
+	y = !x
+x: INT
+x = 10

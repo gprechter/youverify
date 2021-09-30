@@ -1,23 +1,22 @@
 from pysmt.typing import BOOL, INT, ArrayType
 from pysmt.shortcuts import And, Or, Plus, Minus, GE, LT
 from pysmt.shortcuts import TRUE, FALSE
+from CoreTheory import *
+from IntegerTheory import *
 
 YVR_SORT_TO_PYSMT = {
-    "BOOL": BOOL,
-    "INT": INT,
     "ARRAY": ArrayType
 }
+YVR_SORT_TO_PYSMT.update(CORE_YVR_TO_PYSMT_SORT)
+YVR_SORT_TO_PYSMT.update(INTEGER_YVR_TO_PYSMT_SORT)
 
-YVR_OP_TO_PYSMT = {
-    "&": And,
-    "|": Or,
-    "+": Plus,
-    "-": Minus,
-    ">=": GE,
-    "<": LT
-}
+YVR_UNARY_OP_TO_PYSMT = {}
+YVR_UNARY_OP_TO_PYSMT.update(CORE_YVR_TO_PYSMT_UNARY_OP)
+YVR_UNARY_OP_TO_PYSMT.update(INTEGER_YVR_TO_PYSMT_UNARY_OP)
 
-YVR_BOOL_TO_PYSMT = {
-    "true": TRUE(),
-    "false": FALSE()
-}
+YVR_BINARY_OP_TO_PYSMT = {}
+YVR_BINARY_OP_TO_PYSMT.update(CORE_YVR_TO_PYSMT_BINARY_OP)
+YVR_BINARY_OP_TO_PYSMT.update(INTEGER_YVR_TO_PYSMT_BINARY_OP)
+
+YVR_TERNARY_OP_TO_PYSMT = {}
+YVR_TERNARY_OP_TO_PYSMT.update(CORE_YVR_TO_PYSMT_TERNARY_OP)
