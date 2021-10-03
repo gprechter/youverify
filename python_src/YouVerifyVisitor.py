@@ -39,8 +39,18 @@ class YouVerifyVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by YouVerifyParser#RETURN.
+    def visitRETURN(self, ctx:YouVerifyParser.RETURNContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by YouVerifyParser#ASSIGN.
     def visitASSIGN(self, ctx:YouVerifyParser.ASSIGNContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YouVerifyParser#FUNC_CALL.
+    def visitFUNC_CALL(self, ctx:YouVerifyParser.FUNC_CALLContext):
         return self.visitChildren(ctx)
 
 

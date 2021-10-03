@@ -3,7 +3,7 @@ class State:
     def __init__(self, program, pc=0, path_cond=TRUE(), variables={}):
         self.pc = pc
         self.path_cond = path_cond
-        self.variables = variables
+        self.variables = variables.copy()
         self.program = program
 
     def split(self, cond, pc):

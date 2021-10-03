@@ -1,5 +1,6 @@
 from pysmt.shortcuts import get_free_variables, to_smtlib, Solver
 from pysmt.fnode import FNode
+from ConvertLet import convert
 
 def gen_declare_const(node: FNode):
     const_declarations = []
@@ -9,4 +10,4 @@ def gen_declare_const(node: FNode):
 
 def gen_assert(node: FNode):
     with Solver(name="z3", logic="QF_AUFLIA") as s:
-        return f"(assert {to_smtlib(node)})"
+        return f"(assert {convert(to_smtlib(node))})"

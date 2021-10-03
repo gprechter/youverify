@@ -2,9 +2,11 @@ x: INT
 z: INT
 r: INT
 done: BOOL
+
 x = $sym{x, INT}
 z = $sym{z, INT}
 r = $sym{r, INT}
+
 if x <= 100 goto ELSE
 if z == 1 goto ELSE
 r = 2

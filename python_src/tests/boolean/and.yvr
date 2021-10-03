@@ -1,0 +1,10 @@
+a: BOOL
+b: BOOL
+r1: BOOL
+r2: BOOL
+r3: BOOL
+a = true
+b = false
+r1 = a & b
+r2 = a & true
+r3 = b & a

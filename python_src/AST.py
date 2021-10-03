@@ -90,6 +90,7 @@ class Function:
         self.name = name
         self.params = params
         self.local_variables = vars
+        self.local_variables.update(params)
         self.statements = statements
         self.labels = labels
 
@@ -99,6 +100,13 @@ class Function:
 class Statement:
     def exec(self, state):
         return state.advance_pc()
+
+class Return(Statement):
+    def __init__(self, expression):
+        self.expression = expression
+
+    def exec(self, state):
+        return [state]
 
 class Assignment(Statement):
     def __init__(self, target, expression):
@@ -111,6 +119,14 @@ class Assignment(Statement):
         else:
             state.variables[self.target.name] = self.expression.eval(state)
         return [state.advance_pc()]
+
+class FunctionCallAndAssignment(Statement):
+    def __init__(self, target, function, arguments):
+        self.target = target
+        self.function = function
+        self.arguments = arguments
+
+
 
 class ConditionalBranch(Statement):
     def __init__(self, condition, dest):
@@ -125,38 +141,3 @@ class UnconditionalBranch(ConditionalBranch):
         self.dest = dest
     def exec(self, state):
         return [state.update_pc(state.program.labels[self.dest])]
-
-program = Program()
-program.append(Assignment(Variable("a"), Value(TRUE())))
-program.append(Assignment(Variable("b"), Value(FALSE())))
-#program.append(ConditionalBranch(Value(Symbol("c")), "branch"))
-program.append(Assignment(Variable("a"), BinaryExpression(Variable("a"), And, Variable("b"))))
-#program.append(UnconditionalBranch("else"))
-#program.append(Assignment(Variable("a"), BinaryExpression(Variable("a"), Or, Variable("b"))), label="branch")
-#program.append(Statement(), label="else")
-
-'''
-program = Program()
-program.append(Assignment(Variable("privateData"), Value(Array(INT, Symbol("NULL", INT)))))
-program.append(Assignment(Variable("k"), Value(Int(3))))
-program.append(Assignment(Variable("i"), Value(Int(0))))
-program.append(ConditionalBranch(BinaryExpression(Variable("k"), LE, Variable("i")), "END1"), label="LOOP1")
-program.append(Assignment(ArrayIndexExpression(Variable("privateData"), Variable("i")), UniqueSymbol(INT)))
-program.append(Assignment(Variable("i"), BinaryExpression(Variable("i"), Plus, Value(Int(1)))))
-program.append(UnconditionalBranch("LOOP1"))
-program.append(Assignment(Variable("i"), Value(Int(0))), label="END1")
-program.append(Assignment(Variable("buf"), Value(Array(INT, Symbol("NULL", INT)))))
-program.append(Assignment(Variable("buf_length"), Value(Int(0))))
-
-program.append(ConditionalBranch(BinaryExpression(Variable("k"), LE, Variable("i")), "END2"), label="LOOP2")
-program.append(Assignment(Variable("t"), ArrayIndexExpression(Variable("privateData"), Variable("i"))))
-program.append(ConditionalBranch(BinaryExpression(Variable("t"), LT, Value(Int(0))), "ELSE"), label="COND")
-program.append(Assignment(ArrayIndexExpression(Variable("buf"), Variable("buf_length")), Value(Int(1))))
-program.append(Assignment(Variable("buf_length"), BinaryExpression(Variable("buf_length"), Plus, Value(Int(1)))))
-program.append(UnconditionalBranch("ENDCOND"))
-program.append(Assignment(ArrayIndexExpression(Variable("buf"), Variable("buf_length")), Value(Int(0))), label="ELSE")
-program.append(Assignment(Variable("buf_length"), BinaryExpression(Variable("buf_length"), Plus, Value(Int(1)))))
-program.append(Assignment(Variable("i"), BinaryExpression(Variable("i"), Plus, Value(Int(1)))), label="ENDCOND")
-program.append(UnconditionalBranch("LOOP2"))
-program.append(Statement(), label="END2")
-'''

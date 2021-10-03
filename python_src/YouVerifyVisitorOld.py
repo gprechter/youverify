@@ -61,6 +61,14 @@ class YouVerifyVisitor(ParseTreeVisitor):
 
         return ctx.name.text, parameters, variables, statements, labels
 
+    # Visit a parse tree produced by YouVerifyParser#RETURN.
+    def visitRETURN(self, ctx: YouVerifyParser.RETURNContext):
+        return Return(self.visit(ctx.expression))
+
+    # Visit a parse tree produced by YouVerifyParser#FUNC_CALL.
+    def visitFUNC_CALL(self, ctx: YouVerifyParser.FUNC_CALLContext):
+        return FunctionCallAndAssignment(self.visit(ctx.target), ctx.operator.text, [self.visit(e) for e in ctx.operands])
+
     # Visit a parse tree produced by YouVerifyParser#LABELED.
     def visitLABELED(self, ctx: YouVerifyParser.LABELEDContext):
         return ctx.identifier.text, self.visit(ctx.statement)

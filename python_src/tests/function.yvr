@@ -1,8 +1,6 @@
 define f(x: INT, y: INT):
 	z: INT
 	z = x + y
-define f2(x: BOOL):
-	y: BOOL
-	y = !x
+	return z
 x: INT
-x = 10
+x = f(4, 5)

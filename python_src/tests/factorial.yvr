@@ -1,0 +1,12 @@
+i: INT
+n: INT
+fact: INT
+done: BOOL
+fact = 1
+i = 1
+n = 5
+LABEL LOOP1: if i > n goto END1
+fact = fact * i
+i = i + 1
+goto LOOP1
+LABEL END1: done = true

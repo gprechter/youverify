@@ -18,8 +18,6 @@ def main(argv):
     parser = YouVerifyParser(stream)
     variables, functions, statements, labels = YouVerifyVisitor().visitProgram(parser.program())
     program = Program(statements, variables, labels)
-    Program.variables = variables
-
 
     def exec(program):
         states = [State(program)]
@@ -36,7 +34,7 @@ def main(argv):
 def display_states_smt2(states):
     for i, state in enumerate(states):
         state_desc = f"{i}\t" + str({k: simplify(v) for k, v in state.variables.items()})
-        print("=" * len(state_desc))
+        print("" + "=" * len(state_desc) + "")
         print(state_desc)
         print("=" * len(state_desc))
         print("(set-option :produce-models true)")

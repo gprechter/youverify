@@ -4,6 +4,17 @@ import glob
 import os.path
 from YouVerify import main, concrete_evaluation
 
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
 def compare_json(a, b):
     print("EXPECTED:", json.dumps(b, sort_keys=True))
     print("GOT:\t ", json.dumps(a, sort_keys=True))
@@ -18,6 +29,8 @@ def check_all(dir):
         print(file)
         expected = glob.glob(dir + f"/**/{os.path.basename(file).split('.')[0]}.expected", recursive=True)
         if expected:
-            print("PASS" if check(concrete_evaluation(main(["testing", file])), expected[0]) else "FAILED")
+            print((bcolors.BOLD + bcolors.OKGREEN + "PASS" + bcolors.ENDC)
+                  if check(concrete_evaluation(main(["testing", file])), expected[0]) else
+                  (bcolors.BOLD + bcolors.FAIL + "FAILED" + bcolors.ENDC))
 
 check_all(sys.argv[1])
