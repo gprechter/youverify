@@ -10,7 +10,7 @@ labeled_stmt: 'LABEL' identifier=IDENTIFIER ':' statement=stmt # LABELED
             | statement=stmt # UNLABELED;
 stmt: 'return' expression=expr # RETURN
     | target=assign_target '=' expression=expr # ASSIGN
-    | target=assign_target '=' operator=IDENTIFIER OPAREN ((operands+=expr COMMA)* (operands+=expr)?) CPAREN #FUNC_CALL
+    | 'call' target=assign_target '=' operator=IDENTIFIER OPAREN ((operands+=expr COMMA)* (operands+=expr)?) CPAREN #FUNC_CALL
     | 'if' expression=expr 'goto' label=IDENTIFIER # CONDITIONAL_BRANCH
     | 'goto' label=IDENTIFIER # UNCONDITIONAL_BRANCH;
 assign_target: identifier=IDENTIFIER # ASSIGN_TARGET_IDENTIFIER

@@ -2,13 +2,16 @@ from pysmt.shortcuts import And, Or, Not, Symbol, TRUE, FALSE, is_sat, Array
 from pysmt.shortcuts import Solver, simplify, Int, FreshSymbol, Plus, Store, Select
 from pysmt.shortcuts import LE, LT
 from pysmt.typing import INT
+from State import State, Frame
+from Mappings import YVR_BUILTIN_OP_TO_PYSMT
 
 class Program:
-    def __init__(self, statements = [], variables = {}, labels = {}):
+    def __init__(self, statements = [], variables = {}, labels = {}, functions={}):
         self.statements = statements
         self.current_line = len(statements)
         self.labels = labels
         self.variables = variables
+        self.functions = functions
 
     def append(self, statement, label = None):
         if label:
@@ -27,7 +30,7 @@ class Variable(AtomicExpression):
         self.name = name
 
     def eval(self, state):
-        return state.variables[self.name]
+        return state.get_variable(self.name)
 
 class Value(AtomicExpression):
     def __init__(self, value):
@@ -86,16 +89,16 @@ class NewArrayExpression(Expression):
         return Array(INT, self.default.eval(state))
 
 class Function:
-    def __init__(self, name, params, vars, statements, labels):
+    def __init__(self, name, params, variables, statements, labels):
         self.name = name
         self.params = params
-        self.local_variables = vars
-        self.local_variables.update(params)
+        self.variables = variables
+        self.variables.update(params)
         self.statements = statements
         self.labels = labels
 
     def __str__(self):
-        return f"define {self.name}({', '.join(self.params)}): {', '.join(self.local_variables)}"
+        return f"define {self.name}({', '.join(self.params)}): {', '.join(self.variables)}"
 
 class Statement:
     def exec(self, state):
@@ -106,6 +109,7 @@ class Return(Statement):
         self.expression = expression
 
     def exec(self, state):
+        state.pop_frame(self.expression.eval(state))
         return [state]
 
 class Assignment(Statement):
@@ -115,9 +119,9 @@ class Assignment(Statement):
 
     def exec(self, state):
         if isinstance(self.target, ArrayIndexExpression):
-            state.variables[self.target.arr.name] = Store(self.target.arr.eval(state), self.target.index.eval(state), self.expression.eval(state))
+            state.assign_variable(self.target.arr.name, Store(self.target.arr.eval(state), self.target.index.eval(state), self.expression.eval(state)))
         else:
-            state.variables[self.target.name] = self.expression.eval(state)
+            state.assign_variable(self.target.name, self.expression.eval(state))
         return [state.advance_pc()]
 
 class FunctionCallAndAssignment(Statement):
@@ -126,7 +130,32 @@ class FunctionCallAndAssignment(Statement):
         self.function = function
         self.arguments = arguments
 
+    def exec(self, state):
 
+        if self.function in YVR_BUILTIN_OP_TO_PYSMT:
+            arguments = []
+            for argument in self.arguments:
+                arguments.append(argument.eval(state))
+            if isinstance(self.target, ArrayIndexExpression):
+                state.assign_variable(self.target.arr.name,
+                                      Store(self.target.arr.eval(state), self.target.index.eval(state),
+                                            YVR_BUILTIN_OP_TO_PYSMT[self.function](*arguments)))
+            else:
+                state.assign_variable(self.target.name, YVR_BUILTIN_OP_TO_PYSMT[self.function](*arguments))
+            return [state.advance_pc()]
+
+
+        function = state.frame_stack[0].function.functions[self.function]
+
+        arguments = []
+        for argument in self.arguments:
+            arguments.append(argument.eval(state))
+
+        state.advance_pc()
+        state.push_frame(Frame(function, 0, function.variables, self.target))
+        for i, param in enumerate(function.params):
+            state.assign_variable(param, arguments[i])
+        return [state]
 
 class ConditionalBranch(Statement):
     def __init__(self, condition, dest):
@@ -134,10 +163,10 @@ class ConditionalBranch(Statement):
         self.dest = dest
 
     def exec(self, state):
-        return state.split(self.condition.eval(state), state.program.labels[self.dest])
+        return state.split(self.condition.eval(state), state.head_frame().function.labels[self.dest])
 
 class UnconditionalBranch(ConditionalBranch):
     def __init__(self, dest):
         self.dest = dest
     def exec(self, state):
-        return [state.update_pc(state.program.labels[self.dest])]
+        return [state.update_pc(state.head_frame().function.labels[self.dest])]

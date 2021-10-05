@@ -9,31 +9,31 @@ from YouVerifyParser import YouVerifyParser
 from pysmt.shortcuts import TRUE, is_sat, simplify, get_model, get_free_variables, Solver
 from pysmt.typing import _BoolType
 from AST import Program
-from State import State
+from State import State, Frame
 from SMTLibUtil import *
+
 def main(argv):
     input_stream = FileStream(argv[1])
     lexer = YouVerifyLexer(input_stream)
     stream = CommonTokenStream(lexer)
     parser = YouVerifyParser(stream)
     variables, functions, statements, labels = YouVerifyVisitor().visitProgram(parser.program())
-    program = Program(statements, variables, labels)
-
+    program = Program(statements, variables, labels, functions)
     def exec(program):
-        states = [State(program)]
-        while [state for state in states if state.pc < len(program.statements)]:
+        states = [State(TRUE(), [Frame(program, 0, variables.copy(), None)])]
+        while [state for state in states if not state.is_finished]:
             state = states.pop(0)
-            if state.pc >= len(program.statements):
+            if state.is_finished:
                 states.append(state)
                 continue
-            states.extend([s for s in program.statements[state.pc].exec(state) if is_sat(state.path_cond)])
+            states.extend([s for s in state.current_statement.exec(state) if is_sat(state.path_cond)])
         return states
 
     return exec(program)
 
 def display_states_smt2(states):
     for i, state in enumerate(states):
-        state_desc = f"{i}\t" + str({k: simplify(v) for k, v in state.variables.items()})
+        state_desc = f"{i}\t" + str({k: simplify(v) for k, v in state.head_frame().variables.items()})
         print("" + "=" * len(state_desc) + "")
         print(state_desc)
         print("=" * len(state_desc))
@@ -43,8 +43,8 @@ def display_states_smt2(states):
 
 def concrete_evaluation(states):
     state = states[0]
-    assert all([simplify(v).is_constant() for k, v in state.variables.items()]), "All variables must be constant."
-    return json.dumps({k: simplify(v).constant_value() for k, v in state.variables.items()})
+    assert all([simplify(v).is_constant() for k, v in state.head_frame().variables.items()]), "All variables must be constant."
+    return json.dumps({k: simplify(v).constant_value() for k, v in state.head_frame().variables.items()})
 
 if __name__ == '__main__':
     display_states_smt2(main(sys.argv))

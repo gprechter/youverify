@@ -1,0 +1,14 @@
+define fib(n: INT):
+	rec_call1: INT
+	rec_call2: INT
+	next_n: INT
+	next_next_n: INT
+	if n > 1 goto END
+	return n
+	LABEL END: next_n = n - 1
+	next_next_n = next_n - 1
+	call rec_call1 = fib(next_n)
+	call rec_call2 = fib(next_next_n)
+	return rec_call1 + rec_call2
+result: INT
+call result = fib(10)

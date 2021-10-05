@@ -1,0 +1,10 @@
+define fact(n: INT):
+	rec_call: INT
+	next_n: INT
+	if n > 0 goto END
+	return 1
+	LABEL END: next_n = n - 1
+	call rec_call = fact(next_n)
+	return rec_call * n
+result: INT
+call result = fact(5)

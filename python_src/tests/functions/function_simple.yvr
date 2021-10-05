@@ -3,4 +3,4 @@ define f(x: INT, y: INT):
 	z = x + y
 	return z
 x: INT
-x = f(4, 5)
+call x = f(4, 5)

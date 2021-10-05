@@ -1,0 +1,9 @@
+define f(x: INT, y: INT):
+	z: INT
+	if $sym{c, BOOL} goto ELSE
+	z = x + y
+	goto ENDIF
+	LABEL ELSE: z = x - y
+	LABEL ENDIF: return z
+x: INT
+call x = f(4, 5)

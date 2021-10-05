@@ -1,0 +1,7 @@
+x: INT
+y: INT
+define f():
+	x = 10
+	return 5
+x = 5
+call y = f()
