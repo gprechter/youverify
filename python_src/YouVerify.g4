@@ -18,6 +18,7 @@ assign_target: identifier=IDENTIFIER # ASSIGN_TARGET_IDENTIFIER
 decl: identifier=IDENTIFIER ':' s=sort;
 expr: (atom=BOOLEAN | atom=INTEGER | atom=IDENTIFIER) # ATOMIC
     | 'ARRAY[]' '{' expression=expr '}' # ARRAY
+    | 'BV' '{' value=INTEGER COMMA size=INTEGER '}' # BIT_VECTOR
     | '$sym' '{' s=sort '}' # SYMBOL
     | '$sym' '{' identifier=IDENTIFIER ',' s=sort '}' # NAMED_SYMBOL
     | expression=array_index_expr # ARRAY_INDEX
@@ -25,7 +26,7 @@ expr: (atom=BOOLEAN | atom=INTEGER | atom=IDENTIFIER) # ATOMIC
     | lhs=expr op=BINARY_OPERATOR rhs=expr # BINARY
     | op=TERNARY_OPERATOR first=expr second=expr third=expr #TERNARY;
 array_index_expr: array=IDENTIFIER '[' index=expr ']';
-sort: (s='BOOL' | s='INT') | (s='ARRAY' '[' contained_sort=sort ']');
+sort: (s='BOOL' | s='INT') | (s='ARRAY' '[' contained_sort=sort ']') | (s = 'BV' '[' size=INTEGER']');
 BOOLEAN: 'true' | 'false';
 UNARY_OPERATOR: '!' | '@';
 BINARY_OPERATOR: '&' | '|' | '+' | '-' | '*' | '/' | '%' | '<=' | '<' | '>=' | '>' | '==' | '!=';

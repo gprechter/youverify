@@ -99,6 +99,11 @@ class YouVerifyVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by YouVerifyParser#BIT_VECTOR.
+    def visitBIT_VECTOR(self, ctx:YouVerifyParser.BIT_VECTORContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by YouVerifyParser#BINARY.
     def visitBINARY(self, ctx:YouVerifyParser.BINARYContext):
         return self.visitChildren(ctx)

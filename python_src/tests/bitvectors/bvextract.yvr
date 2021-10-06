@@ -1,0 +1,5 @@
+a: BV[8]
+b: BV[4]
+
+a = BV{16, 8}
+call b = extract(a, 3, 6)

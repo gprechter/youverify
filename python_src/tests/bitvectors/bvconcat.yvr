@@ -1,0 +1,7 @@
+a: BV[16]
+b: BV[16]
+c: BV[32]
+
+a = BV{5, 16}
+b = BV{4, 16}
+call c = concat(a, b)

@@ -7,7 +7,7 @@ if __name__ is not None and "." in __name__:
 else:
     from YouVerifyParser import YouVerifyParser
 
-from pysmt.shortcuts import Int, ArrayType
+from pysmt.shortcuts import Int, ArrayType, BV
 
 # This class defines a complete generic visitor for a parse tree produced by YouVerifyParser.
 
@@ -115,6 +115,10 @@ class YouVerifyVisitor(ParseTreeVisitor):
     def visitARRAY(self, ctx:YouVerifyParser.ARRAYContext):
         return NewArrayExpression(default=self.visit(ctx.expression))
 
+    # Visit a parse tree produced by YouVerifyParser#BIT_VECTOR.
+    def visitBIT_VECTOR(self, ctx:YouVerifyParser.BIT_VECTORContext):
+        return Value(BV(int(ctx.value.text), int(ctx.size.text)))
+
     # Visit a parse tree produced by YouVerifyParser#SYMBOL.
     def visitSYMBOL(self, ctx: YouVerifyParser.SYMBOLContext):
         return UniqueSymbol(self.visit(ctx.s))
@@ -141,10 +145,14 @@ class YouVerifyVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by YouVerifyParser#sort.
     def visitSort(self, ctx: YouVerifyParser.SortContext):
-        if ctx.contained_sort:
-            return YVR_SORT_TO_PYSMT[ctx.s.text](INT, self.visit(ctx.contained_sort))
+        outer_sort = ctx.s.text
+
+        if outer_sort == 'ARRAY':
+            return YVR_SORT_TO_PYSMT[outer_sort](INT, self.visit(ctx.contained_sort))
+        elif outer_sort == 'BV':
+            return YVR_SORT_TO_PYSMT[outer_sort](int(ctx.size.text))
         else:
-            return YVR_SORT_TO_PYSMT[ctx.s.text]
+            return YVR_SORT_TO_PYSMT[outer_sort]
 
 
 del YouVerifyParser
