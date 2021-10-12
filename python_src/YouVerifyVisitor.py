@@ -19,6 +19,11 @@ class YouVerifyVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by YouVerifyParser#GLOBAL_REC.
+    def visitGLOBAL_REC(self, ctx:YouVerifyParser.GLOBAL_RECContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by YouVerifyParser#GLOBAL_FUNC.
     def visitGLOBAL_FUNC(self, ctx:YouVerifyParser.GLOBAL_FUNCContext):
         return self.visitChildren(ctx)
@@ -26,6 +31,11 @@ class YouVerifyVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by YouVerifyParser#function.
     def visitFunction(self, ctx:YouVerifyParser.FunctionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YouVerifyParser#record.
+    def visitRecord(self, ctx:YouVerifyParser.RecordContext):
         return self.visitChildren(ctx)
 
 
@@ -66,6 +76,11 @@ class YouVerifyVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by YouVerifyParser#ASSIGN_TARGET_IDENTIFIER.
     def visitASSIGN_TARGET_IDENTIFIER(self, ctx:YouVerifyParser.ASSIGN_TARGET_IDENTIFIERContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YouVerifyParser#ASSIGN_TARGET_RECORD_INDEX.
+    def visitASSIGN_TARGET_RECORD_INDEX(self, ctx:YouVerifyParser.ASSIGN_TARGET_RECORD_INDEXContext):
         return self.visitChildren(ctx)
 
 
@@ -116,6 +131,11 @@ class YouVerifyVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by YouVerifyParser#TERNARY.
     def visitTERNARY(self, ctx:YouVerifyParser.TERNARYContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YouVerifyParser#RECORD_INDEX.
+    def visitRECORD_INDEX(self, ctx:YouVerifyParser.RECORD_INDEXContext):
         return self.visitChildren(ctx)
 
 

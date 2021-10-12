@@ -1,0 +1,13 @@
+record container(i: INT, b: BOOL)
+
+x: container
+y: container
+boolean: BOOL
+
+x.i = 1
+x.b = true
+
+y = x
+y.i = 2
+
+boolean = y.b

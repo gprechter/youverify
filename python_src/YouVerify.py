@@ -17,8 +17,13 @@ def main(argv):
     lexer = YouVerifyLexer(input_stream)
     stream = CommonTokenStream(lexer)
     parser = YouVerifyParser(stream)
-    variables, functions, statements, labels = YouVerifyVisitor().visitProgram(parser.program())
+    variables, functions, statements, labels, records = YouVerifyVisitor().visitProgram(parser.program())
     program = Program(statements, variables, labels, functions)
+
+    for n, v in variables.items():
+        if v.name in records:
+            variables[n] = records[v.name].elements
+
     def exec(program):
         states = [State(TRUE(), [Frame(program, 0, variables.copy(), None)])]
         while [state for state in states if not state.is_finished]:
@@ -31,9 +36,15 @@ def main(argv):
 
     return exec(program)
 
+def simplify_smt(value):
+    if isinstance(value, dict):
+        return str({k: simplify_smt(v) for k, v in value.items()})
+    else:
+        return simplify(value)
+
 def display_states_smt2(states):
     for i, state in enumerate(states):
-        state_desc = f"{i}\t" + str({k: simplify(v) for k, v in state.head_frame().variables.items()})
+        state_desc = f"{i}\t" + str({k: simplify_smt(v) for k, v in state.head_frame().variables.items()})
         print("" + "=" * len(state_desc) + "")
         print(state_desc)
         print("=" * len(state_desc))

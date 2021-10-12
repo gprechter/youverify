@@ -32,6 +32,14 @@ class Variable(AtomicExpression):
     def eval(self, state):
         return state.get_variable(self.name)
 
+class RecordIndexExpression(Expression):
+    def __init__(self, record, element):
+        self.record = record
+        self.element = element
+
+    def eval(self, state):
+        return state.get_variable(self.record)[self.element]
+
 class Value(AtomicExpression):
     def __init__(self, value):
         self.value = value
@@ -120,9 +128,19 @@ class Assignment(Statement):
     def exec(self, state):
         if isinstance(self.target, ArrayIndexExpression):
             state.assign_variable(self.target.arr.name, Store(self.target.arr.eval(state), self.target.index.eval(state), self.expression.eval(state)))
+        elif isinstance(self.target, RecordIndexExpression):
+            state.get_variable(self.target.record)[self.target.element] = self.expression.eval(state)
         else:
             state.assign_variable(self.target.name, self.expression.eval(state))
         return [state.advance_pc()]
+
+class Record:
+    def __init__(self, name, elements):
+        self.name = name
+        self.elements = elements
+
+    def __str__(self):
+        return f"{self.name}({', '.join(self.elements.items())})"
 
 class FunctionCallAndAssignment(Statement):
     def __init__(self, target, function, arguments):

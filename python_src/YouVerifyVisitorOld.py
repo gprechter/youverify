@@ -17,12 +17,15 @@ class YouVerifyVisitor(ParseTreeVisitor):
     def visitProgram(self, ctx:YouVerifyParser.ProgramContext):
         variables = dict()
         functions = dict()
+        records = dict()
 
         for decl in ctx.decls:
             type, value = self.visit(decl)
             if type == 'var':
                 identifier, sort = value
                 variables[identifier] = Variable(sort)
+            elif type == 'rec':
+                records[value.name] = value
             else:
                 name, parameters, local_variables, local_statements, local_labels = value
                 functions[name] = Function(name, parameters, local_variables, local_statements, local_labels)
@@ -36,15 +39,24 @@ class YouVerifyVisitor(ParseTreeVisitor):
                 labels[label] = line
             statements.append(stmt)
 
-        return variables, functions, statements, labels
+        return variables, functions, statements, labels, records
 
     # Visit a parse tree produced by YouVerifyParser#GLOBAL_VAR.
     def visitGLOBAL_VAR(self, ctx: YouVerifyParser.GLOBAL_VARContext):
         return "var", self.visit(ctx.var)
 
+    # Visit a parse tree produced by YouVerifyParser#GLOBAL_REC.
+    def visitGLOBAL_REC(self, ctx: YouVerifyParser.GLOBAL_RECContext):
+        return "rec", self.visit(ctx.rec)
+
     # Visit a parse tree produced by YouVerifyParser#GLOBAL_FUNC.
     def visitGLOBAL_FUNC(self, ctx: YouVerifyParser.GLOBAL_FUNCContext):
         return "func", self.visit(ctx.func)
+
+    # Visit a parse tree produced by YouVerifyParser#record.
+    def visitRecord(self, ctx: YouVerifyParser.RecordContext):
+        elements = {identifier: Variable(sort) for identifier, sort in [self.visit(p) for p in ctx.elems]}
+        return Record(ctx.name.text, elements)
 
     # Visit a parse tree produced by YouVerifyParser#function.
     def visitFunction(self, ctx: YouVerifyParser.FunctionContext):
@@ -84,6 +96,10 @@ class YouVerifyVisitor(ParseTreeVisitor):
     # Visit a parse tree produced by YouVerifyParser#ASSIGN_TARGET_IDENTIFIER.
     def visitASSIGN_TARGET_IDENTIFIER(self, ctx: YouVerifyParser.ASSIGN_TARGET_IDENTIFIERContext):
         return Variable(ctx.identifier.text)
+
+    # Visit a parse tree produced by YouVerifyParser#ASSIGN_TARGET_RECORD_INDEX.
+    def visitASSIGN_TARGET_RECORD_INDEX(self, ctx: YouVerifyParser.ASSIGN_TARGET_RECORD_INDEXContext):
+        return RecordIndexExpression(ctx.rec.text, ctx.item.text)
 
     # Visit a parse tree produced by YouVerifyParser#ASSIGN_TARGET_ARRAY_INDEX.
     def visitASSIGN_TARGET_ARRAY_INDEX(self, ctx: YouVerifyParser.ASSIGN_TARGET_ARRAY_INDEXContext):
@@ -139,6 +155,10 @@ class YouVerifyVisitor(ParseTreeVisitor):
     def visitTERNARY(self, ctx: YouVerifyParser.TERNARYContext):
         return TernaryExpression(YVR_TERNARY_OP_TO_PYSMT[ctx.op.text], self.visit(ctx.first), self.visit(ctx.second), self.visit(ctx.third))
 
+    # Visit a parse tree produced by YouVerifyParser#RECORD_INDEX.
+    def visitRECORD_INDEX(self, ctx: YouVerifyParser.RECORD_INDEXContext):
+        return RecordIndexExpression(ctx.rec.text, ctx.item.text)
+
     # Visit a parse tree produced by YouVerifyParser#array_index_expr.
     def visitArray_index_expr(self, ctx: YouVerifyParser.Array_index_exprContext):
         return ArrayIndexExpression(Variable(ctx.array.text), self.visit(ctx.index))
@@ -151,8 +171,10 @@ class YouVerifyVisitor(ParseTreeVisitor):
             return YVR_SORT_TO_PYSMT[outer_sort](INT, self.visit(ctx.contained_sort))
         elif outer_sort == 'BV':
             return YVR_SORT_TO_PYSMT[outer_sort](int(ctx.size.text))
-        else:
+        elif outer_sort in YVR_SORT_TO_PYSMT:
             return YVR_SORT_TO_PYSMT[outer_sort]
+        else:
+            return outer_sort
 
 
 del YouVerifyParser
