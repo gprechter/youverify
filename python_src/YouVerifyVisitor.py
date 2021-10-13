@@ -109,6 +109,11 @@ class YouVerifyVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by YouVerifyParser#FIXED_SIZE_ARRAY.
+    def visitFIXED_SIZE_ARRAY(self, ctx:YouVerifyParser.FIXED_SIZE_ARRAYContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by YouVerifyParser#SYMBOL.
     def visitSYMBOL(self, ctx:YouVerifyParser.SYMBOLContext):
         return self.visitChildren(ctx)

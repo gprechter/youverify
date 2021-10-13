@@ -131,6 +131,10 @@ class YouVerifyVisitor(ParseTreeVisitor):
     def visitARRAY(self, ctx:YouVerifyParser.ARRAYContext):
         return NewArrayExpression(default=self.visit(ctx.expression))
 
+    # Visit a parse tree produced by YouVerifyParser#FIXED_SIZE_ARRAY.
+    def visitFIXED_SIZE_ARRAY(self, ctx: YouVerifyParser.FIXED_SIZE_ARRAYContext):
+        return NewArrayExpression(default=self.visit(ctx.expression), length=int(ctx.length.text))
+
     # Visit a parse tree produced by YouVerifyParser#BIT_VECTOR.
     def visitBIT_VECTOR(self, ctx:YouVerifyParser.BIT_VECTORContext):
         return Value(BV(int(ctx.value.text), int(ctx.size.text)))

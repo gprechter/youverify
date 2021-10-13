@@ -1,16 +1,6 @@
-arr: ARRAY[INT]
-result: INT
-sym_index: INT
+arr: ARRAY{INT}
+symbolic_index: INT
 arr = ARRAY[10]{0}
+symbolic_index = $sym{index, INT}
+arr[symbolic_index] = 1
 
-arr[1] = 1
-
-# What happens? Assertion added that index must be less than length?
-arr[11] = 0
-
-# What happens? Assertion added that index must be less than lenght?
-result = arr[20]
-
-# What happens?
-sym_index = $sym{index, INT}
-result = arr[sym_index]

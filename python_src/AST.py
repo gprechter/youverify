@@ -1,4 +1,4 @@
-from pysmt.shortcuts import And, Or, Not, Symbol, TRUE, FALSE, is_sat, Array
+from pysmt.shortcuts import And, Or, Not, Symbol, TRUE, FALSE, is_sat, Array, GE, LT
 from pysmt.shortcuts import Solver, simplify, Int, FreshSymbol, Plus, Store, Select
 from pysmt.shortcuts import LE, LT
 from pysmt.typing import INT
@@ -89,12 +89,18 @@ class ArrayIndexExpression(Expression):
     def eval(self, state):
         return Select(self.arr.eval(state), self.index.eval(state))
 
+array_to_length_map = dict()
+
 class NewArrayExpression(Expression):
-    def __init__(self, default):
+    def __init__(self, default, length=None):
         self.default = default
+        self.length = length
 
     def eval(self, state):
-        return Array(INT, self.default.eval(state))
+        arr = Array(INT, self.default.eval(state))
+        if self.length:
+            array_to_length_map[arr] = self.length
+        return arr
 
 class Function:
     def __init__(self, name, params, variables, statements, labels):
@@ -127,7 +133,11 @@ class Assignment(Statement):
 
     def exec(self, state):
         if isinstance(self.target, ArrayIndexExpression):
-            state.assign_variable(self.target.arr.name, Store(self.target.arr.eval(state), self.target.index.eval(state), self.expression.eval(state)))
+            index = self.target.index.eval(state)
+            arr = self.target.arr.eval(state)
+            state.assign_variable(self.target.arr.name, Store(arr, index, self.expression.eval(state)))
+            if arr in array_to_length_map:
+                state.path_cond = And(state.path_cond, And(GE(index, Int(0)), LT(index, Int(array_to_length_map[arr]))))
         elif isinstance(self.target, RecordIndexExpression):
             state.get_variable(self.target.record)[self.target.element] = self.expression.eval(state)
         else:

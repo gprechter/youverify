@@ -1,6 +1,6 @@
-privateData: ARRAY[INT]
+privateData: ARRAY{INT}
 privateData_length: INT
-buf: ARRAY[INT]
+buf: ARRAY{INT}
 buf_length: INT
 i: INT
 k: INT
