@@ -27,8 +27,8 @@ class YouVerifyVisitor(ParseTreeVisitor):
             elif type == 'rec':
                 records[value.name] = value
             else:
-                name, parameters, local_variables, local_statements, local_labels = value
-                functions[name] = Function(name, parameters, local_variables, local_statements, local_labels)
+                name, parameters, local_variables, local_statements, local_labels, return_value = value
+                functions[name] = Function(name, parameters, local_variables, local_statements, local_labels, return_value)
 
         statements = []
         labels = dict()
@@ -71,7 +71,7 @@ class YouVerifyVisitor(ParseTreeVisitor):
                 labels[label] = line
             statements.append(stmt)
 
-        return ctx.name.text, parameters, variables, statements, labels
+        return ctx.name.text, parameters, variables, statements, labels, self.visit(ctx.return_type) if ctx.return_type else None
 
     # Visit a parse tree produced by YouVerifyParser#RETURN.
     def visitRETURN(self, ctx: YouVerifyParser.RETURNContext):

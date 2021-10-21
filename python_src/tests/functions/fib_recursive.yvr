@@ -1,4 +1,4 @@
-define fib(n: INT):
+define fib(n: INT) -> INT:
 	rec_call1: INT
 	rec_call2: INT
 	next_n: INT

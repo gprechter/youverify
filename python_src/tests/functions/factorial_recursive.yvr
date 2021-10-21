@@ -1,4 +1,4 @@
-define fact(n: INT):
+define fact(n: INT) -> INT:
 	rec_call: INT
 	next_n: INT
 	if n > 0 goto END

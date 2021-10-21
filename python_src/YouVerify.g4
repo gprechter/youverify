@@ -4,7 +4,7 @@ program: ((decls+=global_decl NEWLINE)* (decls+=global_decl)?) ((stmts+=labeled_
 global_decl: var=decl       #GLOBAL_VAR
            | rec=record     #GLOBAL_REC
            | func=function  #GLOBAL_FUNC;
-function: 'define' name=IDENTIFIER OPAREN ((params+=decl COMMA)* (params+=decl)?) CPAREN COLON NEWLINE
+function: 'define' name=IDENTIFIER OPAREN ((params+=decl COMMA)* (params+=decl)?) CPAREN (ARROW return_type=sort)? COLON NEWLINE
                                                 ((TAB decls+=decl NEWLINE)* (TAB decls+=decl)?)
                                                 ((TAB stmts+=labeled_stmt NEWLINE)* (TAB stmts+=labeled_stmt)?);
 record: 'record' name=IDENTIFIER OPAREN ((elems+=decl COMMA)* (elems+=decl)?) CPAREN;
@@ -42,6 +42,7 @@ TERNARY_OPERATOR: '?';
 IDENTIFIER: [a-zA-Z]([a-zA-Z0-9]|'_')*;
 INTEGER: '0'|([1-9][0-9]*);
 NEWLINE		: ('\r'? '\n' | '\r')+ ;
+ARROW       : '->';
 COMMA       : ',' ;
 OPAREN      : '(' ;
 CPAREN      : ')' ;

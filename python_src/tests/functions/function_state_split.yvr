@@ -1,4 +1,4 @@
-define f(x: INT, y: INT):
+define f(x: INT, y: INT) -> INT:
 	z: INT
 	if $sym{c, BOOL} goto ELSE
 	z = x + y

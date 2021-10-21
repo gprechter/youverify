@@ -1,6 +1,6 @@
 x: INT
 y: INT
-define f():
+define f() -> INT:
 	x = 10
 	return 5
 x = 5

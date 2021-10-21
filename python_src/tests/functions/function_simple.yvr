@@ -1,4 +1,4 @@
-define f(x: INT, y: INT):
+define f(x: INT, y: INT) -> INT:
 	z: INT
 	z = x + y
 	return z

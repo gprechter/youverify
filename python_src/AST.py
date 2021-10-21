@@ -103,13 +103,14 @@ class NewArrayExpression(Expression):
         return arr
 
 class Function:
-    def __init__(self, name, params, variables, statements, labels):
+    def __init__(self, name, params, variables, statements, labels, return_value):
         self.name = name
         self.params = params
         self.variables = variables
         self.variables.update(params)
         self.statements = statements
         self.labels = labels
+        self.return_value = return_value
 
     def __str__(self):
         return f"define {self.name}({', '.join(self.params)}): {', '.join(self.variables)}"
