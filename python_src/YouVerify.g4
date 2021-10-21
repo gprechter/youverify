@@ -11,8 +11,11 @@ record: 'record' name=IDENTIFIER OPAREN ((elems+=decl COMMA)* (elems+=decl)?) CP
 labeled_stmt: 'LABEL' identifier=IDENTIFIER ':' statement=stmt # LABELED
             | statement=stmt # UNLABELED;
 stmt: 'return' expression=expr # RETURN
+    | 'return' # RETURN_NO_VALUE
+    | 'assert' expression=expr # ASSERT
     | target=assign_target '=' expression=expr # ASSIGN
     | 'call' target=assign_target '=' operator=IDENTIFIER OPAREN ((operands+=expr COMMA)* (operands+=expr)?) CPAREN #FUNC_CALL
+    | 'call' operator=IDENTIFIER OPAREN ((operands+=expr COMMA)* (operands+=expr)?) CPAREN #FUNC_CALL_NO_VALUE
     | 'if' expression=expr 'goto' label=IDENTIFIER # CONDITIONAL_BRANCH
     | 'goto' label=IDENTIFIER # UNCONDITIONAL_BRANCH;
 assign_target: identifier=IDENTIFIER # ASSIGN_TARGET_IDENTIFIER

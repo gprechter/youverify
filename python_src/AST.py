@@ -123,8 +123,19 @@ class Return(Statement):
         self.expression = expression
 
     def exec(self, state):
-        state.pop_frame(self.expression.eval(state))
+        if self.expression:
+            state.pop_frame(self.expression.eval(state))
+        else:
+            state.pop_frame(self.expression)
         return [state]
+
+class Assert(Statement):
+    def __init__(self, expression):
+        self.expression = expression
+
+    def exec(self, state):
+        state.path_cond = And(state.path_cond, self.expression.eval(state))
+        return [state.advance_pc()]
 
 class Assignment(Statement):
     def __init__(self, target, expression):
@@ -181,6 +192,28 @@ class FunctionCallAndAssignment(Statement):
 
         state.advance_pc()
         state.push_frame(Frame(function, 0, function.variables, self.target))
+        for i, param in enumerate(function.params):
+            state.assign_variable(param, arguments[i])
+        return [state]
+
+class FunctionCallWithNoAssignment(Statement):
+    def __init__(self, function, arguments):
+        self.function = function
+        self.arguments = arguments
+
+    def exec(self, state):
+
+        if self.function in YVR_BUILTIN_OP_TO_PYSMT:
+            assert False, "Builtins can never be called with a target."
+
+        function = state.frame_stack[0].function.functions[self.function]
+
+        arguments = []
+        for argument in self.arguments:
+            arguments.append(argument.eval(state))
+
+        state.advance_pc()
+        state.push_frame(Frame(function, 0, function.variables, None))
         for i, param in enumerate(function.params):
             state.assign_variable(param, arguments[i])
         return [state]

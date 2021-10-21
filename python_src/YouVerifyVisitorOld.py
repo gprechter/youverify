@@ -77,9 +77,21 @@ class YouVerifyVisitor(ParseTreeVisitor):
     def visitRETURN(self, ctx: YouVerifyParser.RETURNContext):
         return Return(self.visit(ctx.expression))
 
+    # Visit a parse tree produced by YouVerifyParser#RETURN_NO_VALUE.
+    def visitRETURN_NO_VALUE(self, ctx:YouVerifyParser.RETURN_NO_VALUEContext):
+        return Return(None)
+
     # Visit a parse tree produced by YouVerifyParser#FUNC_CALL.
     def visitFUNC_CALL(self, ctx: YouVerifyParser.FUNC_CALLContext):
         return FunctionCallAndAssignment(self.visit(ctx.target), ctx.operator.text, [self.visit(e) for e in ctx.operands])
+
+    # Visit a parse tree produced by YouVerifyParser#FUNC_CALL_NO_VALUE.
+    def visitFUNC_CALL_NO_VALUE(self, ctx: YouVerifyParser.FUNC_CALL_NO_VALUEContext):
+        return FunctionCallWithNoAssignment(ctx.operator.text, [self.visit(e) for e in ctx.operands])
+
+    # Visit a parse tree produced by YouVerifyParser#ASSERT.
+    def visitASSERT(self, ctx: YouVerifyParser.ASSERTContext):
+        return Assert(self.visit(ctx.expression))
 
     # Visit a parse tree produced by YouVerifyParser#LABELED.
     def visitLABELED(self, ctx: YouVerifyParser.LABELEDContext):

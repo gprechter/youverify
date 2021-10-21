@@ -54,6 +54,16 @@ class YouVerifyVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by YouVerifyParser#RETURN_NO_VALUE.
+    def visitRETURN_NO_VALUE(self, ctx:YouVerifyParser.RETURN_NO_VALUEContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YouVerifyParser#ASSERT.
+    def visitASSERT(self, ctx:YouVerifyParser.ASSERTContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by YouVerifyParser#ASSIGN.
     def visitASSIGN(self, ctx:YouVerifyParser.ASSIGNContext):
         return self.visitChildren(ctx)
@@ -61,6 +71,11 @@ class YouVerifyVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by YouVerifyParser#FUNC_CALL.
     def visitFUNC_CALL(self, ctx:YouVerifyParser.FUNC_CALLContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YouVerifyParser#FUNC_CALL_NO_VALUE.
+    def visitFUNC_CALL_NO_VALUE(self, ctx:YouVerifyParser.FUNC_CALL_NO_VALUEContext):
         return self.visitChildren(ctx)
 
 

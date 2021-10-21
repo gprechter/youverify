@@ -63,8 +63,8 @@ class State:
 
     def pop_frame(self, return_value):
         target = self.frame_stack.pop().return_target
-
-        self.assign_variable(target.name, return_value)
+        if target is not None and return_value is not None:
+            self.assign_variable(target.name, return_value)
 
     @property
     def is_finished(self):
