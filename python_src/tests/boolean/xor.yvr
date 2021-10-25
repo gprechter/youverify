@@ -1,0 +1,8 @@
+t, f: BOOL
+a, b, c, d: BOOL
+t = true
+f = false
+a = t ^ t
+b = t ^ f
+c = f ^ t
+d = f ^ f

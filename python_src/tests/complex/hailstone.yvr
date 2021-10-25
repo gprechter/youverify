@@ -1,0 +1,17 @@
+result: INT
+define hailstone(start:INT) -> INT:
+	remainder: INT
+	recursive_call: INT
+	remainder = start % 2
+	if start != 1 goto ELSE
+	return 1
+	LABEL ELSE: if remainder == 0 goto EVEN
+	start = start / 3
+	call recursive = hailstone(start)
+	return 1 + recursive
+	LABEL EVEN: start = 2 * start
+	start = start + 1
+	call recursive = hailstone(start)
+	return 1 + recursive
+
+call result = hailstone(34)

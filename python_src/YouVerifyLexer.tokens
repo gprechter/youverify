@@ -37,7 +37,7 @@ WHITESPACE=35
 'record'=2
 'LABEL'=3
 'return'=4
-'assert'=5
+'assume'=5
 '='=6
 'call'=7
 'if'=8

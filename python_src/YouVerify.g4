@@ -12,7 +12,7 @@ labeled_stmt: 'LABEL' identifier=IDENTIFIER ':' statement=stmt # LABELED
             | statement=stmt # UNLABELED;
 stmt: 'return' expression=expr # RETURN
     | 'return' # RETURN_NO_VALUE
-    | 'assert' expression=expr # ASSERT
+    | 'assume' expression=expr # ASSERT
     | target=assign_target '=' expression=expr # ASSIGN
     | 'call' target=assign_target '=' operator=IDENTIFIER OPAREN ((operands+=expr COMMA)* (operands+=expr)?) CPAREN #FUNC_CALL
     | 'call' operator=IDENTIFIER OPAREN ((operands+=expr COMMA)* (operands+=expr)?) CPAREN #FUNC_CALL_NO_VALUE
@@ -21,7 +21,7 @@ stmt: 'return' expression=expr # RETURN
 assign_target: identifier=IDENTIFIER # ASSIGN_TARGET_IDENTIFIER
              | rec=IDENTIFIER PERIOD item=IDENTIFIER # ASSIGN_TARGET_RECORD_INDEX
              | expression=array_index_expr # ASSIGN_TARGET_ARRAY_INDEX;
-decl: identifier=IDENTIFIER ':' s=sort;
+decl: ((identifiers+=IDENTIFIER COMMA)* (identifiers+=IDENTIFIER)?) ':' s=sort;
 expr: (atom=BOOLEAN | atom=INTEGER | atom=IDENTIFIER) # ATOMIC
     | 'ARRAY[]' '{' expression=expr '}' # ARRAY
     | 'ARRAY[' length=INTEGER ']' '{' expression=expr '}' # FIXED_SIZE_ARRAY
@@ -32,12 +32,13 @@ expr: (atom=BOOLEAN | atom=INTEGER | atom=IDENTIFIER) # ATOMIC
     | expression=array_index_expr # ARRAY_INDEX
     | op=UNARY_OPERATOR e=expr # UNARY
     | lhs=expr op=BINARY_OPERATOR rhs=expr # BINARY
-    | op=TERNARY_OPERATOR first=expr second=expr third=expr #TERNARY;
+    | first=expr op=TERNARY_OPERATOR second=expr COLON third=expr #TERNARY;
 array_index_expr: array=IDENTIFIER '[' index=expr ']';
 sort: (s='BOOL' | s='INT') | (s='ARRAY' '{' contained_sort=sort '}') | (s = 'BV' '[' size=INTEGER']') | s=IDENTIFIER;
 BOOLEAN: 'true' | 'false';
 UNARY_OPERATOR: '!' | '@';
-BINARY_OPERATOR: '&' | '|' | '+' | '-' | '*' | '/' | '%' | '<=' | '<' | '>=' | '>' | '==' | '!=';
+BINARY_OPERATOR: '&' | '|' | '^' | '=>' | '==' | '!='
+| '+' | '-' | '*' | '/' | '%' | '<=' | '<' | '>=' | '>';
 TERNARY_OPERATOR: '?';
 IDENTIFIER: [a-zA-Z]([a-zA-Z0-9]|'_')*;
 INTEGER: '0'|([1-9][0-9]*);

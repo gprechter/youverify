@@ -1,0 +1,9 @@
+a: BOOL
+b: BOOL
+c: BOOL
+
+a = true
+b = false
+a = ! a
+b = ! b
+c = ! b

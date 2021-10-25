@@ -7,5 +7,7 @@ define fact(n: INT) -> INT:
 	call rec_call = fact(next_n)
 	return rec_call * n
 result: INT
-
-call result = fact(5)
+symbol: INT
+symbol = $sym{INT}
+assume symbol < 10
+call result = fact(symbol)

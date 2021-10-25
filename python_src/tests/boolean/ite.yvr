@@ -1,0 +1,3 @@
+a, b: BOOL
+a = true ? true : false
+b = false ? true : false

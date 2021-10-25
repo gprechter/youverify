@@ -1,0 +1,8 @@
+t, f: BOOL
+a, b, c, d: BOOL
+t = true
+f = false
+a = 1 == 1
+b = 1 == 2
+c = 2 == 1
+d = 2 == 2
