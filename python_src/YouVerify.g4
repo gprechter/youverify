@@ -30,15 +30,14 @@ expr: (atom=BOOLEAN | atom=INTEGER | atom=IDENTIFIER) # ATOMIC
     | '$sym' '{' identifier=IDENTIFIER ',' s=sort '}' # NAMED_SYMBOL
     | rec=IDENTIFIER PERIOD item=IDENTIFIER # RECORD_INDEX
     | expression=array_index_expr # ARRAY_INDEX
-    | op=UNARY_OPERATOR e=expr # UNARY
-    | lhs=expr op=BINARY_OPERATOR rhs=expr # BINARY
+    | op=OPERATOR e=expr # UNARY
+    | lhs=expr op=OPERATOR rhs=expr # BINARY
     | first=expr op=TERNARY_OPERATOR second=expr COLON third=expr #TERNARY;
 array_index_expr: array=IDENTIFIER '[' index=expr ']';
 sort: (s='BOOL' | s='INT') | (s='ARRAY' '{' contained_sort=sort '}') | (s = 'BV' '[' size=INTEGER']') | s=IDENTIFIER;
 BOOLEAN: 'true' | 'false';
-UNARY_OPERATOR: '!' | '@';
-BINARY_OPERATOR: '&' | '|' | '^' | '=>' | '==' | '!='
-| '+' | '-' | '*' | '/' | '%' | '<=' | '<' | '>=' | '>';
+OPERATOR: '&' | '|' | '^' | '=>' | '==' | '!='
+| '+' | '-' | '*' | '/' | '%' | '<=' | '<' | '>=' | '>' | '!' | '@';
 TERNARY_OPERATOR: '?';
 IDENTIFIER: [a-zA-Z]([a-zA-Z0-9]|'_')*;
 INTEGER: '0'|([1-9][0-9]*);

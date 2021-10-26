@@ -6,9 +6,9 @@ from YouVerifyVisitorOld import YouVerifyVisitor
 from YouVerifyLexer import YouVerifyLexer
 from YouVerifyParser import YouVerifyParser
 
-from pysmt.shortcuts import TRUE, is_sat, simplify, get_model, get_free_variables, Solver
+from pysmt.shortcuts import TRUE, is_sat, simplify, get_model, get_free_variables, Solver, Int
 from pysmt.typing import _BoolType
-from AST import Program
+from AST import Program, Variable, array_to_length_map
 from State import State, Frame
 from SMTLibUtil import *
 
@@ -40,7 +40,12 @@ def simplify_smt(value):
     if isinstance(value, dict):
         return str({k: simplify_smt(v) for k, v in value.items()})
     else:
-        return simplify(value)
+        simplified = simplify(value)
+        if simplified.is_array_value() and value in array_to_length_map:
+            length = array_to_length_map[value]
+            return f"{[simplified.array_value_get(Int(i)) for i in range(length)]}"
+        else:
+            return simplified
 
 def display_states_smt2(states):
     for i, state in enumerate(states):

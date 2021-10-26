@@ -1,0 +1,42 @@
+result_arr: ARRAY{INT}
+result_int, component, bit: INT
+i: INT
+done: BOOL
+
+define get_bits(bv: BV[8]) -> ARRAY{INT}:
+	arr: ARRAY{INT}
+	lsb: BV[1]
+	lsb_int: INT
+	i: INT
+	i = 0
+	arr = ARRAY[8]{0}
+	LABEL LOOP: if i >= 8 goto END
+	call lsb = extract(bv, 0, 0)
+	call bv = bvlshr(bv, BV{1, 8})
+	call lsb_int = bv2nat(lsb)
+	arr[i] = lsb_int
+	i = i + 1
+	goto LOOP
+	LABEL END: return arr
+
+define exp(x: INT, y: INT) -> INT:
+	recursive_call: INT
+	if y == 0 goto END
+	y = y - 1
+	call recursive_call = exp(x, y)
+	return x * recursive_call
+	LABEL END: return 1
+
+call result_arr = get_bits(BV{183, 8})
+
+i = 0
+result_int = 0
+
+LABEL LOOP: if i >= 8 goto END
+bit = result_arr[i]
+call component = exp(2, i)
+component = bit * component
+result_int = result_int + component
+i = i + 1
+goto LOOP
+LABEL END: done = true

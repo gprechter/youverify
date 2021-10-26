@@ -2,7 +2,7 @@ from pysmt.typing import BOOL, INT, ArrayType, BVType
 from pysmt.shortcuts import And, Or, Plus, Minus, GE, LT
 from pysmt.shortcuts import TRUE, FALSE, BVAdd, BVConcat, BVExtract
 from pysmt.shortcuts import BVNot, BVAnd, BVOr
-from pysmt.shortcuts import BVNeg, BVAdd, BVMul, BVUDiv, BVURem
+from pysmt.shortcuts import BVNeg, BVAdd, BVMul, BVUDiv, BVURem, BVToNatural
 from pysmt.shortcuts import BVLShl, BVLShr, BVULT
 from CoreTheory import *
 from IntegerTheory import *
@@ -37,4 +37,5 @@ YVR_BUILTIN_OP_TO_PYSMT = {"bvnot": BVNot,
                            "bvlshr": BVLShr,
                            "bvult": BVULT,
                            "concat": BVConcat,
+                           "bv2nat": BVToNatural,
                            "extract": lambda bv, s, e: BVExtract(bv, s.constant_value(), e.constant_value())}

@@ -147,9 +147,13 @@ class Assignment(Statement):
         if isinstance(self.target, ArrayIndexExpression):
             index = self.target.index.eval(state)
             arr = self.target.arr.eval(state)
-            state.assign_variable(self.target.arr.name, Store(arr, index, self.expression.eval(state)))
+            new_arr = Store(arr, index, self.expression.eval(state))
+            state.assign_variable(self.target.arr.name, new_arr)
             if arr in array_to_length_map:
                 state.path_cond = And(state.path_cond, And(GE(index, Int(0)), LT(index, Int(array_to_length_map[arr]))))
+
+            array_to_length_map[new_arr] = array_to_length_map[arr]
+            array_to_length_map.pop(arr)
         elif isinstance(self.target, RecordIndexExpression):
             state.get_variable(self.target.record)[self.target.element] = self.expression.eval(state)
         else:

@@ -22,8 +22,8 @@ class YouVerifyVisitor(ParseTreeVisitor):
         for decl in ctx.decls:
             type, value = self.visit(decl)
             if type == 'var':
-                identifiers, sort = value
-                for identifier in identifiers:
+                for val in value:
+                    identifier, sort = val
                     variables[identifier] = Variable(sort)
             elif type == 'rec':
                 records[value.name] = value
@@ -56,13 +56,13 @@ class YouVerifyVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by YouVerifyParser#record.
     def visitRecord(self, ctx: YouVerifyParser.RecordContext):
-        elements = {identifier: Variable(sort) for identifier, sort in [self.visit(p) for p in ctx.elems]}
+        elements = {identifier: Variable(sort) for identifier, sort in sum([self.visit(p) for p in ctx.elems], [])}
         return Record(ctx.name.text, elements)
 
     # Visit a parse tree produced by YouVerifyParser#function.
     def visitFunction(self, ctx: YouVerifyParser.FunctionContext):
-        parameters = {identifier: Variable(sort) for identifier, sort in [self.visit(p) for p in ctx.params]}
-        variables = {identifier: Variable(sort) for identifier, sort in [self.visit(p) for p in ctx.decls]}
+        parameters = {identifier: Variable(sort) for identifier, sort in sum([self.visit(p) for p in ctx.params], [])}
+        variables = {identifier: Variable(sort) for identifier, sort in sum([self.visit(p) for p in ctx.decls], [])}
 
         statements = list()
         labels = dict()
@@ -128,7 +128,7 @@ class YouVerifyVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by YouVerifyParser#decl.
     def visitDecl(self, ctx:YouVerifyParser.DeclContext):
-        return [id.text for id in ctx.identifiers], self.visit(ctx.s)
+        return [(id.text, self.visit(ctx.s)) for id in ctx.identifiers]
 
 
     # Visit a parse tree produced by YouVerifyParser#ATOMIC.
