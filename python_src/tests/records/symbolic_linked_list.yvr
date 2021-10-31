@@ -1,0 +1,37 @@
+record link(elem: INT, next: link)
+
+depth_limit, result, i: INT
+correct_sum, done: BOOL
+lnk, head: link
+
+define sum(l: link) -> INT:
+	next: link
+	e: INT
+	recursive_call: INT
+	not_null: BOOL
+	not_null = l != null
+	if not_null goto ELSE
+	return 0
+	LABEL ELSE: next = l.next
+	assume depth_limit > 0
+	depth_limit = depth_limit - 1
+	call recursive_call = sum(next)
+	e = l.elem
+	return e + recursive_call
+
+depth_limit = 10
+new lnk = $sym{link}
+call result = sum(lnk)
+if result == 256 goto ELSE
+correct_sum = false
+goto END
+LABEL ELSE: correct_sum = true
+LABEL END: head = lnk
+
+i = 0
+LABEL LOOP: if lnk == null goto END2
+i = lnk.elem
+assume i > 0
+lnk = lnk.next
+goto LOOP
+LABEL END2: done = true

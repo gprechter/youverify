@@ -59,6 +59,11 @@ class YouVerifyVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by YouVerifyParser#ASSUME.
+    def visitASSUME(self, ctx:YouVerifyParser.ASSUMEContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by YouVerifyParser#ASSERT.
     def visitASSERT(self, ctx:YouVerifyParser.ASSERTContext):
         return self.visitChildren(ctx)

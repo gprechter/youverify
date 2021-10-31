@@ -65,7 +65,7 @@ class YouVerifyVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by YouVerifyParser#ALLOC_SYMB.
     def visitALLOC_SYMB(self, ctx: YouVerifyParser.ALLOC_SYMBContext):
-        return self.visitChildren(ctx)
+        return Alloc_Symbolic(self.visit(ctx.target), ctx.identifier.text)
 
 
     # Visit a parse tree produced by YouVerifyParser#function.
@@ -98,6 +98,14 @@ class YouVerifyVisitor(ParseTreeVisitor):
     # Visit a parse tree produced by YouVerifyParser#FUNC_CALL_NO_VALUE.
     def visitFUNC_CALL_NO_VALUE(self, ctx: YouVerifyParser.FUNC_CALL_NO_VALUEContext):
         return FunctionCallWithNoAssignment(ctx.operator.text, [self.visit(e) for e in ctx.operands])
+
+    # Visit a parse tree produced by YouVerifyParser#ASSERT.
+    def visitASSERT(self, ctx: YouVerifyParser.ASSERTContext):
+        return
+
+    # Visit a parse tree produced by YouVerifyParser#ASSUME.
+    def visitASSUME(self, ctx: YouVerifyParser.ASSUMEContext):
+        return Assume(self.visit(ctx.expression))
 
     # Visit a parse tree produced by YouVerifyParser#ASSERT.
     def visitASSERT(self, ctx: YouVerifyParser.ASSERTContext):

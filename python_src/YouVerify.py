@@ -29,12 +29,13 @@ def main(argv):
             if state.is_finished:
                 states.append(state)
                 continue
-            states.extend([s for s in state.current_statement.exec(state) if is_sat(state.path_cond)])
+            stmt = state.current_statement
+            states.extend([s for s in stmt.exec(state) if is_sat(state.path_cond)])
         return states
 
     return exec(program)
 
-def simplify_smt(value):
+def simplify_smt(value, type):
     if isinstance(value, dict):
         return str({k: simplify_smt(v) for k, v in value.items()})
     elif isinstance(value, YouVerifyArray):
@@ -45,9 +46,23 @@ def simplify_smt(value):
     else:
         return simplify(value)
 
+def display_model(state, variables, model, depth = 0):
+    for k, v in variables.items():
+        if isinstance(v[0], str):
+            elems = State.records[v[0]].elements
+            if model.get_value(v[1]).constant_value() == 0:
+                print(f"{'  ' * depth}{k}: {'null'}")
+            else:
+                print(f"{'  ' * depth}{k}:")
+                display_model(state,
+                          {k: [elems[k].name, v] for k, v in state.addr_map[model.get_value(v[1]).constant_value()].items()},
+                          model, depth = depth + 1)
+        else:
+            print(f"{'  ' * depth}{k}: {model.get_value(v[1])}")
+
 def display_states_smt2(states):
     for i, state in enumerate(states):
-        state_desc = f"{i}\t" + str({k: simplify_smt(v[1]) for k, v in state.head_frame().variables.items()})
+        state_desc = f"{i}\t" + str({k: simplify_smt(v[1], v[0]) for k, v in state.head_frame().variables.items()})
         print("" + "=" * len(state_desc) + "")
         print(state_desc)
         print("Memory Map: ", state.addr_map)
@@ -55,6 +70,7 @@ def display_states_smt2(states):
         print("(set-option :produce-models true)")
         print('\n'.join(gen_declare_const(state.path_cond)))
         print(gen_assert(simplify(state.path_cond)))
+        display_model(state, state.head_frame().variables, get_model(state.path_cond))
 
 def concrete_evaluation(states):
     state = states[0]

@@ -1,4 +1,4 @@
-from pysmt.shortcuts import And, Or, Not, Symbol, TRUE, FALSE, is_sat, Array, GE, LT, NotEquals
+from pysmt.shortcuts import And, Or, Not, Symbol, TRUE, FALSE, is_sat, Array, GE, LT, Equals
 from pysmt.shortcuts import Solver, simplify, Int, FreshSymbol, Plus, Store, Select, BV
 from pysmt.shortcuts import LE, LT
 from pysmt.typing import INT, BVType
@@ -32,6 +32,9 @@ class Variable(AtomicExpression):
     def eval(self, state):
         return state.get_variable(self.name)
 
+    def __repr__(self):
+        return self.name
+
 class RecordIndexExpression(Expression):
     def __init__(self, record, element):
         self.record = record
@@ -42,8 +45,21 @@ class RecordIndexExpression(Expression):
         if address.is_constant():
             return state.addr_map[address.constant_value()][self.element]
         else:
-            state.path_cond = And(state.path_cond, NotEquals(address, BV(0, 32)))
-            return state.addr_map[address]
+            if address.symbol_name() not in state.concrete_symbolic_pointers:
+                concrete_address = state.base_addr
+                state.path_cond = And(state.path_cond, Equals(address, BV(concrete_address, 32)))
+                state.concrete_symbolic_pointers[address.symbol_name()] = concrete_address
+                state.base_addr = state.base_addr + 1
+            else:
+                concrete_address = state.concrete_symbolic_pointers[address.symbol_name()]
+            symb_elems ={}
+            for k, v in State.records[state.get_variable_type(self.record)].elements.items():
+                if isinstance(v.name, str):
+                    symb_elems[k] = Symbol(f"{address.symbol_name()}_{k}", BVType(32))
+                else:
+                    symb_elems[k] = Symbol(f"{address.symbol_name()}_{k}", INT)
+            state.addr_map[concrete_address] = symb_elems
+            return state.addr_map[concrete_address][self.element]
 
 class Value(AtomicExpression):
     def __init__(self, value):
@@ -142,13 +158,24 @@ class Return(Statement):
             state.pop_frame(self.expression)
         return [state]
 
-class Assert(Statement):
+class Assume(Statement):
     def __init__(self, expression):
         self.expression = expression
 
     def exec(self, state):
         state.path_cond = And(state.path_cond, self.expression.eval(state))
         return [state.advance_pc()]
+
+class Assert(Statement):
+    def __init__(self, expression):
+        self.expression = expression
+
+    def exec(self, state):
+        if is_sat(And(state.path_cond, Not(self.expression.eval(state)))):
+            state.path_cond = FALSE()
+            return [state]
+        else:
+            return [state.advance_pc()]
 
 class Alloc_Concrete(Statement):
     def __init__(self, target, record, arguments):
@@ -157,7 +184,6 @@ class Alloc_Concrete(Statement):
         self.arguments = arguments
 
     def exec(self, state):
-        print(State.records)
         address = state.base_addr
         arguments = [arg.eval(state) for arg in self.arguments]
         state.addr_map[address] = {k: v for k, v in zip(State.records[self.record].elements, arguments)}
@@ -171,7 +197,7 @@ class Alloc_Symbolic(Statement):
         self.record = record
 
     def exec(self, state):
-        state.assign_variable(Symbol(f"{self.record}.{self.target}", BVType(32)))
+        state.assign_variable(self.target.name, Symbol(f"{self.record}_{self.target.name}", BVType(32)))
         return [state.advance_pc()]
 
 class Assignment(Statement):
@@ -193,6 +219,9 @@ class Assignment(Statement):
         else:
             state.assign_variable(self.target.name, self.expression.eval(state))
         return [state.advance_pc()]
+
+    def __repr__(self):
+        return f"{repr(self.target)} = {repr(self.expression)}"
 
 class Record:
     def __init__(self, name, elements):
@@ -230,7 +259,7 @@ class FunctionCallAndAssignment(Statement):
             arguments.append(argument.eval(state))
 
         state.advance_pc()
-        state.push_frame(Frame(function, 0, function.variables, self.target))
+        state.push_frame(Frame(function, 0, {k: [v.name, None] for k, v in function.variables.items()}, self.target))
         for i, param in enumerate(function.params):
             state.assign_variable(param, arguments[i])
         return [state]
