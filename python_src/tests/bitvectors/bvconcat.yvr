@@ -1,7 +1,11 @@
-a: BV[16]
-b: BV[16]
-c: BV[32]
+a: BV[4]
+b: BV[4]
+c: BV[8]
+d: BV[8]
+e: BV[6]
 
-a = BV{5, 16}
-b = BV{4, 16}
+a = BV{5, 4}
+b = BV{4, 4}
 call c = concat(a, b)
+call d = concat(b, a)
+call e = concat(BV{3, 2}, a)

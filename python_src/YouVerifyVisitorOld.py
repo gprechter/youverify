@@ -59,6 +59,15 @@ class YouVerifyVisitor(ParseTreeVisitor):
         elements = {identifier: Variable(sort) for identifier, sort in sum([self.visit(p) for p in ctx.elems], [])}
         return Record(ctx.name.text, elements)
 
+    # Visit a parse tree produced by YouVerifyParser#ALLOC_CONC.
+    def visitALLOC_CONC(self, ctx: YouVerifyParser.ALLOC_CONCContext):
+        return Alloc_Concrete(self.visit(ctx.target), ctx.operator.text, [self.visit(e) for e in ctx.operands])
+
+    # Visit a parse tree produced by YouVerifyParser#ALLOC_SYMB.
+    def visitALLOC_SYMB(self, ctx: YouVerifyParser.ALLOC_SYMBContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by YouVerifyParser#function.
     def visitFunction(self, ctx: YouVerifyParser.FunctionContext):
         parameters = {identifier: Variable(sort) for identifier, sort in sum([self.visit(p) for p in ctx.params], [])}
@@ -138,7 +147,10 @@ class YouVerifyVisitor(ParseTreeVisitor):
         elif ctx.INTEGER():
             return Value(Int(int(ctx.atom.text)))
         elif ctx.IDENTIFIER():
-            return Variable(ctx.atom.text)
+            if ctx.atom.text.lower() == 'null':
+                return Value(BV(0, 32))
+            else:
+                return Variable(ctx.atom.text)
 
     # Visit a parse tree produced by YouVerifyParser#ARRAY.
     def visitARRAY(self, ctx:YouVerifyParser.ARRAYContext):

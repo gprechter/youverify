@@ -1,7 +1,11 @@
-a: BV[16]
-b: BV[16]
-c: BV[16]
-
+a, b, c, d, e: BV[16]
 a = BV{5, 16}
 b = BV{4, 16}
 call c = bvadd(a, b)
+
+a = BV{10, 16}
+b = BV{7, 16}
+call d = bvadd(a, b)
+
+a = BV{28986, 16}
+call e = bvadd(a, a)

@@ -1,5 +1,11 @@
 a: BV[8]
 b: BV[4]
+c: BV[6]
+d: BV[2]
+e: BV[1]
 
 a = BV{16, 8}
 call b = extract(a, 3, 6)
+call c = extract(a, 2, 7)
+call d = extract(a, 0, 1)
+call e = extract(a, 4, 4)

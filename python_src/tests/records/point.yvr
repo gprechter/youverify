@@ -1,0 +1,12 @@
+record point(x, y: INT)
+define add_points(a, b: point) -> point:
+	x, y: INT
+	c: point
+	x = a.x + b.x
+	y = a.y + b.y
+	new c = point(x, y)
+	return c
+a, b, c: point
+new a = point(3, 4)
+b = a
+call c = add_points(a, b)

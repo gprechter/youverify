@@ -8,7 +8,7 @@ from YouVerifyParser import YouVerifyParser
 
 from pysmt.shortcuts import TRUE, is_sat, simplify, get_model, get_free_variables, Solver, Int
 from pysmt.typing import _BoolType
-from AST import Program, Variable, array_to_length_map
+from AST import Program, Variable, array_to_length_map, YouVerifyArray
 from State import State, Frame
 from SMTLibUtil import *
 
@@ -20,12 +20,10 @@ def main(argv):
     variables, functions, statements, labels, records = YouVerifyVisitor().visitProgram(parser.program())
     program = Program(statements, variables, labels, functions)
 
-    for n, v in variables.items():
-        if v.name in records:
-            variables[n] = records[v.name].elements
+    State.records = records
 
     def exec(program):
-        states = [State(TRUE(), [Frame(program, 0, variables.copy(), None)])]
+        states = [State(TRUE(), [Frame(program, 0, {k: [v.name, None] for k, v in program.variables.copy().items()}, None)])]
         while [state for state in states if not state.is_finished]:
             state = states.pop(0)
             if state.is_finished:
@@ -39,19 +37,20 @@ def main(argv):
 def simplify_smt(value):
     if isinstance(value, dict):
         return str({k: simplify_smt(v) for k, v in value.items()})
-    else:
-        simplified = simplify(value)
-        if simplified.is_array_value() and value in array_to_length_map:
-            length = array_to_length_map[value]
-            return f"{[simplified.array_value_get(Int(i)) for i in range(length)]}"
+    elif isinstance(value, YouVerifyArray):
+        if value.length:
+            return f"{[simplify(value.array).array_value_get(Int(i)) for i in range(value.length)]}"
         else:
-            return simplified
+            return simplify(value.array)
+    else:
+        return simplify(value)
 
 def display_states_smt2(states):
     for i, state in enumerate(states):
-        state_desc = f"{i}\t" + str({k: simplify_smt(v) for k, v in state.head_frame().variables.items()})
+        state_desc = f"{i}\t" + str({k: simplify_smt(v[1]) for k, v in state.head_frame().variables.items()})
         print("" + "=" * len(state_desc) + "")
         print(state_desc)
+        print("Memory Map: ", state.addr_map)
         print("=" * len(state_desc))
         print("(set-option :produce-models true)")
         print('\n'.join(gen_declare_const(state.path_cond)))

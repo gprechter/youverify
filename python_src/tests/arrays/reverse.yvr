@@ -1,0 +1,27 @@
+arr: ARRAY{INT}
+
+define populate(arr: ARRAY{INT}, len: INT):
+	i: INT
+	i = 0
+	LABEL LOOP: if i >= len goto END
+	arr[i] = i
+	i = i + 1
+	goto LOOP
+	LABEL END: return
+
+define reverse(arr: ARRAY{INT}, len: INT) -> ARRAY{INT}:
+	i, j: INT
+	new: ARRAY{INT}
+	new = ARRAY[10]{0}
+	i = 0
+	LABEL LOOP: if i >= len goto END
+	j = len - i
+	j = j - 1
+	new[j] = arr[i]
+	i = i + 1
+	goto LOOP
+	LABEL END: return new
+
+arr = ARRAY[10]{0}
+call populate(arr, 10)
+call arr = reverse(arr, 10)

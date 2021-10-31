@@ -1,4 +1,4 @@
-from copy import copy
+from copy import copy, deepcopy
 
 from pysmt.shortcuts import TRUE, And, Not, Store
 
@@ -13,25 +13,28 @@ class Frame:
         return Frame(self.function, self.pc, self.variables.copy(), self.return_target)
 
 class State:
-
-    def __init__(self, path_cond, frame_stack):
+    records = {}
+    def __init__(self, path_cond, frame_stack, base_addr = 1, addr_map = {0: None}):
         self.path_cond = path_cond
         self.frame_stack = frame_stack
+        self.base_addr = base_addr
+        self.addr_map = addr_map
 
     def __copy__(self):
-        return State(self.path_cond, [copy(f) for f in self.frame_stack])
+        return State(self.path_cond, [copy(f) for f in self.frame_stack], self.base_addr, deepcopy(self.addr_map))
 
     def assign_variable(self, var, val):
+        print(self.head_frame().variables, self.addr_map)
         if var in self.head_frame().variables:
-            self.head_frame().variables[var] = val
+            self.head_frame().variables[var] = [self.head_frame().variables[var][0], val]
         else:
-            self.frame_stack[0].variables[var] = val
+            self.frame_stack[0].variables[var] = [self.frame_stack[0].variables[var][0], val]
 
     def get_variable(self, var):
         if var in self.head_frame().variables:
-            return self.head_frame().variables[var]
+            return self.head_frame().variables[var][1]
         else:
-            return self.frame_stack[0].variables[var]
+            return self.frame_stack[0].variables[var][1]
     def split(self, cond, pc):
         taken_state = copy(self)
         not_taken_state = copy(self)

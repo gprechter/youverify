@@ -1,0 +1,10 @@
+record link(elem: INT, next: link)
+x, temp: link
+i: INT
+i = 1
+temp = null
+LABEL LOOP: if i > 10 goto END
+new temp = link(i, temp)
+i = i + 1
+goto LOOP
+LABEL END: x = temp

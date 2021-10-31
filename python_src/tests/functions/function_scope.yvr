@@ -1,0 +1,18 @@
+x, y: BOOL
+define f(x: BOOL):
+	x = false
+	return
+define g():
+	x: BOOL
+	x = false
+	return
+define h() -> BOOL:
+	x: BOOL
+	x = y
+	return x
+x = true
+y = false
+z = true
+call f(x)
+call g()
+call z = h()

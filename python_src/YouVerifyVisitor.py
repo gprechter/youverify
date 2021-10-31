@@ -79,6 +79,16 @@ class YouVerifyVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by YouVerifyParser#ALLOC_CONC.
+    def visitALLOC_CONC(self, ctx:YouVerifyParser.ALLOC_CONCContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YouVerifyParser#ALLOC_SYMB.
+    def visitALLOC_SYMB(self, ctx:YouVerifyParser.ALLOC_SYMBContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by YouVerifyParser#CONDITIONAL_BRANCH.
     def visitCONDITIONAL_BRANCH(self, ctx:YouVerifyParser.CONDITIONAL_BRANCHContext):
         return self.visitChildren(ctx)

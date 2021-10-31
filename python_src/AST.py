@@ -1,7 +1,7 @@
-from pysmt.shortcuts import And, Or, Not, Symbol, TRUE, FALSE, is_sat, Array, GE, LT
-from pysmt.shortcuts import Solver, simplify, Int, FreshSymbol, Plus, Store, Select
+from pysmt.shortcuts import And, Or, Not, Symbol, TRUE, FALSE, is_sat, Array, GE, LT, NotEquals
+from pysmt.shortcuts import Solver, simplify, Int, FreshSymbol, Plus, Store, Select, BV
 from pysmt.shortcuts import LE, LT
-from pysmt.typing import INT
+from pysmt.typing import INT, BVType
 from State import State, Frame
 from Mappings import YVR_BUILTIN_OP_TO_PYSMT
 
@@ -38,7 +38,12 @@ class RecordIndexExpression(Expression):
         self.element = element
 
     def eval(self, state):
-        return state.get_variable(self.record)[self.element]
+        address = simplify(state.get_variable(self.record))
+        if address.is_constant():
+            return state.addr_map[address.constant_value()][self.element]
+        else:
+            state.path_cond = And(state.path_cond, NotEquals(address, BV(0, 32)))
+            return state.addr_map[address]
 
 class Value(AtomicExpression):
     def __init__(self, value):
@@ -46,6 +51,11 @@ class Value(AtomicExpression):
 
     def eval(self, state):
         return self.value
+
+class YouVerifyArray:
+    def __init__(self, default_value, length=None):
+        self.length = length
+        self.array = Array(INT, default_value)
 
 class UniqueSymbol(Value):
     def __init__(self, type):
@@ -87,7 +97,11 @@ class ArrayIndexExpression(Expression):
         self.index = index
 
     def eval(self, state):
-        return Select(self.arr.eval(state), self.index.eval(state))
+        arr = self.arr.eval(state)
+        index = self.index.eval(state)
+        if arr.length:
+            state.path_cond = And(state.path_cond, And(GE(index, Int(0)), LT(index, Int(arr.length))))
+        return Select(arr.array, index)
 
 array_to_length_map = dict()
 
@@ -97,9 +111,7 @@ class NewArrayExpression(Expression):
         self.length = length
 
     def eval(self, state):
-        arr = Array(INT, self.default.eval(state))
-        if self.length:
-            array_to_length_map[arr] = self.length
+        arr = YouVerifyArray(self.default.eval(state), self.length)
         return arr
 
 class Function:
@@ -138,6 +150,30 @@ class Assert(Statement):
         state.path_cond = And(state.path_cond, self.expression.eval(state))
         return [state.advance_pc()]
 
+class Alloc_Concrete(Statement):
+    def __init__(self, target, record, arguments):
+        self.target = target
+        self.record = record
+        self.arguments = arguments
+
+    def exec(self, state):
+        print(State.records)
+        address = state.base_addr
+        arguments = [arg.eval(state) for arg in self.arguments]
+        state.addr_map[address] = {k: v for k, v in zip(State.records[self.record].elements, arguments)}
+        state.base_addr = state.base_addr + 1
+        state.assign_variable(self.target.name, BV(address, 32))
+        return [state.advance_pc()]
+
+class Alloc_Symbolic(Statement):
+    def __init__(self, target, record):
+        self.target = target
+        self.record = record
+
+    def exec(self, state):
+        state.assign_variable(Symbol(f"{self.record}.{self.target}", BVType(32)))
+        return [state.advance_pc()]
+
 class Assignment(Statement):
     def __init__(self, target, expression):
         self.target = target
@@ -147,15 +183,13 @@ class Assignment(Statement):
         if isinstance(self.target, ArrayIndexExpression):
             index = self.target.index.eval(state)
             arr = self.target.arr.eval(state)
-            new_arr = Store(arr, index, self.expression.eval(state))
-            state.assign_variable(self.target.arr.name, new_arr)
-            if arr in array_to_length_map:
-                state.path_cond = And(state.path_cond, And(GE(index, Int(0)), LT(index, Int(array_to_length_map[arr]))))
-
-            array_to_length_map[new_arr] = array_to_length_map[arr]
-            array_to_length_map.pop(arr)
+            arr.array = Store(arr.array, index, self.expression.eval(state))
+            state.assign_variable(self.target.arr.name, arr)
+            if arr.length:
+                state.path_cond = And(state.path_cond, And(GE(index, Int(0)), LT(index, Int(arr.length))))
         elif isinstance(self.target, RecordIndexExpression):
-            state.get_variable(self.target.record)[self.target.element] = self.expression.eval(state)
+            address = simplify(state.get_variable(self.target.record))
+            state.addr_map[address.constant_value()][self.target.element] = self.expression.eval(state)
         else:
             state.assign_variable(self.target.name, self.expression.eval(state))
         return [state.advance_pc()]

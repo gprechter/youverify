@@ -16,6 +16,8 @@ stmt: 'return' expression=expr # RETURN
     | target=assign_target '=' expression=expr # ASSIGN
     | 'call' target=assign_target '=' operator=IDENTIFIER OPAREN ((operands+=expr COMMA)* (operands+=expr)?) CPAREN #FUNC_CALL
     | 'call' operator=IDENTIFIER OPAREN ((operands+=expr COMMA)* (operands+=expr)?) CPAREN #FUNC_CALL_NO_VALUE
+    | 'new' target=assign_target '=' operator=IDENTIFIER OPAREN ((operands+=expr COMMA)* (operands+=expr)?) CPAREN #ALLOC_CONC
+    | 'new' target=assign_target '=' '$sym' '{' identifier=IDENTIFIER '}' # ALLOC_SYMB
     | 'if' expression=expr 'goto' label=IDENTIFIER # CONDITIONAL_BRANCH
     | 'goto' label=IDENTIFIER # UNCONDITIONAL_BRANCH;
 assign_target: identifier=IDENTIFIER # ASSIGN_TARGET_IDENTIFIER
