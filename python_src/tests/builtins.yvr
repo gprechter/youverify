@@ -2,4 +2,4 @@ a: BOOL
 b: BOOL
 a = true
 b = true
-call a = ANDY(a, b)
+a = a & b

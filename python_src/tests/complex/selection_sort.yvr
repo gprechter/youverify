@@ -1,0 +1,52 @@
+define sort(arr: ARRAY{INT}, len: INT):
+	i, j: INT
+	min_index, e1, e2, temp: INT
+	is_not_swap: BOOL
+	i = 0
+	LABEL LOOP1: if i >= len goto END
+	min_index = i
+	j = i + 1
+	LABEL LOOP2: if j >= len goto END2
+	e1 = arr[min_index]
+	e2 = arr[j]
+	if e2 >= e1 goto ELSE
+	min_index = j
+	LABEL ELSE: j = j + 1
+	goto LOOP2
+	LABEL END2: temp = arr[i]
+	is_not_swap = i == min_index
+	if is_not_swap goto ELSE2
+	swaps = swaps + 1
+	LABEL ELSE2: arr[i] = arr[min_index]
+	arr[min_index] = temp
+	i = i + 1
+	goto LOOP1
+	LABEL END: return
+
+define populate(arr: ARRAY{INT}, len: INT):
+	i: INT
+	i = 0
+	LABEL LOOP: if i >= len goto END
+	arr[i] = len - i
+	i = i + 1
+	goto LOOP
+	LABEL END: return
+
+define copy(arr: ARRAY{INT}) -> ARRAY{INT}:
+	i: INT
+	new_arr: ARRAY{INT}
+	new_arr = ARRAY[5]{0}
+	i = 0
+	LABEL LOOP: if i >= 5 goto END
+	new_arr[i] = arr[i]
+	i = i + 1
+	goto LOOP
+	LABEL END: return new_arr
+
+arr, old: ARRAY{INT}
+swaps: INT
+swaps = 0
+arr = ARRAY[5]{0}
+call populate(arr, 5)
+call old = copy(arr)
+call sort(arr, 5)

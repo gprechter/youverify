@@ -13,11 +13,13 @@ class Program:
         self.variables = variables
         self.functions = functions
 
+'''
     def append(self, statement, label = None):
         if label:
             self.labels[label] = self.current_line
         self.statements.append(statement)
         self.current_line += 1
+'''
 
 class Expression:
     pass
@@ -246,6 +248,20 @@ class Record:
     def __str__(self):
         return f"{self.name}({', '.join(self.elements.items())})"
 
+def wrap_target_var(var):
+    def return_to_var(state, value):
+        state.assign_variable(var.name, value)
+    return return_to_var
+
+def wrap_target_arr_index(arr, index):
+    def return_to_arr_index(state, value):
+        i = index.eval(state)
+        a = arr.eval(state)
+        a.array = Store(a.array, i, value)
+        if a.length:
+            state.path_cond = And(state.path_cond, And(GE(i, Int(0)), LT(i, Int(a.length))))
+    return return_to_arr_index
+
 class FunctionCallAndAssignment(Statement):
     def __init__(self, target, function, arguments):
         self.target = target
@@ -274,7 +290,9 @@ class FunctionCallAndAssignment(Statement):
             arguments.append(argument.eval(state))
 
         state.advance_pc()
-        state.push_frame(Frame(function, 0, {k: [v.name, None] for k, v in function.variables.items()}, self.target))
+        wrapped_target = wrap_target_arr_index(self.target.arr, self.target.index)\
+            if isinstance(self.target, ArrayIndexExpression) else wrap_target_var(self.target)
+        state.push_frame(Frame(function, 0, {k: [v.name, None] for k, v in function.variables.items()}, wrapped_target))
         for i, param in enumerate(function.params):
             state.assign_variable(param, arguments[i])
         return [state]

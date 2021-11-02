@@ -2,7 +2,7 @@ import sys
 import json
 import glob
 import os.path
-from YouVerify import main, concrete_evaluation
+from YouVerify import main, concrete_evaluation, display_states_smt2
 
 class bcolors:
     HEADER = '\033[95m'
@@ -32,5 +32,7 @@ def check_all(dir):
             print((bcolors.BOLD + bcolors.OKGREEN + "PASS" + bcolors.ENDC)
                   if check(concrete_evaluation(main(["testing", file])), expected[0]) else
                   (bcolors.BOLD + bcolors.FAIL + "FAILED" + bcolors.ENDC))
+        else:
+            display_states_smt2(main(['eval', file]))
 
 check_all(sys.argv[1])

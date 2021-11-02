@@ -1,0 +1,5 @@
+arr: ARRAY{INT}
+define f()->INT:
+	return 10
+arr = ARRAY[1]{0}
+call arr[0] = f()

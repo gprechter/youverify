@@ -4,8 +4,7 @@ x: container
 y: container
 boolean: BOOL
 
-x.i = 1
-x.b = true
+new x = container(1, true)
 
 y = x
 y.i = 2

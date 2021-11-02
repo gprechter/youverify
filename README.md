@@ -239,15 +239,31 @@ Only `ite`.
 
  
 
-| Feature                                                      | Notes                      | Status        |
-| ------------------------------------------------------------ | -------------------------- | ------------- |
-| [Boolean Sort and Operators](https://github.com/gprechter/youverify/tree/master/python_src/tests/boolean) |                            | ✅ Completed   |
-| [Integer Sort and Operators](https://github.com/gprechter/youverify/tree/master/python_src/tests/integer) | `div`, `mod` concrete only | ✅ Completed   |
-| [Bit Vector Sort and Operators](https://github.com/gprechter/youverify/tree/master/python_src/tests/bitvectors) |                            | ✅ Completed   |
-| [Array Sort and Operators](https://github.com/gprechter/youverify/tree/master/python_src/tests/arrays) [Including Fixed Sized] |                            | ❌ In Progress |
-| Labels and Branching Statements                              |                            | ❌ In Progress |
-| [Functions](https://github.com/gprechter/youverify/tree/master/python_src/tests/functions) |                            | ❌ In Progress |
-| [Assert Statements](https://github.com/gprechter/youverify/tree/master/python_src/tests/assert) |                            | ❌ In Progress |
-| Symbolic Values and Programs                                 |                            | ❌ In Progress |
-| [Records](https://github.com/gprechter/youverify/tree/master/python_src/tests/records) |                            | ❌ In Progress |
+| Feature                                                      | Notes                      | Status      |
+| ------------------------------------------------------------ | -------------------------- | ----------- |
+| [Boolean Sort and Operators](https://github.com/gprechter/youverify/tree/master/python_src/tests/boolean) |                            | ✅ Completed |
+| [Integer Sort and Operators](https://github.com/gprechter/youverify/tree/master/python_src/tests/integer) | `div`, `mod` concrete only | ✅ Completed |
+| [Bit Vector Sort and Operators](https://github.com/gprechter/youverify/tree/master/python_src/tests/bitvectors) |                            | ✅ Completed |
+| [Array Sort and Operators](https://github.com/gprechter/youverify/tree/master/python_src/tests/arrays) [Including Fixed Sized] |                            | ✅ Completed |
+| Labels and Branching Statements                              |                            | ✅ Completed |
+| [Functions](https://github.com/gprechter/youverify/tree/master/python_src/tests/functions) |                            | In Progress |
+| [Assert Statements](https://github.com/gprechter/youverify/tree/master/python_src/tests/assert) |                            | ✅ Completed |
+| Symbolic Values and Programs                                 |                            | In Progress |
+| [Records](https://github.com/gprechter/youverify/tree/master/python_src/tests/records) |                            | In Progress |
+
+### Coverage
+
+| Source File              | Coverage | Full Coverage | Exceptions                                                   |
+| ------------------------ | -------- | :-----------: | ------------------------------------------------------------ |
+| `AST.py`                 | **95%**  |       ✅       | *80, 85*: Copying array between state, *165*: Unused abstract class method, *308:* assertion, *all others*: `__repr__` or `__str__` |
+| `ConvertLet.py`          | **100%** |       ✅       |                                                              |
+| `CoreTheory.py`          | **100%** |       ✅       |                                                              |
+| `IntegerTheory.py`       | **93%**  |       ✅       | Line 5: only executed if an unsupported operator is called   |
+| `Mappings.py`            | **100%** |       ✅       |                                                              |
+| `State.py`               | **98%**  |       ✅       | *43:* Unused method                                          |
+| `TestUtil.py`            | **100%** |       ✅       |                                                              |
+| `YouVerify.py`           | **97%**  |       ✅       | *42*: Unused display statement, *86*: command line entry point |
+| `YouVerifyLexer.py`      | **100%** |       ✅       |                                                              |
+| `YouVerifyParser.py`     | **84%**  |               |                                                              |
+| `YouVerifyVisitorOld.py` | **98%**  |       ✅       | *6:* Unfollowed conditional import, *104*: Unused statement  |
 

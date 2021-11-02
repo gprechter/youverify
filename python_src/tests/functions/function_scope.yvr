@@ -1,4 +1,4 @@
-x, y: BOOL
+x, y, z: BOOL
 define f(x: BOOL):
 	x = false
 	return

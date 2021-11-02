@@ -63,7 +63,7 @@ def display_model(state, variables, model, depth = 0):
             print(f"{'  ' * depth}{k}: {model.get_value(v[1].array)}")
         else:
             print(f"{'  ' * depth}{k}: {model.get_value(v[1])}")
-    print("MODEL", model)
+    #print("MODEL", model)
 
 def display_states_smt2(states):
     for i, state in enumerate(states):

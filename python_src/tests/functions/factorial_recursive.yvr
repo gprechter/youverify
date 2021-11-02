@@ -6,7 +6,5 @@ define fact(n: INT) -> INT:
 	LABEL END: next_n = n - 1
 	call rec_call = fact(next_n)
 	return rec_call * n
-result, n: INT
-n = $sym{INT}
-assume n < 10
-call result = fact(n)
+result: INT
+call result = fact(5)
