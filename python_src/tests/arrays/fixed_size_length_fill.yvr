@@ -1,0 +1,9 @@
+arr: ARRAY{INT}
+index: INT
+arr = ARRAY[10]{0}
+index = 0
+LABEL LOOP: if index >= 10 goto END
+arr[index] = index
+index = index + 1
+goto LOOP
+LABEL END: index = 0

@@ -1,0 +1,6 @@
+arr1, arr2: ARRAY{INT}
+result: INT
+arr1 = ARRAY[4]{0}
+arr2 = arr1
+arr2[2] = 100
+result = arr1[2]

@@ -1,0 +1,8 @@
+a,b,c,d,e,f,g: BV[4]
+a = BV{2, 4}
+b = BV{4, 4}
+call c = bvshl(b, a)
+call d = bvshl(BV{15, 4}, a)
+call e = bvshl(BV{15, 4}, b)
+call f = bvshl(BV{1, 4}, a)
+call g = bvshl(BV{1, 4}, BV{3, 4})

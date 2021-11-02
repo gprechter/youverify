@@ -19,7 +19,7 @@ define sum(l: link) -> INT:
 	e = l.elem
 	return e + recursive_call
 
-depth_limit = 10
+depth_limit = 5
 new lnk = $sym{link}
 call result = sum(lnk)
 if result == 256 goto ELSE

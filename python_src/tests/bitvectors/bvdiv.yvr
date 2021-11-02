@@ -1,0 +1,8 @@
+a, b, c, d, e, f, g: BV[16]
+call a = bvdiv(BV{0, 16}, BV{245, 16})
+call b = bvdiv(BV{3000, 16}, BV{245, 16})
+call c = bvdiv(BV{1, 16}, BV{345, 16})
+call d = bvdiv(BV{345, 16}, BV{45, 16})
+e = BV{10, 16}
+call f = bvdiv(e, e)
+call g = bvdiv(e, BV{1, 16})

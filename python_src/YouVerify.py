@@ -31,6 +31,8 @@ def main(argv):
                 continue
             stmt = state.current_statement
             states.extend([s for s in stmt.exec(state) if is_sat(state.path_cond)])
+           # if is_sat(state.path_cond):
+                #print(stmt)
         return states
 
     return exec(program)
@@ -57,8 +59,11 @@ def display_model(state, variables, model, depth = 0):
                 display_model(state,
                           {k: [elems[k].name, v] for k, v in state.addr_map[model.get_value(v[1]).constant_value()].items()},
                           model, depth = depth + 1)
+        elif isinstance(v[1], YouVerifyArray):
+            print(f"{'  ' * depth}{k}: {model.get_value(v[1].array)}")
         else:
             print(f"{'  ' * depth}{k}: {model.get_value(v[1])}")
+    print("MODEL", model)
 
 def display_states_smt2(states):
     for i, state in enumerate(states):
@@ -74,8 +79,8 @@ def display_states_smt2(states):
 
 def concrete_evaluation(states):
     state = states[0]
-    assert all([simplify(v).is_constant() for k, v in state.head_frame().variables.items()]), "All variables must be constant."
-    return json.dumps({k: simplify(v).constant_value() for k, v in state.head_frame().variables.items()})
+    assert all([simplify(v[1]).is_constant() for k, v in state.head_frame().variables.items()]), "All variables must be constant."
+    return json.dumps({k: simplify(v[1]).constant_value() for k, v in state.head_frame().variables.items()})
 
 if __name__ == '__main__':
     display_states_smt2(main(sys.argv))

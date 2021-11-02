@@ -1,0 +1,6 @@
+a,b,c,d,e: BV[4]
+a = BV{12, 4}
+b = BV{3, 4}
+call c = bvand(a, b)
+call d = bvand(BV{14, 4}, BV{7, 4})
+call e = bvand(BV{15, 4}, BV{15, 4})

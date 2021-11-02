@@ -1,0 +1,17 @@
+arr: ARRAY{INT}
+i, result: INT
+define populate(arr: ARRAY{INT}, len: INT):
+	i: INT
+	i = 0
+	LABEL LOOP: if i >= len goto END
+	arr[i] = i
+	i = i + 1
+	goto LOOP
+	LABEL END: return
+
+arr = ARRAY[10]{0}
+call populate(arr, 10)
+i = $sym{index, INT}
+arr[i] = -10
+result = arr[3]
+assume result == -10

@@ -203,9 +203,9 @@ class YouVerifyVisitor(ParseTreeVisitor):
     # Visit a parse tree produced by YouVerifyParser#sort.
     def visitSort(self, ctx: YouVerifyParser.SortContext):
         outer_sort = ctx.s.text
-
         if outer_sort == 'ARRAY':
-            return YVR_SORT_TO_PYSMT[outer_sort](INT, self.visit(ctx.contained_sort))
+            contained = self.visit(ctx.contained_sort)
+            return YVR_SORT_TO_PYSMT[outer_sort](INT, BVType(32) if isinstance(contained, str) else contained)
         elif outer_sort == 'BV':
             return YVR_SORT_TO_PYSMT[outer_sort](int(ctx.size.text))
         elif outer_sort in YVR_SORT_TO_PYSMT:

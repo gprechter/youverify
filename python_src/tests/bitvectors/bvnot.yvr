@@ -1,0 +1,10 @@
+a, b, c: BV[32]
+d, e: BV[4]
+f: BV[7]
+
+a = BV{3554760518, 32}
+call b = bvnot(a)
+call c = bvnot(BV{5, 32})
+call d = bvnot(BV{0, 4})
+call e = bvnot(BV{10, 4})
+call f = bvnot(BV{127, 7})

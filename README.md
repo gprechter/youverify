@@ -239,15 +239,15 @@ Only `ite`.
 
  
 
-| Feature                                                      | Notes                                        | Status        |
-| ------------------------------------------------------------ | -------------------------------------------- | ------------- |
-| [Boolean Sort and Operators](https://github.com/gprechter/youverify/tree/master/python_src/tests/boolean) |                                              | ✅ Completed   |
-| [Integer Sort and Operators](https://github.com/gprechter/youverify/tree/master/python_src/tests/integer) | `div`, `mod`, `abs` not supported by `pysmt` | ✅ Completed   |
-| [Bit Vector Sort and Operators](https://github.com/gprechter/youverify/tree/master/python_src/tests/bitvectors) |                                              | ❌ In Progress |
-| [Array Sort and Operators](https://github.com/gprechter/youverify/tree/master/python_src/tests/arrays) [Including Fixed Sized] |                                              | ❌ In Progress |
-| Labels and Branching Statements                              |                                              | ❌ In Progress |
-| [Functions](https://github.com/gprechter/youverify/tree/master/python_src/tests/functions) |                                              | ❌ In Progress |
-| [Assert Statements](https://github.com/gprechter/youverify/tree/master/python_src/tests/assert) |                                              | ❌ In Progress |
-| Symbolic Values and Programs                                 |                                              | ❌ In Progress |
-| [Records](https://github.com/gprechter/youverify/tree/master/python_src/tests/records) |                                              | ❌ In Progress |
+| Feature                                                      | Notes                      | Status        |
+| ------------------------------------------------------------ | -------------------------- | ------------- |
+| [Boolean Sort and Operators](https://github.com/gprechter/youverify/tree/master/python_src/tests/boolean) |                            | ✅ Completed   |
+| [Integer Sort and Operators](https://github.com/gprechter/youverify/tree/master/python_src/tests/integer) | `div`, `mod` concrete only | ✅ Completed   |
+| [Bit Vector Sort and Operators](https://github.com/gprechter/youverify/tree/master/python_src/tests/bitvectors) |                            | ✅ Completed   |
+| [Array Sort and Operators](https://github.com/gprechter/youverify/tree/master/python_src/tests/arrays) [Including Fixed Sized] |                            | ❌ In Progress |
+| Labels and Branching Statements                              |                            | ❌ In Progress |
+| [Functions](https://github.com/gprechter/youverify/tree/master/python_src/tests/functions) |                            | ❌ In Progress |
+| [Assert Statements](https://github.com/gprechter/youverify/tree/master/python_src/tests/assert) |                            | ❌ In Progress |
+| Symbolic Values and Programs                                 |                            | ❌ In Progress |
+| [Records](https://github.com/gprechter/youverify/tree/master/python_src/tests/records) |                            | ❌ In Progress |
 

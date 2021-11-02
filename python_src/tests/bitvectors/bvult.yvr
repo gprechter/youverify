@@ -1,0 +1,12 @@
+a,b,c,d: BV[8]
+r1,r2,r3,r4: BOOL
+a = BV{4, 8}
+b = BV{8, 8}
+c = BV{1, 8}
+d = BV{16, 8}
+
+call r1 = bvult(a, b)
+call r2 = bvult(a, c)
+call r3 = bvult(d, b)
+call r4 = bvult(BV{0, 8}, c)
+

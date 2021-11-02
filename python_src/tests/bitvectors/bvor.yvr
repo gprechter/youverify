@@ -1,0 +1,6 @@
+a,b,c,d,e: BV[4]
+a = BV{12, 4}
+b = BV{3, 4}
+call c = bvor(a, b)
+call d = bvor(BV{14, 4}, BV{7, 4})
+call e = bvor(BV{5, 4}, BV{10, 4})

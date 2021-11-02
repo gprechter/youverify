@@ -1,0 +1,8 @@
+a, b, c, d, e, f, g: BV[16]
+call a = bvmul(BV{0, 16}, BV{245, 16})
+call b = bvmul(BV{0, 16}, BV{0, 16})
+call c = bvmul(BV{1, 16}, BV{345, 16})
+call d = bvmul(BV{45, 16}, BV{345, 16})
+e = BV{10, 16}
+call f = bvmul(e, e)
+call g = bvmul(e, c)

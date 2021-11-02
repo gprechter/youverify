@@ -1,0 +1,8 @@
+a, b, c, d, e, f, g: BV[16]
+call a = bvrem(BV{0, 16}, BV{245, 16})
+call b = bvrem(BV{3000, 16}, BV{245, 16})
+call c = bvrem(BV{1, 16}, BV{345, 16})
+call d = bvrem(BV{345, 16}, BV{45, 16})
+e = BV{10, 16}
+call f = bvrem(e, e)
+call g = bvrem(e, BV{3, 16})

@@ -68,10 +68,19 @@ class Value(AtomicExpression):
     def eval(self, state):
         return self.value
 
+    def __repr__(self):
+        return f"{self.value}"
+
 class YouVerifyArray:
-    def __init__(self, default_value, length=None):
+    def __init__(self, default_value=0, length=None, array=None):
         self.length = length
-        self.array = Array(INT, default_value)
+        if array:
+            self.array = array
+        else:
+            self.array = Array(INT, default_value)
+
+    def __copy__(self):
+        return YouVerifyArray(self.default_value, self.length, self.array)
 
 class UniqueSymbol(Value):
     def __init__(self, type):
@@ -97,6 +106,9 @@ class BinaryExpression(Expression):
     def eval(self, state):
         return self.op(self.lhs.eval(state), self.rhs.eval(state))
 
+    def __repr__(self):
+        return f"{self.lhs} {self.op} {self.rhs}"
+
 class TernaryExpression(Expression):
     def __init__(self, op, first, second, third):
         self.op = op
@@ -118,6 +130,9 @@ class ArrayIndexExpression(Expression):
         if arr.length:
             state.path_cond = And(state.path_cond, And(GE(index, Int(0)), LT(index, Int(arr.length))))
         return Select(arr.array, index)
+
+    def __repr__(self):
+        return f"{self.arr}[{self.index}]"
 
 array_to_length_map = dict()
 
@@ -281,7 +296,7 @@ class FunctionCallWithNoAssignment(Statement):
             arguments.append(argument.eval(state))
 
         state.advance_pc()
-        state.push_frame(Frame(function, 0, function.variables, None))
+        state.push_frame(Frame(function, 0, {k: [v.name, None] for k, v in function.variables.items()}, None))
         for i, param in enumerate(function.params):
             state.assign_variable(param, arguments[i])
         return [state]
@@ -294,8 +309,14 @@ class ConditionalBranch(Statement):
     def exec(self, state):
         return state.split(self.condition.eval(state), state.head_frame().function.labels[self.dest])
 
+    def __repr__(self):
+        return f"if {self.condition} goto {self.dest}"
+
 class UnconditionalBranch(ConditionalBranch):
     def __init__(self, dest):
         self.dest = dest
     def exec(self, state):
         return [state.update_pc(state.head_frame().function.labels[self.dest])]
+
+    def __repr__(self):
+        return f"goto {self.dest}"

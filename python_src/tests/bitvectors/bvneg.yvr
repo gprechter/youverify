@@ -1,0 +1,6 @@
+a, b, c, d, e: BV[16]
+a = BV{10, 16}
+b = BV{0, 16}
+call c = bvneg(a)
+call d = bvneg(b)
+call e = bvneg(c)
