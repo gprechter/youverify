@@ -255,7 +255,7 @@ Only `ite`.
 
 | Source File              | Coverage | Full Coverage | Exceptions                                                   |
 | ------------------------ | -------- | :-----------: | ------------------------------------------------------------ |
-| `AST.py`                 | **95%**  |       ✅       | *80, 85*: Copying array between state, *165*: Unused abstract class method, *308:* assertion, *all others*: `__repr__` or `__str__` |
+| `AST.py`                 | **95%**  |       ✅       | *165*: Unused abstract class method, *308:* assertion, *all others*: `__repr__` or `__str__` |
 | `ConvertLet.py`          | **100%** |       ✅       |                                                              |
 | `CoreTheory.py`          | **100%** |       ✅       |                                                              |
 | `IntegerTheory.py`       | **93%**  |       ✅       | Line 5: only executed if an unsupported operator is called   |

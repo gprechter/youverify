@@ -10,7 +10,7 @@ class Frame:
         self.return_target = return_target
 
     def __copy__(self):
-        return Frame(self.function, self.pc, self.variables.copy(), self.return_target)
+        return Frame(self.function, self.pc, deepcopy(self.variables), self.return_target)
 
 class State:
     records = {}
@@ -42,8 +42,8 @@ class State:
         else:
             return self.frame_stack[0].variables[var][0]
     def split(self, cond, pc):
-        taken_state = copy(self)
-        not_taken_state = copy(self)
+        taken_state = deepcopy(self)
+        not_taken_state = deepcopy(self)
         taken_state.update_pc(pc).path_cond = And(cond, self.path_cond)
         not_taken_state.advance_pc().path_cond = And(Not(cond), self.path_cond)
         return [taken_state, not_taken_state]
