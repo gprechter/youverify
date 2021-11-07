@@ -22,6 +22,9 @@ def main(argv):
 
     State.records = records
 
+    for stmt in program.statements:
+        stmt.type_check(program)
+
     def exec(program):
         states = [State(TRUE(), [Frame(program, 0, {k: [v.name, None] for k, v in program.variables.copy().items()}, None)])]
         while [state for state in states if not state.is_finished]:

@@ -12,7 +12,7 @@ define populate(arr: ARRAY{INT}, len: INT):
 define reverse(arr: ARRAY{INT}, len: INT) -> ARRAY{INT}:
 	i, j: INT
 	new_arr: ARRAY{INT}
-	new_arr = ARRAY[10]{0}
+	new_arr = ARRAY[5]{0}
 	i = 0
 	LABEL LOOP: if i >= len goto END
 	j = len - i
@@ -36,7 +36,7 @@ define mirrors(arr1: ARRAY{INT}, arr2: ARRAY{INT}, len: INT) -> BOOL:
 	goto LOOP
 	LABEL END: return true
 
-arr = ARRAY[10]{0}
-call populate(arr, 10)
-call reversed = reverse(arr, 10)
-call are_mirrors = mirrors(arr, reversed, 10)
+arr = ARRAY[5]{0}
+call populate(arr, 5)
+call reversed = reverse(arr, 5)
+call are_mirrors = mirrors(arr, reversed, 5)

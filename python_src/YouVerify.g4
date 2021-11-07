@@ -22,21 +22,26 @@ stmt: 'return' expression=expr # RETURN
     | 'if' expression=expr 'goto' label=IDENTIFIER # CONDITIONAL_BRANCH
     | 'goto' label=IDENTIFIER # UNCONDITIONAL_BRANCH;
 assign_target: identifier=IDENTIFIER # ASSIGN_TARGET_IDENTIFIER
-             | rec=IDENTIFIER PERIOD item=IDENTIFIER # ASSIGN_TARGET_RECORD_INDEX
+             | expression=record_index_expr # ASSIGN_TARGET_RECORD_INDEX
              | expression=array_index_expr # ASSIGN_TARGET_ARRAY_INDEX;
 decl: ((identifiers+=IDENTIFIER COMMA)* (identifiers+=IDENTIFIER)?) ':' s=sort;
-expr: (atom=BOOLEAN | atom=INTEGER | atom=IDENTIFIER) # ATOMIC
-    | 'ARRAY[]' '{' expression=expr '}' # ARRAY
-    | 'ARRAY[' length=INTEGER ']' '{' expression=expr '}' # FIXED_SIZE_ARRAY
-    | 'BV' '{' value=INTEGER COMMA size=INTEGER '}' # BIT_VECTOR
-    | '$sym' '{' s=sort '}' # SYMBOL
-    | '$sym' '{' identifier=IDENTIFIER ',' s=sort '}' # NAMED_SYMBOL
-    | rec=IDENTIFIER PERIOD item=IDENTIFIER # RECORD_INDEX
-    | expression=array_index_expr # ARRAY_INDEX
-    | op=OPERATOR e=expr # UNARY
-    | lhs=expr op=OPERATOR rhs=expr # BINARY
-    | first=expr op=TERNARY_OPERATOR second=expr COLON third=expr #TERNARY;
-array_index_expr: array=IDENTIFIER '[' index=expr ']';
+atomic_expr: (atom=BOOLEAN | atom=INTEGER | atom=IDENTIFIER) # SIMPLE
+            | 'ARRAY[]' '{' expression=expr '}' # ARRAY
+            | 'ARRAY[' length=INTEGER ']' '{' expression=expr '}' # FIXED_SIZE_ARRAY
+            | 'BV' '{' value=INTEGER COMMA size=INTEGER '}' # BIT_VECTOR
+            | '$sym' '{' s=sort '}' # SYMBOL
+            | '$sym' '{' identifier=IDENTIFIER ',' s=sort '}' # NAMED_SYMBOL;
+expr: atomic_expr
+    | record_index_expr
+    | array_index_expr
+    | unary_expr
+    | binary_expr
+    | ternary_expr;
+array_index_expr: array=IDENTIFIER '[' index=expr ']' # ARRAY_INDEX;
+record_index_expr: rec=IDENTIFIER PERIOD item=IDENTIFIER # RECORD_INDEX;
+unary_expr: op=OPERATOR e=atomic_expr # UNARY;
+binary_expr: lhs=atomic_expr op=OPERATOR rhs=atomic_expr # BINARY;
+ternary_expr: first=atomic_expr op=TERNARY_OPERATOR second=atomic_expr COLON third=atomic_expr #TERNARY;
 sort: (s='BOOL' | s='INT') | (s='ARRAY' '{' contained_sort=sort '}') | (s = 'BV' '[' size=INTEGER']') | s=IDENTIFIER;
 BOOLEAN: 'true' | 'false';
 OPERATOR: '&' | '|' | '^' | '=>' | '==' | '!='

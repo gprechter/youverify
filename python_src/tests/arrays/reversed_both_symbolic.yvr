@@ -24,15 +24,15 @@ define mirrors(arr1: ARRAY{INT}, arr2: ARRAY{INT}, len: INT) -> BOOL:
 	goto LOOP
 	LABEL END: return true
 
-arr1 = ARRAY[10]{0}
-call populate(arr1, 10)
-arr2 = ARRAY[10]{0}
-call populate(arr2, 10)
-call are_mirrors = mirrors(arr1, arr2, 10)
+arr1 = ARRAY[5]{0}
+call populate(arr1, 5)
+arr2 = ARRAY[5]{0}
+call populate(arr2, 5)
+call are_mirrors = mirrors(arr1, arr2, 5)
 assert are_mirrors
 i = 0
 sum = 0
-LABEL LOOP: if i >= 10 goto END
+LABEL LOOP: if i >= 5 goto END
 elem = arr1[i]
 sum = sum + elem
 i = i + 1

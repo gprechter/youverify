@@ -8,6 +8,7 @@ else:
     from YouVerifyParser import YouVerifyParser
 
 from pysmt.shortcuts import Int, ArrayType, BV
+from pysmt.typing import BOOL, INT, BVType
 
 # This class defines a complete generic visitor for a parse tree produced by YouVerifyParser.
 
@@ -107,6 +108,10 @@ class YouVerifyVisitor(ParseTreeVisitor):
     def visitASSUME(self, ctx: YouVerifyParser.ASSUMEContext):
         return Assume(self.visit(ctx.expression))
 
+    # Visit a parse tree produced by YouVerifyParser#expr.
+    def visitExpr(self, ctx: YouVerifyParser.ExprContext):
+        return self.visitChildren(ctx)
+
     # Visit a parse tree produced by YouVerifyParser#ASSERT.
     def visitASSERT(self, ctx: YouVerifyParser.ASSERTContext):
         return Assert(self.visit(ctx.expression))
@@ -129,7 +134,7 @@ class YouVerifyVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by YouVerifyParser#ASSIGN_TARGET_RECORD_INDEX.
     def visitASSIGN_TARGET_RECORD_INDEX(self, ctx: YouVerifyParser.ASSIGN_TARGET_RECORD_INDEXContext):
-        return RecordIndexExpression(ctx.rec.text, ctx.item.text)
+        return self.visit(ctx.expression)
 
     # Visit a parse tree produced by YouVerifyParser#ASSIGN_TARGET_ARRAY_INDEX.
     def visitASSIGN_TARGET_ARRAY_INDEX(self, ctx: YouVerifyParser.ASSIGN_TARGET_ARRAY_INDEXContext):
@@ -147,18 +152,18 @@ class YouVerifyVisitor(ParseTreeVisitor):
     def visitDecl(self, ctx:YouVerifyParser.DeclContext):
         return [(id.text, self.visit(ctx.s)) for id in ctx.identifiers]
 
-
-    # Visit a parse tree produced by YouVerifyParser#ATOMIC.
-    def visitATOMIC(self, ctx:YouVerifyParser.ATOMICContext):
+    # Visit a parse tree produced by YouVerifyParser#atomic_expr.
+    def visitSIMPLE(self, ctx: YouVerifyParser.SIMPLEContext):
         if ctx.BOOLEAN():
-            return Value(YVR_BOOL_TO_PYSMT[ctx.atom.text])
+            return Value(YVR_BOOL_TO_PYSMT[ctx.atom.text], BOOL)
         elif ctx.INTEGER():
-            return Value(Int(int(ctx.atom.text)))
+            return Value(Int(int(ctx.atom.text)), INT)
         elif ctx.IDENTIFIER():
             if ctx.atom.text.lower() == 'null':
-                return Value(BV(0, 32))
+                return Value(BV(0, 32), BVType(32))
             else:
                 return Variable(ctx.atom.text)
+
 
     # Visit a parse tree produced by YouVerifyParser#ARRAY.
     def visitARRAY(self, ctx:YouVerifyParser.ARRAYContext):
@@ -170,7 +175,7 @@ class YouVerifyVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by YouVerifyParser#BIT_VECTOR.
     def visitBIT_VECTOR(self, ctx:YouVerifyParser.BIT_VECTORContext):
-        return Value(BV(int(ctx.value.text), int(ctx.size.text)))
+        return Value(BV(int(ctx.value.text), int(ctx.size.text)), BVType(int(ctx.size.text)))
 
     # Visit a parse tree produced by YouVerifyParser#SYMBOL.
     def visitSYMBOL(self, ctx: YouVerifyParser.SYMBOLContext):
@@ -178,7 +183,8 @@ class YouVerifyVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by YouVerifyParser#NAMED_SYMBOL.
     def visitNAMED_SYMBOL(self, ctx: YouVerifyParser.NAMED_SYMBOLContext):
-        return Value(Symbol(ctx.identifier.text, self.visit(ctx.s)))
+        sort = self.visit(ctx.s)
+        return Value(Symbol(ctx.identifier.text, sort), sort)
 
     # Visit a parse tree produced by YouVerifyParser#UNARY.
     def visitUNARY(self, ctx:YouVerifyParser.UNARYContext):
@@ -197,7 +203,7 @@ class YouVerifyVisitor(ParseTreeVisitor):
         return RecordIndexExpression(ctx.rec.text, ctx.item.text)
 
     # Visit a parse tree produced by YouVerifyParser#array_index_expr.
-    def visitArray_index_expr(self, ctx: YouVerifyParser.Array_index_exprContext):
+    def visitARRAY_INDEX(self, ctx: YouVerifyParser.ARRAY_INDEXContext):
         return ArrayIndexExpression(Variable(ctx.array.text), self.visit(ctx.index))
 
     # Visit a parse tree produced by YouVerifyParser#sort.

@@ -34,8 +34,11 @@ class Variable(AtomicExpression):
     def eval(self, state):
         return state.get_variable(self.name)
 
+    def type_check(self, program):
+        return program.variables[self.name].name, ""
+
     def __repr__(self):
-        return self.name
+        return f"{self.name}"
 
 class RecordIndexExpression(Expression):
     def __init__(self, record, element):
@@ -64,11 +67,15 @@ class RecordIndexExpression(Expression):
             return state.addr_map[concrete_address][self.element]
 
 class Value(AtomicExpression):
-    def __init__(self, value):
+    def __init__(self, value, type):
         self.value = value
+        self.type = type
 
     def eval(self, state):
         return self.value
+
+    def type_check(self, program):
+        return self.type, ""
 
     def __repr__(self):
         return f"{self.value}"
@@ -107,6 +114,9 @@ class BinaryExpression(Expression):
 
     def eval(self, state):
         return self.op(self.lhs.eval(state), self.rhs.eval(state))
+
+    def type_check(self, program):
+        return
 
     def __repr__(self):
         return f"{self.lhs} {self.op} {self.rhs}"
@@ -236,6 +246,13 @@ class Assignment(Statement):
         else:
             state.assign_variable(self.target.name, self.expression.eval(state))
         return [state.advance_pc()]
+
+    def type_check(self, program):
+        target, target_issue = self.target.type_check(program)
+        value, value_issue = self.expression.type_check(program)
+        if value_issue or target_issue:
+            return None, f"{value_issue}, {target_issue}"
+        return None, f"Target {target} and value {value} types must match." if target == value else ""
 
     def __repr__(self):
         return f"{repr(self.target)} = {repr(self.expression)}"

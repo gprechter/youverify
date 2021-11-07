@@ -35,3 +35,5 @@ assume i > 0
 lnk = lnk.next
 goto LOOP
 LABEL END2: done = true
+
+assume correct_sum

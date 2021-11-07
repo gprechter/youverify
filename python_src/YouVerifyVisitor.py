@@ -124,18 +124,13 @@ class YouVerifyVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by YouVerifyParser#SIMPLE.
+    def visitSIMPLE(self, ctx:YouVerifyParser.SIMPLEContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by YouVerifyParser#ARRAY.
     def visitARRAY(self, ctx:YouVerifyParser.ARRAYContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by YouVerifyParser#ARRAY_INDEX.
-    def visitARRAY_INDEX(self, ctx:YouVerifyParser.ARRAY_INDEXContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by YouVerifyParser#ATOMIC.
-    def visitATOMIC(self, ctx:YouVerifyParser.ATOMICContext):
         return self.visitChildren(ctx)
 
 
@@ -144,18 +139,13 @@ class YouVerifyVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by YouVerifyParser#SYMBOL.
-    def visitSYMBOL(self, ctx:YouVerifyParser.SYMBOLContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by YouVerifyParser#BIT_VECTOR.
     def visitBIT_VECTOR(self, ctx:YouVerifyParser.BIT_VECTORContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by YouVerifyParser#BINARY.
-    def visitBINARY(self, ctx:YouVerifyParser.BINARYContext):
+    # Visit a parse tree produced by YouVerifyParser#SYMBOL.
+    def visitSYMBOL(self, ctx:YouVerifyParser.SYMBOLContext):
         return self.visitChildren(ctx)
 
 
@@ -164,8 +154,13 @@ class YouVerifyVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by YouVerifyParser#TERNARY.
-    def visitTERNARY(self, ctx:YouVerifyParser.TERNARYContext):
+    # Visit a parse tree produced by YouVerifyParser#expr.
+    def visitExpr(self, ctx:YouVerifyParser.ExprContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YouVerifyParser#ARRAY_INDEX.
+    def visitARRAY_INDEX(self, ctx:YouVerifyParser.ARRAY_INDEXContext):
         return self.visitChildren(ctx)
 
 
@@ -179,8 +174,13 @@ class YouVerifyVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by YouVerifyParser#array_index_expr.
-    def visitArray_index_expr(self, ctx:YouVerifyParser.Array_index_exprContext):
+    # Visit a parse tree produced by YouVerifyParser#BINARY.
+    def visitBINARY(self, ctx:YouVerifyParser.BINARYContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YouVerifyParser#TERNARY.
+    def visitTERNARY(self, ctx:YouVerifyParser.TERNARYContext):
         return self.visitChildren(ctx)
 
 
