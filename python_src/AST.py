@@ -4,6 +4,7 @@ from pysmt.shortcuts import LE, LT
 from pysmt.typing import INT, BVType
 from State import State, Frame
 from Mappings import YVR_BUILTIN_OP_TO_PYSMT
+from pyeda.inter import *
 
 class Program:
     def __init__(self, statements = [], variables = {}, labels = {}, functions={}):
@@ -72,7 +73,8 @@ class Value(AtomicExpression):
         self.type = type
 
     def eval(self, state):
-        return self.value
+        fake = bddvar('fake')
+        return [[fake.restrict({fake: 1}), self.value]]
 
     def type_check(self, program):
         return self.type, ""
@@ -113,7 +115,13 @@ class BinaryExpression(Expression):
         self.rhs = rhs
 
     def eval(self, state):
-        return self.op(self.lhs.eval(state), self.rhs.eval(state))
+        lhs = self.lhs.eval(state)
+        rhs = self.rhs.eval(state)
+        new_vs = []
+        for lvs in lhs:
+            for rvs in rhs:
+                new_vs.append([lvs[0] & rvs[0], self.op(lvs[1], rvs[1])])
+        return new_vs
 
     def type_check(self, program):
         return
@@ -245,7 +253,7 @@ class Assignment(Statement):
             state.addr_map[address.constant_value()][self.target.element] = self.expression.eval(state)
         else:
             state.assign_variable(self.target.name, self.expression.eval(state))
-        return [state.advance_pc()]
+        return state.advance_pc()
 
     def type_check(self, program):
         target, target_issue = self.target.type_check(program)

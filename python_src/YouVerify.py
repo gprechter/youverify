@@ -8,9 +8,10 @@ from YouVerifyParser import YouVerifyParser
 
 from pysmt.shortcuts import TRUE, is_sat, simplify, get_model, get_free_variables, Solver, Int
 from pysmt.typing import _BoolType
-from AST import Program, Variable, array_to_length_map, YouVerifyArray
+from AST import Program, Variable, array_to_length_map, YouVerifyArray, ConditionalBranch
 from State import State, Frame
 from SMTLibUtil import *
+from pyeda.inter import *
 
 def main(argv):
     input_stream = FileStream(argv[1])
@@ -22,21 +23,21 @@ def main(argv):
 
     State.records = records
 
-    for stmt in program.statements:
-        stmt.type_check(program)
+    #for stmt in program.statements:
+    #    stmt.type_check(program)
 
     def exec(program):
-        states = [State(TRUE(), [Frame(program, 0, {k: [v.name, None] for k, v in program.variables.copy().items()}, None)])]
-        while [state for state in states if not state.is_finished]:
-            state = states.pop(0)
-            if state.is_finished:
-                states.append(state)
-                continue
+        state = State(TRUE(), [Frame(program, 0, {k: [v.name, None] for k, v in program.variables.copy().items()}, None)])
+        while not state.is_finished:
+            state.current_guard = state.get_guard()
             stmt = state.current_statement
-            states.extend([s for s in stmt.exec(state) if is_sat(state.path_cond)])
+            state = stmt.exec(state)
+            print(state.value_summaries)
+            if not isinstance(stmt, ConditionalBranch):
+                state.value_summaries['_pc'].append(state.current_guard)
            # if is_sat(state.path_cond):
                 #print(stmt)
-        return states
+        return state
 
     return exec(program)
 
@@ -49,7 +50,7 @@ def simplify_smt(value, type):
         else:
             return simplify(value.array)
     else:
-        return simplify(value)
+        return simplify(value[1])
 
 def display_model(state, variables, model, depth = 0):
     for k, v in variables.items():
@@ -68,17 +69,12 @@ def display_model(state, variables, model, depth = 0):
             print(f"{'  ' * depth}{k}: {model.get_value(v[1])}")
     #print("MODEL", model)
 
-def display_states_smt2(states):
-    for i, state in enumerate(states):
-        state_desc = f"{i}\t" + str({k: simplify_smt(v[1], v[0]) for k, v in state.head_frame().variables.items()})
-        print("" + "=" * len(state_desc) + "")
-        print(state_desc)
-        print("Memory Map: ", state.addr_map)
-        print("=" * len(state_desc))
-        print("(set-option :produce-models true)")
-        print('\n'.join(gen_declare_const(state.path_cond)))
-        print(gen_assert(simplify(state.path_cond)))
-        display_model(state, state.head_frame().variables, get_model(state.path_cond))
+def display_states_smt2(state):
+    for v, vs in state.value_summaries.items():
+        if v != '_pc':
+            print(v, ', '.join([f"{bdd2expr(g)}: {simplify(val)}" for g, val in vs]))
+    print([(k, bdd2expr(v)) if isinstance(v, BinaryDecisionDiagram) else (k, v) for k, v in state.bdd_vars.items()])
+
 
 def concrete_evaluation(states):
     state = states[0]

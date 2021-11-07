@@ -1,6 +1,7 @@
 from copy import copy, deepcopy
 
-from pysmt.shortcuts import TRUE, And, Not, Store
+from pysmt.shortcuts import TRUE, FALSE, And, Not, Store
+from pyeda.inter import *
 
 class Frame:
     def __init__(self, function, pc, variables, return_target):
@@ -14,27 +15,31 @@ class Frame:
 
 class State:
     records = {}
+    bdd_vars = {}
+    num_vars = 0
     def __init__(self, path_cond, frame_stack, base_addr = 1, addr_map = {0: None}, conc_sym_pointers = {}):
         self.path_cond = path_cond
         self.frame_stack = frame_stack
         self.base_addr = base_addr
         self.addr_map = addr_map
         self.concrete_symbolic_pointers = conc_sym_pointers
+        fake = bddvar('fake')
+        self.value_summaries = {'_pc': [[fake.restrict({fake: 1}), 0]]}
+        self.value_summaries.update({k: [[fake.restrict({fake: 1}), None]] for k in self.head_frame().variables})
+        print(self.value_summaries)
+        self.bdd_vars[fake] = TRUE()
 
     def __copy__(self):
         return State(self.path_cond, [copy(f) for f in self.frame_stack], self.base_addr, deepcopy(self.addr_map), deepcopy(self.concrete_symbolic_pointers))
 
     def assign_variable(self, var, val):
-        if var in self.head_frame().variables:
-            self.head_frame().variables[var] = [self.head_frame().variables[var][0], val]
-        else:
-            self.frame_stack[0].variables[var] = [self.frame_stack[0].variables[var][0], val]
+        old_vs = [[~self.current_guard[0] & g, v] for g, v in self.value_summaries[var]]
+        print(old_vs)
+        new_vs = [[self.current_guard[0] & g, v] for g, v in val]
+        self.value_summaries[var] = [vs for vs in old_vs + new_vs if not vs[0].is_zero()]
 
     def get_variable(self, var):
-        if var in self.head_frame().variables:
-            return self.head_frame().variables[var][1]
-        else:
-            return self.frame_stack[0].variables[var][1]
+        return self.value_summaries[var]
 
     def get_variable_type(self, var):
         if var in self.head_frame().variables:
@@ -42,14 +47,21 @@ class State:
         else:
             return self.frame_stack[0].variables[var][0]
     def split(self, cond, pc):
-        taken_state = deepcopy(self)
-        not_taken_state = deepcopy(self)
-        taken_state.update_pc(pc).path_cond = And(cond, self.path_cond)
-        not_taken_state.advance_pc().path_cond = And(Not(cond), self.path_cond)
-        return [taken_state, not_taken_state]
+        new_var = bddvar('g', self.num_vars)
+        self.num_vars += 1
+        new_g = bddones(1)[0]
+        for v in cond:
+            new_c_var = bddvar('c', self.num_vars)
+            self.num_vars += 1
+            self.bdd_vars[new_c_var] = v[1]
+            new_g = new_g | (v[0] & new_c_var)
+        self.bdd_vars[new_var] = self.current_guard[0] & new_g
+        self.value_summaries['_pc'].append([new_var, pc])
+        self.value_summaries['_pc'].append([~new_var, self.current_guard[1] + 1])
+        return self
 
     def advance_pc(self):
-        self.head_frame().pc += 1
+        self.current_guard = [self.current_guard[0], self.current_guard[1] + 1]
         return self
 
     def update_pc(self, pc):
@@ -58,7 +70,7 @@ class State:
 
     @property
     def pc(self):
-        return self.head_frame().pc
+        return self.current_guard[1]
 
     @property
     def current_statement(self):
@@ -75,6 +87,11 @@ class State:
         if target is not None and return_value is not None:
             target(self, return_value)
 
+    def get_guard(self):
+        for i in range(len(self.value_summaries['_pc'])):
+            if self.value_summaries['_pc'][i][1] < len(self.head_frame().function.statements):
+                return self.value_summaries['_pc'].pop(i)
+
     @property
     def is_finished(self):
-        return (len(self.frame_stack) == 1) and self.pc >= len(self.head_frame().function.statements)
+        return (len(self.frame_stack) == 1) and all(pc[1] >= len(self.head_frame().function.statements) for pc in self.value_summaries['_pc'])

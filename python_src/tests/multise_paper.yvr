@@ -1,0 +1,12 @@
+x, z, r: INT
+done: BOOL
+x = $sym{x, INT}
+z = $sym{z, INT}
+r = $sym{r, INT}
+x = 2 * x
+if x <= 100 goto ELSE1
+if z != 1 goto ELSE1
+r = 3
+LABEL ELSE1: if r <= 1 goto ELSE2
+z = r - 1
+LABEL ELSE2: done = true
