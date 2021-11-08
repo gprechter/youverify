@@ -8,3 +8,4 @@ new temp = link(i, temp)
 i = i + 1
 goto LOOP
 LABEL END: x = temp
+temp = null

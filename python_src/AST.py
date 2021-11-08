@@ -1,9 +1,10 @@
 from pysmt.shortcuts import And, Or, Not, Symbol, TRUE, FALSE, is_sat, Array, GE, LT, Equals
 from pysmt.shortcuts import Solver, simplify, Int, FreshSymbol, Plus, Store, Select, BV
 from pysmt.shortcuts import LE, LT
-from pysmt.typing import INT, BVType
+from pysmt.typing import INT, BVType, BOOL
 from State import State, Frame
 from Mappings import YVR_BUILTIN_OP_TO_PYSMT
+from TypeCheckingRules import unary_type_checking_rules, binary_type_checking_rules, both_records_or_null
 
 class Program:
     def __init__(self, statements = [], variables = {}, labels = {}, functions={}):
@@ -66,6 +67,11 @@ class RecordIndexExpression(Expression):
             state.addr_map[concrete_address] = symb_elems
             return state.addr_map[concrete_address][self.element]
 
+    def type_check(self, program):
+        record = State.records[self.record]
+        return record.types[record.elements.index(self.element)], ""
+
+
 class Value(AtomicExpression):
     def __init__(self, value, type):
         self.value = value
@@ -95,28 +101,47 @@ class UniqueSymbol(Value):
     def __init__(self, type):
         self.type = type
 
+    def type_check(self, program):
+        return self.type, ""
+
     def eval(self, state):
         return FreshSymbol(self.type)
 
 class UnaryExpression(Expression):
-    def __init__(self, op, arg):
+    def __init__(self, op, op_name, arg):
         self.op = op
+        self.op_name = op_name
         self.arg = arg
+
+    def type_check(self, program):
+        comp_func, type = unary_type_checking_rules[self.op_name]
+        operand = self.arg.type_check(program)
+        if operand[1]:
+            return operand
+        return type, "" if comp_func(operand[0]) else f"{self.op_name} is being used on the incorrect operand."
 
     def eval(self, state):
         return self.op(self.arg.eval(state))
 
 class BinaryExpression(Expression):
-    def __init__(self, lhs, op, rhs):
+    def __init__(self, lhs, op, op_name, rhs):
         self.lhs = lhs
         self.op = op
+        self.op_name = op_name
         self.rhs = rhs
 
     def eval(self, state):
         return self.op(self.lhs.eval(state), self.rhs.eval(state))
 
     def type_check(self, program):
-        return
+        comp_func, type = binary_type_checking_rules[self.op_name]
+        lhs = self.lhs.type_check(program)
+        rhs = self.rhs.type_check(program)
+        if lhs[1]:
+            return lhs
+        if rhs[1]:
+            return rhs
+        return type, "" if comp_func(lhs[0], rhs[0]) else f"{self.op_name} is being used on the incorrect operands."
 
     def __repr__(self):
         return f"{self.lhs} {self.op} {self.rhs}"
@@ -127,6 +152,10 @@ class TernaryExpression(Expression):
         self.first = first
         self.second = second
         self.third = third
+
+    def type_check(self, program):
+        f, s, t = self.first.type_check(program), self.second.type_check(program), self.third.type_check(program)
+        return 
 
     def eval(self, state):
         return self.op(self.first.eval(state), self.second.eval(state), self.third.eval(state))
@@ -210,6 +239,21 @@ class Alloc_Concrete(Statement):
         self.record = record
         self.arguments = arguments
 
+    def type_check(self, program):
+        target, target_issue = self.target.type_check(program)
+        record = State.records[self.record]
+        if len(self.arguments) != len(record.elements):
+            return None, f"There must be {len(record.elements)} values to initialize the {self.record} record."
+        for t, e in zip(record.types, self.arguments):
+            elem_t, err = e.type_check(program)
+            if err:
+                return None, err
+            if elem_t != t:
+                return None, f"The expression {e} is the incorrect type for the given element."
+        if target_issue:
+            return target, target_issue
+        return None, "" if target == self.record else "The record must be assigned to the same type."
+
     def exec(self, state):
         address = state.base_addr
         arguments = [arg.eval(state) for arg in self.arguments]
@@ -223,9 +267,23 @@ class Alloc_Symbolic(Statement):
         self.target = target
         self.record = record
 
+    def type_check(self, program):
+        target, target_issue = self.target.type_check(program)
+        if target_issue:
+            return target, target_issue
+        return
+
     def exec(self, state):
         state.assign_variable(self.target.name, Symbol(f"{self.record}_{self.target.name}", BVType(32)))
         return [state.advance_pc()]
+
+class NULL(AtomicExpression):
+
+    def type_check(self, program):
+        return 'null', ""
+
+    def eval(self, state):
+        return BV(0, 32)
 
 class Assignment(Statement):
     def __init__(self, target, expression):
@@ -252,18 +310,19 @@ class Assignment(Statement):
         value, value_issue = self.expression.type_check(program)
         if value_issue or target_issue:
             return None, f"{value_issue}, {target_issue}"
-        return None, f"Target {target} and value {value} types must match." if target == value else ""
+        return None, "" if target == value or both_records_or_null(target, value) else f"Target {target} and value {value} types must match."
 
     def __repr__(self):
         return f"{repr(self.target)} = {repr(self.expression)}"
 
 class Record:
-    def __init__(self, name, elements):
+    def __init__(self, name, elements, types):
         self.name = name
         self.elements = elements
+        self.types = types
 
     def __str__(self):
-        return f"{self.name}({', '.join(self.elements.items())})"
+        return f"{self.name}({', '.join(self.elements)})"
 
 def wrap_target_var(var):
     def return_to_var(state, value):
@@ -341,6 +400,12 @@ class ConditionalBranch(Statement):
         self.condition = condition
         self.dest = dest
 
+    def type_check(self, program):
+        cond_type, err = self.condition.type_check(program)
+        if err:
+            return cond_type, err
+        return None, "" if cond_type == BOOL else "The condition to a conditional branch must be a boolean value."
+
     def exec(self, state):
         return state.split(self.condition.eval(state), state.head_frame().function.labels[self.dest])
 
@@ -352,6 +417,9 @@ class UnconditionalBranch(ConditionalBranch):
         self.dest = dest
     def exec(self, state):
         return [state.update_pc(state.head_frame().function.labels[self.dest])]
+
+    def type_check(self, program):
+        return None, ""
 
     def __repr__(self):
         return f"goto {self.dest}"

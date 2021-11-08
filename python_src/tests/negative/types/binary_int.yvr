@@ -1,0 +1,3 @@
+x: INT
+x = 10 + true
+x = true & false

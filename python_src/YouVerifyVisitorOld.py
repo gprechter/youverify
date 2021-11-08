@@ -57,8 +57,8 @@ class YouVerifyVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by YouVerifyParser#record.
     def visitRecord(self, ctx: YouVerifyParser.RecordContext):
-        elements = {identifier: Variable(sort) for identifier, sort in sum([self.visit(p) for p in ctx.elems], [])}
-        return Record(ctx.name.text, elements)
+        elements = [(identifier, sort) for identifier, sort in sum([self.visit(p) for p in ctx.elems], [])]
+        return Record(ctx.name.text, [e[0] for e in elements], [e[1] for e in elements])
 
     # Visit a parse tree produced by YouVerifyParser#ALLOC_CONC.
     def visitALLOC_CONC(self, ctx: YouVerifyParser.ALLOC_CONCContext):
@@ -160,7 +160,7 @@ class YouVerifyVisitor(ParseTreeVisitor):
             return Value(Int(int(ctx.atom.text)), INT)
         elif ctx.IDENTIFIER():
             if ctx.atom.text.lower() == 'null':
-                return Value(BV(0, 32), BVType(32))
+                return NULL()
             else:
                 return Variable(ctx.atom.text)
 
@@ -188,11 +188,11 @@ class YouVerifyVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by YouVerifyParser#UNARY.
     def visitUNARY(self, ctx:YouVerifyParser.UNARYContext):
-        return UnaryExpression(YVR_UNARY_OP_TO_PYSMT[ctx.op.text], self.visit(ctx.e))
+        return UnaryExpression(YVR_UNARY_OP_TO_PYSMT[ctx.op.text], ctx.op.text, self.visit(ctx.e))
 
     # Visit a parse tree produced by YouVerifyParser#BINARY.
     def visitBINARY(self, ctx:YouVerifyParser.BINARYContext):
-        return BinaryExpression(self.visit(ctx.lhs), YVR_BINARY_OP_TO_PYSMT[ctx.op.text], self.visit(ctx.rhs))
+        return BinaryExpression(self.visit(ctx.lhs), YVR_BINARY_OP_TO_PYSMT[ctx.op.text], ctx.op.text, self.visit(ctx.rhs))
 
     # Visit a parse tree produced by YouVerifyParser#TERNARY.
     def visitTERNARY(self, ctx: YouVerifyParser.TERNARYContext):

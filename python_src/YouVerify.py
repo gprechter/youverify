@@ -21,9 +21,16 @@ def main(argv):
     program = Program(statements, variables, labels, functions)
 
     State.records = records
+    not_sanitary = False
+    for i, stmt in enumerate(program.statements):
+        _, err = stmt.type_check(program)
+        if err:
+            not_sanitary = True
+            print(f"line {i}: {err}")
+    if not_sanitary:
+        print("FAILED TO RUN BECAUSE OF TYPE ERRORS.")
+        return []
 
-    for stmt in program.statements:
-        stmt.type_check(program)
 
     def exec(program):
         states = [State(TRUE(), [Frame(program, 0, {k: [v.name, None] for k, v in program.variables.copy().items()}, None)])]
@@ -55,12 +62,13 @@ def display_model(state, variables, model, depth = 0):
     for k, v in variables.items():
         if isinstance(v[0], str):
             elems = State.records[v[0]].elements
+            types = State.records[v[0]].types
             if model.get_value(v[1]).constant_value() == 0:
                 print(f"{'  ' * depth}{k}: {'null'}")
             else:
                 print(f"{'  ' * depth}{k}:")
                 display_model(state,
-                          {k: [elems[k].name, v] for k, v in state.addr_map[model.get_value(v[1]).constant_value()].items()},
+                          {k: [types[elems.index(k)], v] for k, v in state.addr_map[model.get_value(v[1]).constant_value()].items()},
                           model, depth = depth + 1)
         elif isinstance(v[1], YouVerifyArray):
             print(f"{'  ' * depth}{k}: {model.get_value(v[1].array)}")
