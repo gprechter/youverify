@@ -246,10 +246,10 @@ Only `ite`.
 | [Bit Vector Sort and Operators](https://github.com/gprechter/youverify/tree/master/python_src/tests/bitvectors) |                                                              | ✅ Completed |
 | [Array Sort and Operators](https://github.com/gprechter/youverify/tree/master/python_src/tests/arrays) [Including Fixed Sized] |                                                              | ✅ Completed |
 | [Labels and Branching Statements](https://github.com/gprechter/youverify/tree/master/python_src/tests/branching) | [Complex tests](https://github.com/gprechter/youverify/tree/master/python_src/tests/complex) | ✅ Completed |
-| [Functions](https://github.com/gprechter/youverify/tree/master/python_src/tests/functions) |                                                              | In Progress |
+| [Functions](https://github.com/gprechter/youverify/tree/master/python_src/tests/functions) |                                                              | ✅ Completed |
 | [Assume Statements](https://github.com/gprechter/youverify/tree/master/python_src/tests/assume) |                                                              | ✅ Completed |
-| [Symbolic Values and Programs](https://github.com/gprechter/youverify/tree/master/python_src/tests/symbolic) | [Oblicheck symbolic tests](https://github.com/gprechter/youverify/tree/master/python_src/tests/oblicheck) | In Progress |
-| [Records](https://github.com/gprechter/youverify/tree/master/python_src/tests/records) |                                                              | In Progress |
+| [Symbolic Values and Programs](https://github.com/gprechter/youverify/tree/master/python_src/tests/symbolic) | [Oblicheck symbolic tests](https://github.com/gprechter/youverify/tree/master/python_src/tests/oblicheck) | ✅ Completed |
+| [Records](https://github.com/gprechter/youverify/tree/master/python_src/tests/records) |                                                              | ✅ Completed |
 
 
 
