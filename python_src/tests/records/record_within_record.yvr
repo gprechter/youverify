@@ -1,0 +1,2 @@
+record point(x, y: INT)
+record shape(num_points: INT, points: ARRAY{point})

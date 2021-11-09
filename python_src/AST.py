@@ -1,10 +1,12 @@
 from pysmt.shortcuts import And, Or, Not, Symbol, TRUE, FALSE, is_sat, Array, GE, LT, Equals
 from pysmt.shortcuts import Solver, simplify, Int, FreshSymbol, Plus, Store, Select, BV
 from pysmt.shortcuts import LE, LT
-from pysmt.typing import INT, BVType, BOOL
+from pysmt.typing import INT, BVType, BOOL, ArrayType
 from State import State, Frame
+from copy import copy
 from Mappings import YVR_BUILTIN_OP_TO_PYSMT
-from TypeCheckingRules import unary_type_checking_rules, binary_type_checking_rules, both_records_or_null
+from TypeCheckingRules import both_same, unary_type_checking_rules, binary_type_checking_rules, both_records_or_null, builtin_type_checking_rules
+from pysmt.type_checker import SimpleTypeChecker
 
 class Program:
     def __init__(self, statements = [], variables = {}, labels = {}, functions={}):
@@ -14,6 +16,12 @@ class Program:
         self.variables = variables
         self.functions = functions
 
+
+class TCContext:
+    def __init__(self, variables, functions, return_type = None):
+        self.variables = variables
+        self.functions = functions
+        self.return_type = return_type
 '''
     def append(self, statement, label = None):
         if label:
@@ -35,8 +43,8 @@ class Variable(AtomicExpression):
     def eval(self, state):
         return state.get_variable(self.name)
 
-    def type_check(self, program):
-        return program.variables[self.name].name, ""
+    def type_check(self, context):
+        return context.variables[self.name], ""
 
     def __repr__(self):
         return f"{self.name}"
@@ -59,16 +67,18 @@ class RecordIndexExpression(Expression):
             else:
                 concrete_address = state.concrete_symbolic_pointers[address.symbol_name()]
             symb_elems ={}
-            for k, v in State.records[state.get_variable_type(self.record)].elements.items():
-                if isinstance(v.name, str):
+            rec = State.records[state.get_variable_type(self.record)]
+            for k, v in zip(rec.elements, rec.types):
+                if isinstance(v, str):
                     symb_elems[k] = Symbol(f"{address.symbol_name()}_{k}", BVType(32))
                 else:
                     symb_elems[k] = Symbol(f"{address.symbol_name()}_{k}", INT)
             state.addr_map[concrete_address] = symb_elems
             return state.addr_map[concrete_address][self.element]
 
-    def type_check(self, program):
-        record = State.records[self.record]
+    def type_check(self, context):
+        rec_type = context.variables[self.record]
+        record = State.records[rec_type]
         return record.types[record.elements.index(self.element)], ""
 
 
@@ -80,7 +90,7 @@ class Value(AtomicExpression):
     def eval(self, state):
         return self.value
 
-    def type_check(self, program):
+    def type_check(self, context):
         return self.type, ""
 
     def __repr__(self):
@@ -95,13 +105,13 @@ class YouVerifyArray:
             self.array = Array(INT, default_value)
 
     def __copy__(self):
-        return YouVerifyArray(self.default_value, self.length, self.array)
+        return YouVerifyArray(self.default_value, self.length, copy(self.array))
 
 class UniqueSymbol(Value):
     def __init__(self, type):
         self.type = type
 
-    def type_check(self, program):
+    def type_check(self, context):
         return self.type, ""
 
     def eval(self, state):
@@ -113,9 +123,9 @@ class UnaryExpression(Expression):
         self.op_name = op_name
         self.arg = arg
 
-    def type_check(self, program):
+    def type_check(self, context):
         comp_func, type = unary_type_checking_rules[self.op_name]
-        operand = self.arg.type_check(program)
+        operand = self.arg.type_check(context)
         if operand[1]:
             return operand
         return type, "" if comp_func(operand[0]) else f"{self.op_name} is being used on the incorrect operand."
@@ -133,10 +143,10 @@ class BinaryExpression(Expression):
     def eval(self, state):
         return self.op(self.lhs.eval(state), self.rhs.eval(state))
 
-    def type_check(self, program):
+    def type_check(self, context):
         comp_func, type = binary_type_checking_rules[self.op_name]
-        lhs = self.lhs.type_check(program)
-        rhs = self.rhs.type_check(program)
+        lhs = self.lhs.type_check(context)
+        rhs = self.rhs.type_check(context)
         if lhs[1]:
             return lhs
         if rhs[1]:
@@ -153,9 +163,18 @@ class TernaryExpression(Expression):
         self.second = second
         self.third = third
 
-    def type_check(self, program):
-        f, s, t = self.first.type_check(program), self.second.type_check(program), self.third.type_check(program)
-        return 
+    def type_check(self, context):
+        f, s, t = self.first.type_check(context), self.second.type_check(context), self.third.type_check(context)
+        f_type, f_err = f
+        s_type, s_err = s
+        t_type, t_err = t
+        if f_err:
+            return f_type, f_err
+        if s_err:
+            return s_type, s_err
+        if t_err:
+            return t_type, t_err
+        return s_type, "" if (f_type == BOOL and (both_records_or_null(s_type, t_type) or both_same(s_type, t_type))) else "The types were incorrect."
 
     def eval(self, state):
         return self.op(self.first.eval(state), self.second.eval(state), self.third.eval(state))
@@ -164,6 +183,12 @@ class ArrayIndexExpression(Expression):
     def __init__(self, arr, index):
         self.arr = arr
         self.index = index
+
+    def type_check(self, context):
+        arr_type, err = self.arr.type_check(context)
+        if err:
+            return arr_type, err
+        return arr_type.elem_type, ""
 
     def eval(self, state):
         arr = self.arr.eval(state)
@@ -181,6 +206,12 @@ class NewArrayExpression(Expression):
     def __init__(self, default, length=None):
         self.default = default
         self.length = length
+
+    def type_check(self, context):
+        default_type, err = self.default.type_check(context)
+        if err:
+            return default_type, err
+        return ArrayType(INT, (BVType(32) if isinstance(default_type, str) and default_type == 'null' else default_type)), ""
 
     def eval(self, state):
         arr = YouVerifyArray(self.default.eval(state), self.length)
@@ -207,6 +238,16 @@ class Return(Statement):
     def __init__(self, expression):
         self.expression = expression
 
+    def type_check(self, context):
+        if self.expression == None and context.return_type == None:
+            return None, ""
+        elif self.expression == None or context.return_type == None:
+            return None, "A function with no return type cannot return a value, and a function with a return type must have a return value."
+        return_expr_type, err = self.expression.type_check(context)
+        if err:
+            return return_expr_type, err
+        return None, "" if return_expr_type == context.return_type else "The return expression type must match the function's return type"
+
     def exec(self, state):
         if self.expression:
             state.pop_frame(self.expression.eval(state))
@@ -218,6 +259,12 @@ class Assume(Statement):
     def __init__(self, expression):
         self.expression = expression
 
+    def type_check(self, context):
+        cond_type, err = self.expression.type_check(context)
+        if err:
+            return cond_type, err
+        return None, "" if cond_type == BOOL else "The condition to a conditional branch must be a boolean value."
+
     def exec(self, state):
         state.path_cond = And(state.path_cond, self.expression.eval(state))
         return [state.advance_pc()]
@@ -225,6 +272,13 @@ class Assume(Statement):
 class Assert(Statement):
     def __init__(self, expression):
         self.expression = expression
+
+    def type_check(self, context):
+        cond_type, err = self.expression.type_check(context)
+        if err:
+            return cond_type, err
+        return None, "" if cond_type == BOOL else "The condition to a conditional branch must be a boolean value."
+
 
     def exec(self, state):
         if is_sat(And(state.path_cond, Not(self.expression.eval(state)))):
@@ -239,20 +293,20 @@ class Alloc_Concrete(Statement):
         self.record = record
         self.arguments = arguments
 
-    def type_check(self, program):
-        target, target_issue = self.target.type_check(program)
+    def type_check(self, context):
+        target, target_issue = self.target.type_check(context)
         record = State.records[self.record]
         if len(self.arguments) != len(record.elements):
             return None, f"There must be {len(record.elements)} values to initialize the {self.record} record."
         for t, e in zip(record.types, self.arguments):
-            elem_t, err = e.type_check(program)
+            elem_t, err = e.type_check(context)
             if err:
                 return None, err
-            if elem_t != t:
-                return None, f"The expression {e} is the incorrect type for the given element."
+            if not(both_records_or_null(elem_t, t) or both_same(elem_t, t)):
+                return None, f"The expression {e} is the incorrect type for the given element, {t}."
         if target_issue:
             return target, target_issue
-        return None, "" if target == self.record else "The record must be assigned to the same type."
+        return None, "" if both_records_or_null(target, self.record) else "The record must be assigned to the same type."
 
     def exec(self, state):
         address = state.base_addr
@@ -267,11 +321,11 @@ class Alloc_Symbolic(Statement):
         self.target = target
         self.record = record
 
-    def type_check(self, program):
-        target, target_issue = self.target.type_check(program)
+    def type_check(self, context):
+        target, target_issue = self.target.type_check(context)
         if target_issue:
             return target, target_issue
-        return
+        return None, "" if target == self.record else "The type of a symbolic record must match the target."
 
     def exec(self, state):
         state.assign_variable(self.target.name, Symbol(f"{self.record}_{self.target.name}", BVType(32)))
@@ -279,7 +333,7 @@ class Alloc_Symbolic(Statement):
 
 class NULL(AtomicExpression):
 
-    def type_check(self, program):
+    def type_check(self, context):
         return 'null', ""
 
     def eval(self, state):
@@ -305,12 +359,12 @@ class Assignment(Statement):
             state.assign_variable(self.target.name, self.expression.eval(state))
         return [state.advance_pc()]
 
-    def type_check(self, program):
-        target, target_issue = self.target.type_check(program)
-        value, value_issue = self.expression.type_check(program)
+    def type_check(self, context):
+        target, target_issue = self.target.type_check(context)
+        value, value_issue = self.expression.type_check(context)
         if value_issue or target_issue:
             return None, f"{value_issue}, {target_issue}"
-        return None, "" if target == value or both_records_or_null(target, value) else f"Target {target} and value {value} types must match."
+        return None, "" if both_records_or_null(target, value) or both_same(target, value) else f"Target {target} and value {value} types must match."
 
     def __repr__(self):
         return f"{repr(self.target)} = {repr(self.expression)}"
@@ -343,6 +397,32 @@ class FunctionCallAndAssignment(Statement):
         self.target = target
         self.function = function
         self.arguments = arguments
+
+    def type_check(self, context):
+        if self.function in builtin_type_checking_rules:
+            type_check_func, return_type_func, num_args = builtin_type_checking_rules[self.function]
+            if self.function == 'extract':
+                return_type_func = lambda bv, s, e: BVType(1 + self.arguments[2].eval(None).constant_value() - self.arguments[1].eval(None).constant_value())
+        else:
+            type_check_func = lambda *args: all([a == p.name for a, p in zip(args, context.functions[self.function].params.values())])
+            return_type_func = lambda *args: context.functions[self.function].return_value
+            num_args = len(context.functions[self.function].params)
+        if num_args != len(self.arguments):
+            return None, "The number of arguments allowed and the number present are not the same!"
+        args = [arg.type_check(context) for arg in self.arguments]
+        for type, err in args:
+            if err:
+                return None, err
+        if not type_check_func(*[arg[0] for arg in args]):
+            return None, "The arguments to the function are of the wrong type."
+        return_type = return_type_func(*[arg[0] for arg in args])
+        target, target_issue = self.target.type_check(context)
+        if target_issue:
+            return None, target_issue
+        if not return_type:
+            return None, "Return type must not be NONE."
+        return None, "" if both_same(target, return_type) or both_records_or_null(target, return_type) else f"Target {target} and value {return_type} types must match."
+
 
     def exec(self, state):
 
@@ -378,10 +458,30 @@ class FunctionCallWithNoAssignment(Statement):
         self.function = function
         self.arguments = arguments
 
+    def type_check(self, context):
+        if self.function in builtin_type_checking_rules:
+            return None, "Builtins can never be called with a target."
+        else:
+            type_check_func = lambda *args: all([a == p.name for a, p in zip(args, context.functions[self.function].params.values())])
+            return_type_func = lambda *args: context.functions[self.function].return_value
+            num_args = len(context.functions[self.function].params)
+        if num_args != len(self.arguments):
+            return None, "The number of arguments allowed and the number present are not the same!"
+        args = [arg.type_check(context) for arg in self.arguments]
+        for type, err in args:
+            if err:
+                return None, err
+        if not type_check_func(*[arg[0] for arg in args]):
+            return None, "The arguments to the function are of the wrong type."
+
+        return None, ""
+
+
+
     def exec(self, state):
 
         if self.function in YVR_BUILTIN_OP_TO_PYSMT:
-            assert False, "Builtins can never be called with a target."
+            assert False, "Builtins can never be called without a target."
 
         function = state.frame_stack[0].function.functions[self.function]
 
@@ -400,8 +500,8 @@ class ConditionalBranch(Statement):
         self.condition = condition
         self.dest = dest
 
-    def type_check(self, program):
-        cond_type, err = self.condition.type_check(program)
+    def type_check(self, context):
+        cond_type, err = self.condition.type_check(context)
         if err:
             return cond_type, err
         return None, "" if cond_type == BOOL else "The condition to a conditional branch must be a boolean value."
@@ -418,7 +518,7 @@ class UnconditionalBranch(ConditionalBranch):
     def exec(self, state):
         return [state.update_pc(state.head_frame().function.labels[self.dest])]
 
-    def type_check(self, program):
+    def type_check(self, context):
         return None, ""
 
     def __repr__(self):

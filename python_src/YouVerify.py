@@ -8,7 +8,7 @@ from YouVerifyParser import YouVerifyParser
 
 from pysmt.shortcuts import TRUE, is_sat, simplify, get_model, get_free_variables, Solver, Int
 from pysmt.typing import _BoolType
-from AST import Program, Variable, array_to_length_map, YouVerifyArray
+from AST import Program, Variable, array_to_length_map, YouVerifyArray, TCContext
 from State import State, Frame
 from SMTLibUtil import *
 
@@ -22,13 +22,24 @@ def main(argv):
 
     State.records = records
     not_sanitary = False
+    global_tc_context = TCContext({k: v.name for k, v in program.variables.items()}, functions)
     for i, stmt in enumerate(program.statements):
-        _, err = stmt.type_check(program)
+        _, err = stmt.type_check(global_tc_context)
         if err:
             not_sanitary = True
             print(f"line {i}: {err}")
+    for function in program.functions.values():
+        local_variable_map = {k: v.name for k, v in program.variables.items()}
+        local_variable_map.update({k: v.name for k, v in function.params.items()})
+        local_variable_map.update({k: v.name for k, v in function.variables.items()})
+        local_tc_context = TCContext(local_variable_map, functions, function.return_value)
+        for i, stmt in enumerate(function.statements):
+            _, err = stmt.type_check(local_tc_context)
+            if err:
+                not_sanitary = True
+                print(f"In function {function.name}, line {i}: {err}")
     if not_sanitary:
-        print("FAILED TO RUN BECAUSE OF TYPE ERRORS.")
+        print('\033[91m' + "FAILED TO RUN BECAUSE OF TYPE ERRORS." + '\033[0m')
         return []
 
 
@@ -40,10 +51,11 @@ def main(argv):
                 states.append(state)
                 continue
             stmt = state.current_statement
-            states.extend([s for s in stmt.exec(state) if is_sat(state.path_cond)])
+            if is_sat(state.path_cond):
+                states.extend([s for s in stmt.exec(state)])
            # if is_sat(state.path_cond):
                 #print(stmt)
-        return states
+        return [s for s in states if is_sat(s.path_cond)]
 
     return exec(program)
 
@@ -59,6 +71,8 @@ def simplify_smt(value, type):
         return simplify(value)
 
 def display_model(state, variables, model, depth = 0):
+    if not model:
+        return
     for k, v in variables.items():
         if isinstance(v[0], str):
             elems = State.records[v[0]].elements
@@ -71,7 +85,7 @@ def display_model(state, variables, model, depth = 0):
                           {k: [types[elems.index(k)], v] for k, v in state.addr_map[model.get_value(v[1]).constant_value()].items()},
                           model, depth = depth + 1)
         elif isinstance(v[1], YouVerifyArray):
-            print(f"{'  ' * depth}{k}: {model.get_value(v[1].array)}")
+            print(f"{'  ' * depth}{k}: {[simplify(model.get_value(v[1].array)).array_value_get(Int(i)) for i in range(v[1].length)]}")
         else:
             print(f"{'  ' * depth}{k}: {model.get_value(v[1])}")
     #print("MODEL", model)
@@ -90,8 +104,10 @@ def display_states_smt2(states):
 
 def concrete_evaluation(states):
     state = states[0]
-    assert all([simplify(v[1]).is_constant() for k, v in state.head_frame().variables.items()]), "All variables must be constant."
-    return json.dumps({k: simplify(v[1]).constant_value() for k, v in state.head_frame().variables.items()})
+    assert all([simplify(v[1]).is_constant() for k, v in state.head_frame().variables.items() if not isinstance(v[1], YouVerifyArray)]), "All variables must be constant."
+    return json.dumps({k: simplify(v[1]).constant_value() if not isinstance(v[1], YouVerifyArray) else
+                    [simplify(get_model(state.path_cond).get_value(v[1].array)).array_value_get(Int(i)).constant_value() for i in range(v[1].length)]
+                       for k, v in state.head_frame().variables.items()})
 
 if __name__ == '__main__':
     display_states_smt2(main(sys.argv))

@@ -1,0 +1,33 @@
+record bst(root: bst_node)
+record bst_node(l: bst_node, e: INT, r: bst_node)
+b: bst
+define bst_insert(bst: bst, e: INT):
+	node, new_root: bst_node
+	node = bst.root
+	call new_root = insert_rec(node, e)
+	bst.root = new_root
+	return
+
+define insert_rec(node: bst_node, e: INT) -> bst_node:
+	root_e: INT
+	rec_result, temp: bst_node
+	if node != null goto ELSE
+	new node = bst_node(null, e, null)
+	return node
+	LABEL ELSE: root_e = node.e
+	if e >= root_e goto ELSE2
+	temp = node.l
+	call rec_result = insert_rec(temp, e)
+	node.l = rec_result
+	LABEL ELSE2: if e <= root_e goto ELSE3
+	temp = node.r
+	call rec_result = insert_rec(temp, e)
+	node.r = rec_result
+	LABEL ELSE3: return node
+
+new b = bst(null)
+call bst_insert(b, 1)
+call bst_insert(b, 5)
+call bst_insert(b, 3)
+call bst_insert(b, 4)
+call bst_insert(b, 2)

@@ -2,6 +2,7 @@ import sys
 import json
 import glob
 import os.path
+from pysmt.shortcuts import Solver, reset_env
 from YouVerify import main, concrete_evaluation, display_states_smt2
 
 class bcolors:
@@ -28,11 +29,15 @@ def check_all(dir):
     for file in glob.glob(dir + "/**/*.yvr", recursive=True):
         print(file)
         expected = glob.glob(dir + f"/**/{os.path.basename(file).split('.')[0]}.expected", recursive=True)
-        if expected:
-            print((bcolors.BOLD + bcolors.OKGREEN + "PASS" + bcolors.ENDC)
-                  if check(concrete_evaluation(main(["testing", file])), expected[0]) else
-                  (bcolors.BOLD + bcolors.FAIL + "FAILED" + bcolors.ENDC))
-        else:
-            display_states_smt2(main(['eval', file]))
+        reset_env()
+        try:
+            if expected:
+                print((bcolors.BOLD + bcolors.OKGREEN + "PASS" + bcolors.ENDC)
+                      if check(concrete_evaluation(main(["testing", file])), expected[0]) else
+                      (bcolors.BOLD + bcolors.FAIL + "FAILED" + bcolors.ENDC))
+            else:
+                display_states_smt2(main(['eval', file]))
+        except ZeroDivisionError as e:
+            print(e)
 
 check_all(sys.argv[1])

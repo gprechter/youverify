@@ -1,5 +1,6 @@
 arr: ARRAY{INT}
 i, result: INT
+val: INT
 define populate(arr: ARRAY{INT}, len: INT):
 	i: INT
 	i = 0
@@ -12,6 +13,7 @@ define populate(arr: ARRAY{INT}, len: INT):
 arr = ARRAY[10]{0}
 call populate(arr, 10)
 i = $sym{index, INT}
-arr[i] = -10
+val = -10
+arr[i] = val
 result = arr[3]
-assume result == -10
+assume result == val

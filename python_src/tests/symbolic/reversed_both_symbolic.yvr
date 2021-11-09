@@ -1,5 +1,5 @@
 arr1, arr2: ARRAY{INT}
-are_mirrors: BOOL
+are_mirrors, are_all_unique: BOOL
 i, sum, elem: INT
 define populate(arr: ARRAY{INT}, len: INT):
 	i: INT
@@ -9,6 +9,24 @@ define populate(arr: ARRAY{INT}, len: INT):
 	i = i + 1
 	goto LOOP
 	LABEL END: return
+
+define all_unique(arr: ARRAY{INT}, len: INT) -> BOOL:
+	i, j: INT
+	e1, e2: INT
+	i = 0
+	LABEL LOOP: if i >= len goto END
+	j = 0
+	LABEL LOOP2: if j >= len goto CONTINUE
+	if j == i goto CONTINUE
+	e1 = arr[i]
+	e2 = arr[j]
+	if e1 != e2 goto ELSE
+	return false
+	LABEL ELSE: j = j + 1
+	goto LOOP2
+	LABEL CONTINUE: i = i + 1
+	goto LOOP
+	LABEL END: return true
 
 define mirrors(arr1: ARRAY{INT}, arr2: ARRAY{INT}, len: INT) -> BOOL:
 	e1, e2, i, j: INT
@@ -28,6 +46,8 @@ arr1 = ARRAY[5]{0}
 call populate(arr1, 5)
 arr2 = ARRAY[5]{0}
 call populate(arr2, 5)
+call are_all_unique = all_unique(arr1, 5)
+assume are_all_unique
 call are_mirrors = mirrors(arr1, arr2, 5)
 assert are_mirrors
 i = 0

@@ -1,0 +1,11 @@
+record point(x, y: INT)
+define increment_both(p: point):
+	x, y: INT
+	x = p.x
+	y = p.y
+	p.x = x + 1
+	p.y = y + 1
+	return
+p: point
+new p = point(2, 2)
+call increment_both(p)

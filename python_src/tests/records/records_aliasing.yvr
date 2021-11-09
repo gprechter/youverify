@@ -1,0 +1,6 @@
+record point(x, y: INT)
+x, y: point
+new x = point(4, 5)
+x.x = -4
+y = x
+y.y = -5

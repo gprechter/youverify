@@ -1,0 +1,9 @@
+define f(x: BOOL, y: INT):
+	return true
+
+define g(y: INT) -> ARRAY{INT}:
+	return
+x: INT
+call x = g()
+call x = g(true)
+call x = f(1, 2)

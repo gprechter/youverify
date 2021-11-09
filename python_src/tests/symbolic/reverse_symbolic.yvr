@@ -1,5 +1,5 @@
 arr, reversed: ARRAY{INT}
-are_mirrors: BOOL
+unique: BOOL
 define populate(arr: ARRAY{INT}, len: INT):
 	i: INT
 	i = 0
@@ -22,21 +22,26 @@ define reverse(arr: ARRAY{INT}, len: INT) -> ARRAY{INT}:
 	goto LOOP
 	LABEL END: return new_arr
 
-define mirrors(arr1: ARRAY{INT}, arr2: ARRAY{INT}, len: INT) -> BOOL:
-	e1, e2, i, j: INT
+define all_unique(arr: ARRAY{INT}, len: INT) -> BOOL:
+	i, j: INT
+	e1, e2: INT
 	i = 0
 	LABEL LOOP: if i >= len goto END
-	e1 = arr1[i]
-	j = len - i
-	j = j - 1
-	e2 = arr2[j]
-	if e1 == e2 goto ELSE
+	j = 0
+	LABEL LOOP2: if j >= len goto CONTINUE
+	if j == i goto CONTINUE
+	e1 = arr[i]
+	e2 = arr[j]
+	if e1 != e2 goto ELSE
 	return false
-	LABEL ELSE: i = i + 1
+	LABEL ELSE: j = j + 1
+	goto LOOP2
+	LABEL CONTINUE: i = i + 1
 	goto LOOP
 	LABEL END: return true
 
 arr = ARRAY[5]{0}
 call populate(arr, 5)
+call unique = all_unique(arr, 5)
+assume unique
 call reversed = reverse(arr, 5)
-call are_mirrors = mirrors(arr, reversed, 5)

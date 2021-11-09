@@ -1,0 +1,6 @@
+arr: ARRAY{INT}
+arr2: ARRAY{BOOL}
+arr = ARRAY[1]{true}
+arr2 = ARRAY[1]{0}
+arr[0] = true
+arr2[0] = arr[0]

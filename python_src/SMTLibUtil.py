@@ -4,8 +4,11 @@ from ConvertLet import convert
 
 def gen_declare_const(node: FNode):
     const_declarations = []
+    already_declared = []
     for const in get_free_variables(node):
-        const_declarations.append(f"(declare-const {const.symbol_name()} {const.symbol_type()})")
+        if const.symbol_name() not in already_declared:
+            const_declarations.append(f"(declare-const {const.symbol_name()} {const.symbol_type()})")
+            already_declared.append(const.symbol_name())
     return const_declarations
 
 def gen_assert(node: FNode):

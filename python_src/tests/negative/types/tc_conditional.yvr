@@ -1,0 +1,4 @@
+i: INT
+i = 10
+if i goto L
+LABEL L: i = 10

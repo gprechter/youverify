@@ -1,0 +1,40 @@
+input1, input2: ARRAY{INT}
+length1, length2: INT
+
+define symbolic_arr() -> ARRAY{INT}:
+	i, k: INT
+	arr: ARRAY{INT}
+	arr = ARRAY[3]{$sym{INT}}
+	k = 3
+	i = 0
+	LABEL LOOP1: if i >= k goto END1
+	arr[i] = $sym{INT}
+	i = i + 1
+	goto LOOP1
+	LABEL END1: return arr
+
+define branch_oblivious(input: ARRAY{INT}) -> INT:
+	buf: ARRAY{INT}
+	buf_length: INT
+	i, k, t: INT
+	buf = ARRAY[3]{0}
+	k = 3
+	i = 0
+	buf_length = 0
+	LABEL LOOP2: if i >= k goto END2
+	t = input[i]
+	if t < 0 goto ELSE
+	buf[buf_length] = 1
+	buf_length = buf_length + 1
+	goto ENDCOND
+	LABEL ELSE: buf[buf_length] = 0
+	buf_length = buf_length + 1
+	LABEL ENDCOND: i = i + 1
+	goto LOOP2
+	LABEL END2: t = 0
+	return buf_length
+
+call input1 = symbolic_arr()
+call input2 = symbolic_arr()
+call length1 = branch_oblivious(input1)
+call length2 = branch_oblivious(input2)

@@ -1,0 +1,11 @@
+record rec(x: INT)
+record rec2(x: BOOL)
+a: rec
+b: rec2
+a = null
+b = null
+new a = rec2(true)
+new b = rec2(10)
+a = b
+b = a
+a.x = true

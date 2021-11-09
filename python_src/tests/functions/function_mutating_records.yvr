@@ -1,0 +1,10 @@
+record point(x: INT, y: INT)
+gp: point
+define move_right(p: point):
+	original_value: INT
+	original_value = p.x
+	p.x = original_value + 1
+	return
+
+new gp = point(5, 5)
+call move_right(gp)

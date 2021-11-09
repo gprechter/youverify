@@ -1,0 +1,21 @@
+rec_result: INT
+
+define sub_two(i: INT) -> INT:
+	rec_result: INT
+	if i > 0 goto ELSE
+	return 0
+	LABEL ELSE: i = i - 2
+	call rec_result = add_one(i)
+	rec_result = rec_result + 1
+	return rec_result
+
+define add_one(i: INT) -> INT:
+	rec_result: INT
+	if i > 0 goto ELSE
+	return 0
+	LABEL ELSE: i = i + 1
+	call rec_result = sub_two(i)
+	rec_result = rec_result + 1
+	return rec_result
+
+call rec_result = add_one(10)

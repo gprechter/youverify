@@ -1,6 +1,6 @@
 from copy import copy, deepcopy
 
-from pysmt.shortcuts import TRUE, And, Not, Store
+from pysmt.shortcuts import TRUE, And, Not, Store, simplify
 
 class Frame:
     def __init__(self, function, pc, variables, return_target):
@@ -8,9 +8,6 @@ class Frame:
         self.pc = pc
         self.variables = variables
         self.return_target = return_target
-
-    def __copy__(self):
-        return Frame(self.function, self.pc, deepcopy(self.variables), self.return_target)
 
 class State:
     records = {}
@@ -22,7 +19,7 @@ class State:
         self.concrete_symbolic_pointers = conc_sym_pointers
 
     def __copy__(self):
-        return State(self.path_cond, [copy(f) for f in self.frame_stack], self.base_addr, deepcopy(self.addr_map), deepcopy(self.concrete_symbolic_pointers))
+        return State(self.path_cond, deepcopy(self.frame_stack), self.base_addr, {k: copy(v) for k, v in self.addr_map.items()}, copy(self.concrete_symbolic_pointers))
 
     def assign_variable(self, var, val):
         if var in self.head_frame().variables:
@@ -42,8 +39,8 @@ class State:
         else:
             return self.frame_stack[0].variables[var][0]
     def split(self, cond, pc):
-        taken_state = deepcopy(self)
-        not_taken_state = deepcopy(self)
+        taken_state = copy(self)
+        not_taken_state = copy(self)
         taken_state.update_pc(pc).path_cond = And(cond, self.path_cond)
         not_taken_state.advance_pc().path_cond = And(Not(cond), self.path_cond)
         return [taken_state, not_taken_state]

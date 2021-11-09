@@ -1,0 +1,3 @@
+a, b: BOOL
+a = true ? $sym{INT} : $sym{BOOL}
+b = 1 ? true : false
