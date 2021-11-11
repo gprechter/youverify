@@ -12,6 +12,7 @@ labeled_stmt: 'LABEL' identifier=IDENTIFIER ':' statement=stmt # LABELED
             | statement=stmt # UNLABELED;
 stmt: 'return' expression=expr # RETURN
     | 'return' # RETURN_NO_VALUE
+    | 'ref' identifier=IDENTIFIER '=' '$sym_ref' '{' t=sort COMMA s=INTEGER '}' #SYMB_PTR
     | 'assume' expression=expr # ASSUME
     | 'assert' expression=expr # ASSERT
     | target=assign_target '=' expression=expr # ASSIGN
@@ -23,7 +24,8 @@ stmt: 'return' expression=expr # RETURN
     | 'goto' label=IDENTIFIER # UNCONDITIONAL_BRANCH;
 assign_target: identifier=IDENTIFIER # ASSIGN_TARGET_IDENTIFIER
              | expression=record_index_expr # ASSIGN_TARGET_RECORD_INDEX
-             | expression=array_index_expr # ASSIGN_TARGET_ARRAY_INDEX;
+             | expression=array_index_expr # ASSIGN_TARGET_ARRAY_INDEX
+             | expression=ptr_deref_expr # ASSIGN_TARGET_PTR_DEREF;
 decl: ((identifiers+=IDENTIFIER COMMA)* (identifiers+=IDENTIFIER)?) ':' s=sort;
 atomic_expr: (atom=BOOLEAN | atom=INTEGER | atom=IDENTIFIER) # SIMPLE
             | 'ARRAY[]' '{' expression=expr '}' # ARRAY
@@ -32,17 +34,21 @@ atomic_expr: (atom=BOOLEAN | atom=INTEGER | atom=IDENTIFIER) # SIMPLE
             | '$sym' '{' s=sort '}' # SYMBOL
             | '$sym' '{' identifier=IDENTIFIER ',' s=sort '}' # NAMED_SYMBOL;
 expr: atomic_expr
+    | ptr_deref_expr
     | record_index_expr
     | array_index_expr
     | unary_expr
     | binary_expr
     | ternary_expr;
+ptr_deref_expr: '*' identifier=IDENTIFIER;
 array_index_expr: array=IDENTIFIER '[' index=expr ']' # ARRAY_INDEX;
 record_index_expr: rec=IDENTIFIER PERIOD item=IDENTIFIER # RECORD_INDEX;
 unary_expr: op=OPERATOR e=atomic_expr # UNARY;
 binary_expr: lhs=atomic_expr op=OPERATOR rhs=atomic_expr # BINARY;
 ternary_expr: first=atomic_expr op=TERNARY_OPERATOR second=atomic_expr COLON third=atomic_expr #TERNARY;
-sort: (s='BOOL' | s='INT') | (s='ARRAY' '{' contained_sort=sort '}') | (s = 'BV' '[' size=INTEGER']') | s=IDENTIFIER;
+sort: s=simple_sort '*' #PTR_SORT
+    | s=simple_sort     #SIMPLE_SORT;
+simple_sort: (s='BOOL' | s='INT') | (s='ARRAY' '{' contained_sort=sort '}') | (s = 'BV' '[' size=INTEGER']') | s=IDENTIFIER;
 BOOLEAN: 'true' | 'false';
 OPERATOR: '&' | '|' | '^' | '=>' | '==' | '!='
 | '+' | '-' | '*' | '/' | '%' | '<=' | '<' | '>=' | '>' | '!' | '@';

@@ -1,0 +1,37 @@
+define is_null_terminated(arg: BV[8]*, length: INT) -> BOOL:
+	null_terminated, cond: BOOL
+	i: INT
+	val: BV[8]
+	null_terminated = false
+	i = 0
+	LABEL LOOP: if i >= length goto END
+	val = *arg
+	i = i + 1
+	arg = arg + 1
+	cond = val == BV{0, 8}
+	null_terminated = cond | null_terminated
+	goto LOOP
+	LABEL END: return null_terminated
+
+define expand(arg: BV[8]*, buffer: BV[8]*):
+	i, ac: BV[8]
+	arg_val: BV[8]
+	cond: BOOL
+	LABEL LOOP1: arg_val = *arg
+	if arg_val == BV{0, 8} goto END
+	call cond = bvult(arg_val, BV{5, 8})
+	if cond goto ELSE
+	*buffer = arg_val
+	LABEL ELSE: arg = arg + 1
+	buffer = buffer + 1
+	goto LOOP1
+	LABEL END: return
+arg, buffer: BV[8]*
+null_terminated: BOOL
+ref arg = $sym_ref{BV[8], 3}
+ref buffer = $sym_ref{BV[8], 3}
+call null_terminated = is_null_terminated(arg, 3)
+assume null_terminated
+call null_terminated = is_null_terminated(buffer, 3)
+assume null_terminated
+call expand(arg, buffer)

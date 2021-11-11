@@ -59,6 +59,11 @@ class YouVerifyVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by YouVerifyParser#SYMB_PTR.
+    def visitSYMB_PTR(self, ctx:YouVerifyParser.SYMB_PTRContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by YouVerifyParser#ASSUME.
     def visitASSUME(self, ctx:YouVerifyParser.ASSUMEContext):
         return self.visitChildren(ctx)
@@ -119,6 +124,11 @@ class YouVerifyVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by YouVerifyParser#ASSIGN_TARGET_PTR_DEREF.
+    def visitASSIGN_TARGET_PTR_DEREF(self, ctx:YouVerifyParser.ASSIGN_TARGET_PTR_DEREFContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by YouVerifyParser#decl.
     def visitDecl(self, ctx:YouVerifyParser.DeclContext):
         return self.visitChildren(ctx)
@@ -159,6 +169,11 @@ class YouVerifyVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by YouVerifyParser#ptr_deref_expr.
+    def visitPtr_deref_expr(self, ctx:YouVerifyParser.Ptr_deref_exprContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by YouVerifyParser#ARRAY_INDEX.
     def visitARRAY_INDEX(self, ctx:YouVerifyParser.ARRAY_INDEXContext):
         return self.visitChildren(ctx)
@@ -184,8 +199,18 @@ class YouVerifyVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by YouVerifyParser#sort.
-    def visitSort(self, ctx:YouVerifyParser.SortContext):
+    # Visit a parse tree produced by YouVerifyParser#PTR_SORT.
+    def visitPTR_SORT(self, ctx:YouVerifyParser.PTR_SORTContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YouVerifyParser#SIMPLE_SORT.
+    def visitSIMPLE_SORT(self, ctx:YouVerifyParser.SIMPLE_SORTContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YouVerifyParser#simple_sort.
+    def visitSimple_sort(self, ctx:YouVerifyParser.Simple_sortContext):
         return self.visitChildren(ctx)
 
 

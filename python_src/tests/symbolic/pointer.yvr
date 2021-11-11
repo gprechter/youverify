@@ -1,0 +1,15 @@
+a: *INT
+b, c, d: INT
+was_null, done: BOOL
+ref a = $sym_ref{INT, 10}
+b = *a
+a = a + 1
+c = *a
+*a = 5
+a = a + 1
+d = *a
+if d == 0 goto ELSE
+was_null = false
+goto END
+LABEL ELSE: was_null = true
+LABEL END: done = true

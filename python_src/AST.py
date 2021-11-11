@@ -1,7 +1,7 @@
 from pysmt.shortcuts import And, Or, Not, Symbol, TRUE, FALSE, is_sat, Array, GE, LT, Equals
 from pysmt.shortcuts import Solver, simplify, Int, FreshSymbol, Plus, Store, Select, BV
-from pysmt.shortcuts import LE, LT
-from pysmt.typing import INT, BVType, BOOL, ArrayType
+from pysmt.shortcuts import LE, LT, get_model
+from pysmt.typing import INT, BVType, BOOL, ArrayType, _BVType
 from State import State, Frame
 from copy import copy
 from Mappings import YVR_BUILTIN_OP_TO_PYSMT
@@ -107,6 +107,20 @@ class YouVerifyArray:
     def __copy__(self):
         return YouVerifyArray(self.default_value, self.length, copy(self.array))
 
+class YouVerifyPointer:
+
+    def __init__(self, memory, index, size):
+        self.memory = memory
+        self.index = index
+        self.size = size
+
+    def __copy__(self):
+        return YouVerifyPointer(self.memory, self.index, self.size)
+
+class RefType:
+    def __init__(self, type):
+        self.type = type
+
 class UniqueSymbol(Value):
     def __init__(self, type):
         self.type = type
@@ -141,7 +155,12 @@ class BinaryExpression(Expression):
         self.rhs = rhs
 
     def eval(self, state):
-        return self.op(self.lhs.eval(state), self.rhs.eval(state))
+        lhs = self.lhs.eval(state)
+        rhs = self.rhs.eval(state)
+        if isinstance(lhs, YouVerifyPointer):
+            lhs.index = self.op(lhs.index, rhs)
+            return lhs
+        return self.op(lhs, rhs)
 
     def type_check(self, context):
         comp_func, type = binary_type_checking_rules[self.op_name]
@@ -287,6 +306,31 @@ class Assert(Statement):
         else:
             return [state.advance_pc()]
 
+class Alloc_Symbolic_ptr(Statement):
+    def __init__(self, target, type, size):
+        self.target = target
+        self.type = type
+        self.size = size
+
+    def exec(self, state):
+        state.assign_variable(self.target.name, YouVerifyPointer([FreshSymbol(ArrayType(INT, self.type))], Int(0), self.size))
+        return [state.advance_pc()]
+
+class Pointer_Dereference_Expression(Expression):
+    def __init__(self, name):
+        self.name = name
+
+    def eval(self, state):
+        variable = state.get_variable(self.name)
+        original = state.path_cond
+        state.path_cond = And(state.path_cond, GE(variable.index, Int(0)), LT(variable.index, variable.size))
+        if not is_sat(state.path_cond):
+            print(simplify(variable.index), variable.size)
+            print(simplify(original), is_sat(original))
+            print(get_model(original))
+            assert False, "OVERFLOW!"
+        return Select(variable.memory[0], variable.index)
+
 class Alloc_Concrete(Statement):
     def __init__(self, target, record, arguments):
         self.target = target
@@ -355,8 +399,14 @@ class Assignment(Statement):
         elif isinstance(self.target, RecordIndexExpression):
             address = simplify(state.get_variable(self.target.record))
             state.addr_map[address.constant_value()][self.target.element] = self.expression.eval(state)
+        elif isinstance(self.target, Pointer_Dereference_Expression):
+            ref = state.get_variable(self.target.name)
+            state.path_cond = And(state.path_cond, GE(ref.index, Int(0)), LT(ref.index, ref.size))
+            if not is_sat(state.path_cond):
+                assert False, "OVERFLOW!"
+            ref.memory[0] = Store(ref.memory[0], ref.index, self.expression.eval(state))
         else:
-            state.assign_variable(self.target.name, self.expression.eval(state))
+            state.assign_variable(self.target.name, copy(self.expression.eval(state)))
         return [state.advance_pc()]
 
     def type_check(self, context):
@@ -450,7 +500,7 @@ class FunctionCallAndAssignment(Statement):
             if isinstance(self.target, ArrayIndexExpression) else wrap_target_var(self.target)
         state.push_frame(Frame(function, 0, {k: [v.name, None] for k, v in function.variables.items()}, wrapped_target))
         for i, param in enumerate(function.params):
-            state.assign_variable(param, arguments[i])
+            state.assign_variable(param, copy(arguments[i]))
         return [state]
 
 class FunctionCallWithNoAssignment(Statement):
@@ -468,6 +518,7 @@ class FunctionCallWithNoAssignment(Statement):
         if num_args != len(self.arguments):
             return None, "The number of arguments allowed and the number present are not the same!"
         args = [arg.type_check(context) for arg in self.arguments]
+        print(args)
         for type, err in args:
             if err:
                 return None, err

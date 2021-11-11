@@ -140,6 +140,10 @@ class YouVerifyVisitor(ParseTreeVisitor):
     def visitASSIGN_TARGET_ARRAY_INDEX(self, ctx: YouVerifyParser.ASSIGN_TARGET_ARRAY_INDEXContext):
         return self.visit(ctx.expression)
 
+    # Visit a parse tree produced by YouVerifyParser#ASSIGN_TARGET_PTR_DEREF.
+    def visitASSIGN_TARGET_PTR_DEREF(self, ctx:YouVerifyParser.ASSIGN_TARGET_PTR_DEREFContext):
+        return self.visit(ctx.expression)
+
     # Visit a parse tree produced by YouVerifyParser#CONDITIONAL_BRANCH.
     def visitCONDITIONAL_BRANCH(self, ctx: YouVerifyParser.CONDITIONAL_BRANCHContext):
         return ConditionalBranch(self.visit(ctx.expression), ctx.label.text)
@@ -151,6 +155,14 @@ class YouVerifyVisitor(ParseTreeVisitor):
     # Visit a parse tree produced by YouVerifyParser#decl.
     def visitDecl(self, ctx:YouVerifyParser.DeclContext):
         return [(id.text, self.visit(ctx.s)) for id in ctx.identifiers]
+
+    # Visit a parse tree produced by YouVerifyParser#SYMB_PTR.
+    def visitSYMB_PTR(self, ctx:YouVerifyParser.SYMB_PTRContext):
+        return Alloc_Symbolic_ptr(Variable(ctx.identifier.text), self.visitSIMPLE_SORT(ctx.t), Int(int(ctx.s.text)))
+
+    # Visit a parse tree produced by YouVerifyParser#ptr_deref_expr.
+    def visitPtr_deref_expr(self, ctx:YouVerifyParser.Ptr_deref_exprContext):
+        return Pointer_Dereference_Expression(ctx.identifier.text)
 
     # Visit a parse tree produced by YouVerifyParser#atomic_expr.
     def visitSIMPLE(self, ctx: YouVerifyParser.SIMPLEContext):
@@ -206,8 +218,16 @@ class YouVerifyVisitor(ParseTreeVisitor):
     def visitARRAY_INDEX(self, ctx: YouVerifyParser.ARRAY_INDEXContext):
         return ArrayIndexExpression(Variable(ctx.array.text), self.visit(ctx.index))
 
-    # Visit a parse tree produced by YouVerifyParser#sort.
-    def visitSort(self, ctx: YouVerifyParser.SortContext):
+    # Visit a parse tree produced by YouVerifyParser#PTR_SORT.
+    def visitPTR_SORT(self, ctx: YouVerifyParser.PTR_SORTContext):
+        return RefType(self.visitSimple_sort(ctx.s))
+
+    # Visit a parse tree produced by YouVerifyParser#SIMPLE_SORT.
+    def visitSIMPLE_SORT(self, ctx: YouVerifyParser.SIMPLE_SORTContext):
+        return self.visitChildren(ctx)
+
+    # Visit a parse tree produced by YouVerifyParser#simple_sort.
+    def visitSimple_sort(self, ctx: YouVerifyParser.Simple_sortContext):
         outer_sort = ctx.s.text
         if outer_sort == 'ARRAY':
             contained = self.visit(ctx.contained_sort)
@@ -218,6 +238,5 @@ class YouVerifyVisitor(ParseTreeVisitor):
             return YVR_SORT_TO_PYSMT[outer_sort]
         else:
             return outer_sort
-
 
 del YouVerifyParser
