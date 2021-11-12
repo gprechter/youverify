@@ -1,7 +1,8 @@
 from copy import copy, deepcopy
 
-from pysmt.shortcuts import TRUE, FALSE, And, Not, Store
+
 from pyeda.inter import *
+from pysmt.shortcuts import TRUE, FALSE, And, Not, Or, Store, simplify, is_sat, Int
 
 class Frame:
     def __init__(self, function, pc, variables, return_target):
@@ -13,6 +14,56 @@ class Frame:
     def __copy__(self):
         return Frame(self.function, self.pc, deepcopy(self.variables), self.return_target)
 
+class PathConstraint:
+    bdd_vars = {}
+    num_vars = 0
+    def __init__(self):
+        fake = bddvar('fake')
+        self.bdd = fake.restrict({fake: 1})
+        self.pc = TRUE()
+
+    def __copy__(self):
+        new = PathConstraint()
+        new.bdd = self.bdd
+        new.pc = self.pc
+        return new
+
+    def apply_AND(self, other):
+        new = PathConstraint()
+        new.bdd = self.bdd & other.bdd
+        new.pc = And(self.pc, other.pc)
+        return new
+
+    def apply_OR(self, other):
+        new = PathConstraint()
+        new.bdd = self.bdd | other.bdd
+        new.pc = Or(self.pc, other.pc)
+        return new
+
+    def apply_NOT(self):
+        new = PathConstraint()
+        new.bdd = ~self.bdd
+        new.pc = Not(self.pc)
+        return new
+
+    def is_zero(self):
+        return self.bdd.is_zero()
+
+    def is_unsat(self):
+        return not is_sat(self.pc)
+
+    def from_condition(self, cond):
+        if cond not in PathConstraint.bdd_vars:
+            PathConstraint.bdd_vars[cond] = bddvar('c', PathConstraint.num_vars)
+            PathConstraint.num_vars += 1
+        new = PathConstraint()
+        new.bdd = PathConstraint.bdd_vars[cond]
+        new.pc = cond
+        return new
+
+    def __repr__(self):
+        return f"{simplify(self.pc)}"
+
 class State:
     records = {}
     bdd_vars = {}
@@ -23,20 +74,24 @@ class State:
         self.base_addr = base_addr
         self.addr_map = addr_map
         self.concrete_symbolic_pointers = conc_sym_pointers
-        fake = bddvar('fake')
-        self.value_summaries = {'_pc': [[fake.restrict({fake: 1}), 0]]}
-        self.value_summaries.update({k: [[fake.restrict({fake: 1}), None]] for k in self.head_frame().variables})
+        self.value_summaries = {'_pc': [[PathConstraint(), 0]]}
+        self.value_summaries.update({k: [[PathConstraint(), Int(0)]] for k in self.head_frame().variables})
         print(self.value_summaries)
-        self.bdd_vars[fake] = TRUE()
 
     def __copy__(self):
         return State(self.path_cond, [copy(f) for f in self.frame_stack], self.base_addr, deepcopy(self.addr_map), deepcopy(self.concrete_symbolic_pointers))
 
     def assign_variable(self, var, val):
-        old_vs = [[~self.current_guard[0] & g, v] for g, v in self.value_summaries[var]]
-        print(old_vs)
-        new_vs = [[self.current_guard[0] & g, v] for g, v in val]
-        self.value_summaries[var] = [vs for vs in old_vs + new_vs if not vs[0].is_zero()]
+        merge = {}
+        old_vs = [[self.current_guard[0].apply_NOT().apply_AND(g), v] for g, v in self.value_summaries[var]]
+        new_vs = [[self.current_guard[0].apply_AND(g), v] for g, v in val]
+        for g, v in old_vs + new_vs:
+            if not g.is_zero() and not g.is_unsat():
+                if v not in merge:
+                    merge[v] = g
+                else:
+                    merge[v] = merge[v].apply_OR(g)
+        self.value_summaries[var] = [[v, k] for k, v in merge.items()]
 
     def get_variable(self, var):
         return self.value_summaries[var]
@@ -46,18 +101,14 @@ class State:
             return self.head_frame().variables[var][0]
         else:
             return self.frame_stack[0].variables[var][0]
-    def split(self, cond, pc):
-        new_var = bddvar('g', self.num_vars)
-        self.num_vars += 1
-        new_g = bddones(1)[0]
-        for v in cond:
-            new_c_var = bddvar('c', self.num_vars)
-            self.num_vars += 1
-            self.bdd_vars[new_c_var] = v[1]
-            new_g = new_g | (v[0] & new_c_var)
-        self.bdd_vars[new_var] = self.current_guard[0] & new_g
-        self.value_summaries['_pc'].append([new_var, pc])
-        self.value_summaries['_pc'].append([~new_var, self.current_guard[1] + 1])
+    def split(self, cond, pc, unconditional=False):
+        new_g = PathConstraint().apply_NOT()
+        for g, v in cond:
+            new_g = new_g.apply_OR(g.apply_AND(PathConstraint().from_condition(v)))
+        if not (self.current_guard[0].apply_AND(new_g).is_zero() or self.current_guard[0].apply_AND(new_g).is_unsat()):
+            self.value_summaries['_pc'].append([self.current_guard[0].apply_AND(new_g), pc])
+        if not (self.current_guard[0].apply_AND(new_g.apply_NOT()).is_zero() or self.current_guard[0].apply_AND(new_g.apply_NOT()).is_unsat()):
+            self.value_summaries['_pc'].append([self.current_guard[0].apply_AND(new_g.apply_NOT()), self.current_guard[1] + 1])
         return self
 
     def advance_pc(self):

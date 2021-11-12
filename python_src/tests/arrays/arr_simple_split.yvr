@@ -1,0 +1,8 @@
+arr: ARRAY{INT}
+done: BOOL
+arr = ARRAY[1]{$sym{INT}}
+if $sym{BOOL} goto ELSE
+arr[0] = $sym{INT}
+goto END
+LABEL ELSE: arr[0] = $sym{INT}
+LABEL END: done = true

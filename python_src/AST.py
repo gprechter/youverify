@@ -2,9 +2,10 @@ from pysmt.shortcuts import And, Or, Not, Symbol, TRUE, FALSE, is_sat, Array, GE
 from pysmt.shortcuts import Solver, simplify, Int, FreshSymbol, Plus, Store, Select, BV
 from pysmt.shortcuts import LE, LT
 from pysmt.typing import INT, BVType
-from State import State, Frame
+from State import State, Frame, PathConstraint
 from Mappings import YVR_BUILTIN_OP_TO_PYSMT
 from pyeda.inter import *
+from copy import copy
 
 class Program:
     def __init__(self, statements = [], variables = {}, labels = {}, functions={}):
@@ -73,8 +74,7 @@ class Value(AtomicExpression):
         self.type = type
 
     def eval(self, state):
-        fake = bddvar('fake')
-        return [[fake.restrict({fake: 1}), self.value]]
+        return [[PathConstraint(), self.value]]
 
     def type_check(self, program):
         return self.type, ""
@@ -85,6 +85,7 @@ class Value(AtomicExpression):
 class YouVerifyArray:
     def __init__(self, default_value=0, length=None, array=None):
         self.length = length
+        self.default_value = default_value
         if array:
             self.array = array
         else:
@@ -98,7 +99,10 @@ class UniqueSymbol(Value):
         self.type = type
 
     def eval(self, state):
-        return FreshSymbol(self.type)
+        return [[PathConstraint(), FreshSymbol(self.type)]]
+
+    def __repr__(self):
+        return f"{self.type}"
 
 class UnaryExpression(Expression):
     def __init__(self, op, arg):
@@ -120,7 +124,7 @@ class BinaryExpression(Expression):
         new_vs = []
         for lvs in lhs:
             for rvs in rhs:
-                new_vs.append([lvs[0] & rvs[0], self.op(lvs[1], rvs[1])])
+                new_vs.append([lvs[0].apply_AND(rvs[0]), self.op(lvs[1], rvs[1])])
         return new_vs
 
     def type_check(self, program):
@@ -147,9 +151,11 @@ class ArrayIndexExpression(Expression):
     def eval(self, state):
         arr = self.arr.eval(state)
         index = self.index.eval(state)
-        if arr.length:
-            state.path_cond = And(state.path_cond, And(GE(index, Int(0)), LT(index, Int(arr.length))))
-        return Select(arr.array, index)
+        new_vals = []
+        for g_a, v_a in arr:
+            for g_i, v_i in index:
+                new_vals.append([g_a.apply_AND(g_i), Select(v_a.array, v_i)])
+        return new_vals
 
     def __repr__(self):
         return f"{self.arr}[{self.index}]"
@@ -162,8 +168,10 @@ class NewArrayExpression(Expression):
         self.length = length
 
     def eval(self, state):
-        arr = YouVerifyArray(self.default.eval(state), self.length)
-        return arr
+        values = []
+        for g, v in self.default.eval(state):
+            values.append([g, YouVerifyArray(v, self.length)])
+        return values
 
 class Function:
     def __init__(self, name, params, variables, statements, labels, return_value):
@@ -244,10 +252,15 @@ class Assignment(Statement):
         if isinstance(self.target, ArrayIndexExpression):
             index = self.target.index.eval(state)
             arr = self.target.arr.eval(state)
-            arr.array = Store(arr.array, index, self.expression.eval(state))
-            state.assign_variable(self.target.arr.name, arr)
-            if arr.length:
-                state.path_cond = And(state.path_cond, And(GE(index, Int(0)), LT(index, Int(arr.length))))
+            value = self.expression.eval(state)
+            new_arr = [[g, copy(v)] for g, v in arr]
+            new_values = []
+            for g_a, v_a in new_arr:
+                for g_i, v_i in index:
+                    for g_v, v_v in value:
+                        v_a.array = Store(v_a.array, v_i, v_v)
+                        new_values.append([g_v.apply_AND(g_i).apply_AND(g_a), v_a])
+            state.assign_variable(self.target.arr.name, new_values)
         elif isinstance(self.target, RecordIndexExpression):
             address = simplify(state.get_variable(self.target.record))
             state.addr_map[address.constant_value()][self.target.element] = self.expression.eval(state)
@@ -359,7 +372,7 @@ class UnconditionalBranch(ConditionalBranch):
     def __init__(self, dest):
         self.dest = dest
     def exec(self, state):
-        return [state.update_pc(state.head_frame().function.labels[self.dest])]
+        return state.split([[PathConstraint(), TRUE()]], state.head_frame().function.labels[self.dest], True)
 
     def __repr__(self):
         return f"goto {self.dest}"

@@ -9,7 +9,7 @@ from YouVerifyParser import YouVerifyParser
 from pysmt.shortcuts import TRUE, is_sat, simplify, get_model, get_free_variables, Solver, Int
 from pysmt.typing import _BoolType
 from AST import Program, Variable, array_to_length_map, YouVerifyArray, ConditionalBranch
-from State import State, Frame
+from State import State, Frame, PathConstraint
 from SMTLibUtil import *
 from pyeda.inter import *
 
@@ -32,11 +32,11 @@ def main(argv):
             state.current_guard = state.get_guard()
             stmt = state.current_statement
             state = stmt.exec(state)
-            print(state.value_summaries)
             if not isinstance(stmt, ConditionalBranch):
                 state.value_summaries['_pc'].append(state.current_guard)
            # if is_sat(state.path_cond):
                 #print(stmt)
+        state.value_summaries = {k: [[g, v] for g, v in val if is_sat(g.pc)] for k, val in state.value_summaries.items()}
         return state
 
     return exec(program)
@@ -72,8 +72,8 @@ def display_model(state, variables, model, depth = 0):
 def display_states_smt2(state):
     for v, vs in state.value_summaries.items():
         if v != '_pc':
-            print(v, ', '.join([f"{bdd2expr(g)}: {simplify(val)}" for g, val in vs]))
-    print([(k, bdd2expr(v)) if isinstance(v, BinaryDecisionDiagram) else (k, v) for k, v in state.bdd_vars.items()])
+            print(v, ', '.join([f": {simplify(val) if not isinstance(val, YouVerifyArray) else simplify(val.array)}" for g, val in vs]))
+    print(PathConstraint.bdd_vars)
 
 
 def concrete_evaluation(states):
