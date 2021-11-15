@@ -1,0 +1,25 @@
+define single_array(x, y: INT) -> BOOL:
+	a: INT*
+	v1, v2: INT
+	ref a = $sym_ref{INT, 4}
+	*a = x
+	a = a + 1
+	*a = 0
+	a = a + 1
+	*a = 1
+	a = a + 1
+	*a = 2
+	a = x
+	v1 = *a
+	a = y
+	v2 = *a
+	v2 = v2 + 2
+	if v1 != v2 goto ELSE
+	return true
+	LABEL ELSE: return false
+
+result: BOOL
+s1, s2: INT
+s1 = $sym{s1, INT}
+s2 = $sym{s2, INT}
+call result = single_array(s1, s2)

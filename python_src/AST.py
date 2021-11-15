@@ -406,7 +406,15 @@ class Assignment(Statement):
                 assert False, "OVERFLOW!"
             ref.memory[0] = Store(ref.memory[0], ref.index, self.expression.eval(state))
         else:
-            state.assign_variable(self.target.name, copy(self.expression.eval(state)))
+            if isinstance(state.get_variable(self.target.name), YouVerifyPointer):
+                ref = state.get_variable(self.target.name)
+                val = copy(self.expression.eval(state))
+                if isinstance(val, YouVerifyPointer):
+                    state.assign_variable(self.target.name, val)
+                else:
+                    ref.index = val
+            else:
+                state.assign_variable(self.target.name, copy(self.expression.eval(state)))
         return [state.advance_pc()]
 
     def type_check(self, context):
