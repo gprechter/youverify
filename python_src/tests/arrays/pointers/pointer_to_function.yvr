@@ -1,0 +1,8 @@
+define f(p: BOOL*) -> BOOL:
+	return *p
+
+p: ARRAY{BOOL}
+result: BOOL
+p = ARRAY[1]{false}
+p[0] = true
+call result = f(p)

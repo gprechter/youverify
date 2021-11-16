@@ -9,7 +9,7 @@ from YouVerifyParser import YouVerifyParser
 from pysmt.shortcuts import TRUE, is_sat, simplify, get_model, get_free_variables, Solver, Int
 from pysmt.typing import _BoolType
 from AST import Program, Variable, array_to_length_map, YouVerifyArray, TCContext
-from State import State, Frame, DefaultState
+from State import SubState, Frame, DefaultState
 from SMTLibUtil import *
 
 def main(argv):
@@ -20,7 +20,7 @@ def main(argv):
     variables, functions, statements, labels, records = YouVerifyVisitor().visitProgram(parser.program())
     program = Program(statements, variables, labels, functions)
 
-    State.records = records
+    SubState.records = records
     not_sanitary = False
     '''
     global_tc_context = TCContext({k: v.name for k, v in program.variables.items()}, functions)
@@ -45,14 +45,12 @@ def main(argv):
     '''
 
     def exec(program):
-        state = DefaultState([State(TRUE(), [Frame(program, 0, {k: [v.name, None] for k, v in program.variables.copy().items()}, None)])])
+        state = DefaultState([SubState(TRUE(), [Frame(program, 0, {k: [v.name, None] for k, v in program.variables.copy().items()}, None)])])
+        SubState.controller = state
         while state.next_state():
             stmt = state.current_statement
-            if is_sat(state.path_cond):
-                states.extend([s for s in stmt.exec(state)])
-           # if is_sat(state.path_cond):
-                #print(stmt)
-        return [s for s in states if is_sat(s.path_cond)]
+            stmt.exec(state)
+        return state.sub_states
 
     return exec(program)
 
@@ -70,8 +68,8 @@ def display_model(state, variables, model, depth = 0):
         return
     for k, v in variables.items():
         if isinstance(v[0], str):
-            elems = State.records[v[0]].elements
-            types = State.records[v[0]].types
+            elems = SubState.records[v[0]].elements
+            types = SubState.records[v[0]].types
             if model.get_value(v[1]).constant_value() == 0:
                 print(f"{'  ' * depth}{k}: {'null'}")
             else:

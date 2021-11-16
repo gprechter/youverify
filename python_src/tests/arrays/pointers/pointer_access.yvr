@@ -1,0 +1,5 @@
+p: INT*
+result: INT
+p = ARRAY[3]{0}
+*p = 1
+result = *p

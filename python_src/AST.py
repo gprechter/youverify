@@ -2,12 +2,12 @@ from pysmt.shortcuts import And, Or, Not, Symbol, TRUE, FALSE, is_sat, Array, GE
 from pysmt.shortcuts import Solver, simplify, Int, FreshSymbol, Plus, Store, Select, BV
 from pysmt.shortcuts import LE, LT, get_model
 from pysmt.typing import INT, BVType, BOOL, ArrayType, _BVType
-from State import State, Frame
+from State import SubState, Frame
 from copy import copy
 from Mappings import YVR_BUILTIN_OP_TO_PYSMT
 from TypeCheckingRules import both_same, unary_type_checking_rules, binary_type_checking_rules, both_records_or_null, builtin_type_checking_rules
 from pysmt.type_checker import SimpleTypeChecker
-from pysmt.fnode import FNode
+from pysmt.fnode import FNode 
 
 class Program:
     def __init__(self, statements = [], variables = {}, labels = {}, functions={}):
@@ -58,28 +58,28 @@ class RecordIndexExpression(Expression):
     def eval(self, state):
         address = simplify(state.get_variable(self.record))
         if address.is_constant():
-            return state.addr_map[address.constant_value()][self.element]
+            return state.current_state.addr_map[address.constant_value()][self.element]
         else:
-            if address.symbol_name() not in state.concrete_symbolic_pointers:
-                concrete_address = state.base_addr
-                state.path_cond = And(state.path_cond, Equals(address, BV(concrete_address, 32)))
-                state.concrete_symbolic_pointers[address.symbol_name()] = concrete_address
-                state.base_addr = state.base_addr + 1
+            if address.symbol_name() not in state.current_state.concrete_symbolic_pointers:
+                concrete_address = state.current_state.base_addr
+                state.add_path_constraint(Equals(address, BV(concrete_address, 32)))
+                state.current_state.concrete_symbolic_pointers[address.symbol_name()] = concrete_address
+                state.current_state.base_addr = state.current_state.base_addr + 1
             else:
-                concrete_address = state.concrete_symbolic_pointers[address.symbol_name()]
+                concrete_address = state.current_state.concrete_symbolic_pointers[address.symbol_name()]
             symb_elems ={}
-            rec = State.records[state.get_variable_type(self.record)]
+            rec = SubState.records[state.current_state.get_variable_type(self.record)]
             for k, v in zip(rec.elements, rec.types):
                 if isinstance(v, str):
                     symb_elems[k] = Symbol(f"{address.symbol_name()}_{k}", BVType(32))
                 else:
                     symb_elems[k] = Symbol(f"{address.symbol_name()}_{k}", INT)
-            state.addr_map[concrete_address] = symb_elems
-            return state.addr_map[concrete_address][self.element]
+            state.current_state.addr_map[concrete_address] = symb_elems
+            return state.current_state.addr_map[concrete_address][self.element]
 
     def type_check(self, context):
         rec_type = context.variables[self.record]
-        record = State.records[rec_type]
+        record = SubState.records[rec_type]
         return record.types[record.elements.index(self.element)], ""
 
 
@@ -112,9 +112,6 @@ class YouVerifyArray:
 
     def set_array(self, array):
         self._array[0] = array
-
-    def __repr__(self):
-        return f"{[simplify(self.get_array().array_value_get(Int(i))) for i in range(simplify(self.length).constant_value())]}"
 
 class UniqueSymbol(Value):
     def __init__(self, type):
@@ -243,7 +240,7 @@ class Function:
 
 class Statement:
     def exec(self, state):
-        return state.advance_pc()
+        state.advance_pc()
 
 class Return(Statement):
     def __init__(self, expression):
@@ -261,10 +258,10 @@ class Return(Statement):
 
     def exec(self, state):
         if self.expression:
-            state.pop_frame(self.expression.eval(state))
+            state.current_state.pop_frame(self.expression.eval(state))
         else:
-            state.pop_frame(self.expression)
-        return [state]
+            state.current_state.pop_frame(self.expression)
+        state.advance_pc()
 
 class Assume(Statement):
     def __init__(self, expression):
@@ -277,8 +274,8 @@ class Assume(Statement):
         return None, "" if cond_type == BOOL else "The condition to a conditional branch must be a boolean value."
 
     def exec(self, state):
-        state.path_cond = And(state.path_cond, self.expression.eval(state))
-        return [state.advance_pc()]
+        state.add_path_constraint(self.expression.eval(state))
+        state.advance_pc()
 
 class Assert(Statement):
     def __init__(self, expression):
@@ -292,11 +289,8 @@ class Assert(Statement):
 
 
     def exec(self, state):
-        if is_sat(And(state.path_cond, Not(self.expression.eval(state)))):
-            state.path_cond = FALSE()
-            return [state]
-        else:
-            return [state.advance_pc()]
+        #TODO: IMPLEMENT
+        state.advance_pc()
 
 class Pointer_Dereference_Expression(Expression):
     def __init__(self, name):
@@ -304,7 +298,7 @@ class Pointer_Dereference_Expression(Expression):
 
     def eval(self, state):
         variable = state.get_variable(self.name)
-        state.path_cond = And(state.path_cond, GE(variable.index, Int(0)), LT(variable.index, variable.length))
+        state.add_path_constraint(And(GE(variable.index, Int(0)), LT(variable.index, variable.length)))
         return Select(variable.get_array(), variable.index)
 
 class Alloc_Concrete(Statement):
@@ -315,7 +309,7 @@ class Alloc_Concrete(Statement):
 
     def type_check(self, context):
         target, target_issue = self.target.type_check(context)
-        record = State.records[self.record]
+        record = SubState.records[self.record]
         if len(self.arguments) != len(record.elements):
             return None, f"There must be {len(record.elements)} values to initialize the {self.record} record."
         for t, e in zip(record.types, self.arguments):
@@ -329,12 +323,12 @@ class Alloc_Concrete(Statement):
         return None, "" if both_records_or_null(target, self.record) else "The record must be assigned to the same type."
 
     def exec(self, state):
-        address = state.base_addr
+        address = state.current_state.base_addr
         arguments = [arg.eval(state) for arg in self.arguments]
-        state.addr_map[address] = {k: v for k, v in zip(State.records[self.record].elements, arguments)}
-        state.base_addr = state.base_addr + 1
+        state.current_state.addr_map[address] = {k: v for k, v in zip(SubState.records[self.record].elements, arguments)}
+        state.current_state.base_addr = state.current_state.base_addr + 1
         state.assign_variable(self.target.name, BV(address, 32))
-        return [state.advance_pc()]
+        state.advance_pc()
 
 class Alloc_Symbolic(Statement):
     def __init__(self, target, record):
@@ -349,7 +343,7 @@ class Alloc_Symbolic(Statement):
 
     def exec(self, state):
         state.assign_variable(self.target.name, Symbol(f"{self.record}_{self.target.name}", BVType(32)))
-        return [state.advance_pc()]
+        state.advance_pc()
 
 class NULL(AtomicExpression):
 
@@ -370,14 +364,14 @@ class Assignment(Statement):
             arr = self.target.arr.eval(state)
             arr.set_array(Store(arr.get_array(), index, self.expression.eval(state)))
             if arr.length:
-                state.path_cond = And(state.path_cond, And(GE(index, Int(0)), LT(index, arr.length)))
+                state.add_path_constraint(And(GE(index, Int(0)), LT(index, arr.length)))
         elif isinstance(self.target, RecordIndexExpression):
             address = simplify(state.get_variable(self.target.record))
-            state.addr_map[address.constant_value()][self.target.element] = self.expression.eval(state)
+            state.current_state.addr_map[address.constant_value()][self.target.element] = self.expression.eval(state)
         elif isinstance(self.target, Pointer_Dereference_Expression):
             ref = state.get_variable(self.target.name)
-            state.path_cond = And(state.path_cond, GE(ref.index, Int(0)), LT(ref.index, ref.length))
-            if not is_sat(state.path_cond):
+            state.add_path_constraint(And(GE(ref.index, Int(0)), LT(ref.index, ref.length)))
+            if not is_sat(state.current_state.path_cond):
                 assert False, "OVERFLOW!"
             ref.set_array(Store(ref.get_array(), ref.index, self.expression.eval(state)))
         else:
@@ -390,7 +384,7 @@ class Assignment(Statement):
                     state.assign_variable(self.target.name, val)
             else:
                 state.assign_variable(self.target.name, self.expression.eval(state))
-        return [state.advance_pc()]
+        state.advance_pc()
 
     def type_check(self, context):
         target, target_issue = self.target.type_check(context)
@@ -422,7 +416,7 @@ def wrap_target_arr_index(arr, index):
         a = arr.eval(state)
         a.set_array(Store(a.get_array(), i, value))
         if a.length:
-            state.path_cond = And(state.path_cond, And(GE(i, Int(0)), LT(i, a.length)))
+            state.add_path_constraint(And(GE(i, Int(0)), LT(i, a.length)))
     return return_to_arr_index
 
 class FunctionCallAndAssignment(Statement):
@@ -469,22 +463,19 @@ class FunctionCallAndAssignment(Statement):
                                             YVR_BUILTIN_OP_TO_PYSMT[self.function](*arguments)))
             else:
                 state.assign_variable(self.target.name, YVR_BUILTIN_OP_TO_PYSMT[self.function](*arguments))
-            return [state.advance_pc()]
+            state.advance_pc()
+        else:
+            function = state.current_state.frame_stack[0].function.functions[self.function]
 
-
-        function = state.frame_stack[0].function.functions[self.function]
-
-        arguments = []
-        for argument in self.arguments:
-            arguments.append(argument.eval(state))
-
-        state.advance_pc()
-        wrapped_target = wrap_target_arr_index(self.target.arr, self.target.index)\
-            if isinstance(self.target, ArrayIndexExpression) else wrap_target_var(self.target)
-        state.push_frame(Frame(function, 0, {k: [v.name, None] for k, v in function.variables.items()}, wrapped_target))
-        for i, param in enumerate(function.params):
-            state.assign_variable(param, copy(arguments[i]))
-        return [state]
+            arguments = []
+            for argument in self.arguments:
+                arguments.append(argument.eval(state))
+            wrapped_target = wrap_target_arr_index(self.target.arr, self.target.index)\
+                if isinstance(self.target, ArrayIndexExpression) else wrap_target_var(self.target)
+            state.current_state.push_frame(Frame(function, 0, {k: [v.name, None] for k, v in function.variables.items()}, wrapped_target))
+            for i, param in enumerate(function.params):
+                state.assign_variable(param, copy(arguments[i]))
+            state.advance_pc(0)
 
 class FunctionCallWithNoAssignment(Statement):
     def __init__(self, function, arguments):
@@ -517,17 +508,16 @@ class FunctionCallWithNoAssignment(Statement):
         if self.function in YVR_BUILTIN_OP_TO_PYSMT:
             assert False, "Builtins can never be called without a target."
 
-        function = state.frame_stack[0].function.functions[self.function]
+        function = state.current_state.frame_stack[0].function.functions[self.function]
 
         arguments = []
         for argument in self.arguments:
             arguments.append(argument.eval(state))
 
-        state.advance_pc()
-        state.push_frame(Frame(function, 0, {k: [v.name, None] for k, v in function.variables.items()}, None))
+        state.current_state.push_frame(Frame(function, 0, {k: [v.name, None] for k, v in function.variables.items()}, None))
         for i, param in enumerate(function.params):
             state.assign_variable(param, arguments[i])
-        return [state]
+        state.advance_pc(0)
 
 class ConditionalBranch(Statement):
     def __init__(self, condition, dest):
@@ -541,7 +531,7 @@ class ConditionalBranch(Statement):
         return None, "" if cond_type == BOOL else "The condition to a conditional branch must be a boolean value."
 
     def exec(self, state):
-        return state.split(self.condition.eval(state), state.head_frame().function.labels[self.dest])
+        state.conditional_branch(self.condition.eval(state), state.current_state.head_frame().function.labels[self.dest])
 
     def __repr__(self):
         return f"if {self.condition} goto {self.dest}"
@@ -550,7 +540,7 @@ class UnconditionalBranch(ConditionalBranch):
     def __init__(self, dest):
         self.dest = dest
     def exec(self, state):
-        return [state.update_pc(state.head_frame().function.labels[self.dest])]
+        state.unconditional_branch(state.current_state.head_frame().function.labels[self.dest])
 
     def type_check(self, context):
         return None, ""

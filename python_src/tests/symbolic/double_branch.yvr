@@ -1,0 +1,8 @@
+a, b, c, done: BOOL
+a = $sym{BOOL}
+b = $sym{BOOL}
+c = $sym{BOOL}
+if a goto END
+if b goto END
+if c goto END
+LABEL END: done = true
