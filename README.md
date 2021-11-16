@@ -241,15 +241,15 @@ Only `ite`.
 
 | Feature                                                      | Notes                                                        | Status      |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ----------- |
-| [Boolean Sort and Operators](https://github.com/gprechter/youverify/tree/master/python_src/tests/boolean) |                                                              | ✅ Completed |
-| [Integer Sort and Operators](https://github.com/gprechter/youverify/tree/master/python_src/tests/integer) |                                                              | ✅ Completed |
-| [Bit Vector Sort and Operators](https://github.com/gprechter/youverify/tree/master/python_src/tests/bitvectors) |                                                              | ✅ Completed |
-| [Array Sort and Operators](https://github.com/gprechter/youverify/tree/master/python_src/tests/arrays) [Including Fixed Sized] |                                                              | ✅ Completed |
-| [Labels and Branching Statements](https://github.com/gprechter/youverify/tree/master/python_src/tests/branching) | [Complex tests](https://github.com/gprechter/youverify/tree/master/python_src/tests/complex) | ✅ Completed |
-| [Functions](https://github.com/gprechter/youverify/tree/master/python_src/tests/functions) |                                                              | ✅ Completed |
-| [Assume Statements](https://github.com/gprechter/youverify/tree/master/python_src/tests/assume) |                                                              | ✅ Completed |
-| [Symbolic Values and Programs](https://github.com/gprechter/youverify/tree/master/python_src/tests/symbolic) | [Oblicheck symbolic tests](https://github.com/gprechter/youverify/tree/master/python_src/tests/oblicheck) | ✅ Completed |
-| [Records](https://github.com/gprechter/youverify/tree/master/python_src/tests/records) |                                                              | ✅ Completed |
+| [Boolean Sort and Operators](https://github.com/gprechter/youverify/tree/master/tests/boolean) |                                                              | ✅ Completed |
+| [Integer Sort and Operators](https://github.com/gprechter/youverify/tree/master/tests/integer) |                                                              | ✅ Completed |
+| [Bit Vector Sort and Operators](https://github.com/gprechter/youverify/tree/master/tests/bitvectors) |                                                              | ✅ Completed |
+| [Array Sort and Operators](https://github.com/gprechter/youverify/tree/master/tests/arrays) [Including Fixed Sized] |                                                              | ✅ Completed |
+| [Labels and Branching Statements](https://github.com/gprechter/youverify/tree/master/tests/branching) | [Complex tests](https://github.com/gprechter/youverify/tree/master/tests/complex) | ✅ Completed |
+| [Functions](https://github.com/gprechter/youverify/tree/master/tests/functions) |                                                              | ✅ Completed |
+| [Assume Statements](https://github.com/gprechter/youverify/tree/master/tests/assume) |                                                              | ✅ Completed |
+| [Symbolic Values and Programs](https://github.com/gprechter/youverify/tree/master/tests/symbolic) | [Oblicheck symbolic tests](https://github.com/gprechter/youverify/tree/master/tests/oblicheck) | ✅ Completed |
+| [Records](https://github.com/gprechter/youverify/tree/master/tests/records) |                                                              | ✅ Completed |
 
 
 
