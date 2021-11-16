@@ -1,6 +1,7 @@
 record bst(root: bst_node)
 record bst_node(l: bst_node, e: INT, r: bst_node)
 b: bst
+first, second, third: INT
 define bst_insert(bst: bst, e: INT):
 	node, new_root: bst_node
 	node = bst.root
@@ -26,6 +27,9 @@ define insert_rec(node: bst_node, e: INT) -> bst_node:
 	LABEL ELSE3: return node
 
 new b = bst(null)
-call bst_insert(b, $sym{a, INT})
-call bst_insert(b, $sym{b, INT})
-call bst_insert(b, $sym{c, INT})
+first = $sym{first, INT}
+second = $sym{second, INT}
+third = $sym{third, INT}
+call bst_insert(b, first)
+call bst_insert(b, second)
+call bst_insert(b, third)

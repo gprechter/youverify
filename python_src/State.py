@@ -1,6 +1,6 @@
 from copy import copy, deepcopy
-
-from pysmt.shortcuts import TRUE, And, Not, Store, simplify
+from abc import abstractmethod, ABC
+from pysmt.shortcuts import TRUE, And, Not, Store, simplify, is_sat
 
 class Frame:
     def __init__(self, function, pc, variables, return_target):
@@ -9,7 +9,61 @@ class Frame:
         self.variables = variables
         self.return_target = return_target
 
-class State:
+class State(ABC):
+
+    @abstractmethod
+    def current_state(self):
+        pass
+
+    @abstractmethod
+    def next_state(self):
+        pass
+
+    @abstractmethod
+    @property
+    def current_statement(self):
+        pass
+
+    @abstractmethod
+    def assign_variable(self, var, val):
+        pass
+
+    @abstractmethod
+    def get_variable(self, var, val):
+        pass
+
+    @abstractmethod
+    def unconditional_branch(self, pc):
+        pass
+
+    @abstractmethod
+    def conditional_branch(self, pc):
+        pass
+
+class DefaultState(State):
+    def __init__(self, sub_states):
+        self._current_state = None
+        self.sub_states = sub_states
+
+    def current_state(self):
+        return self._current_state
+
+    @property
+    def current_statement(self):
+        return self._current_state.current_statement()
+
+    def next_state(self):
+        if self.current_state() and is_sat(self.current_state):
+            self.sub_states.append(self.current_state())
+        if self.sub_states:
+            self._current_state = self.sub_states.pop(0)
+            return True
+        else:
+            return False
+
+
+
+class SubState:
     records = {}
     def __init__(self, path_cond, frame_stack, base_addr = 1, addr_map = {0: None}, conc_sym_pointers = {}):
         self.path_cond = path_cond

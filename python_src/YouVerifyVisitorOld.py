@@ -8,7 +8,7 @@ else:
     from YouVerifyParser import YouVerifyParser
 
 from pysmt.shortcuts import Int, ArrayType, BV
-from pysmt.typing import BOOL, INT, BVType
+from pysmt.typing import BOOL, INT, BVType, _ArrayType
 
 # This class defines a complete generic visitor for a parse tree produced by YouVerifyParser.
 
@@ -156,10 +156,6 @@ class YouVerifyVisitor(ParseTreeVisitor):
     def visitDecl(self, ctx:YouVerifyParser.DeclContext):
         return [(id.text, self.visit(ctx.s)) for id in ctx.identifiers]
 
-    # Visit a parse tree produced by YouVerifyParser#SYMB_PTR.
-    def visitSYMB_PTR(self, ctx:YouVerifyParser.SYMB_PTRContext):
-        return Alloc_Symbolic_ptr(Variable(ctx.identifier.text), self.visitSIMPLE_SORT(ctx.t), Int(int(ctx.s.text)))
-
     # Visit a parse tree produced by YouVerifyParser#ptr_deref_expr.
     def visitPtr_deref_expr(self, ctx:YouVerifyParser.Ptr_deref_exprContext):
         return Pointer_Dereference_Expression(ctx.identifier.text)
@@ -196,6 +192,8 @@ class YouVerifyVisitor(ParseTreeVisitor):
     # Visit a parse tree produced by YouVerifyParser#NAMED_SYMBOL.
     def visitNAMED_SYMBOL(self, ctx: YouVerifyParser.NAMED_SYMBOLContext):
         sort = self.visit(ctx.s)
+        if isinstance(sort, _ArrayType):
+            return Value(YouVerifyArray(0, length=FreshSymbol(INT), array=[Symbol(ctx.identifier.text, sort)]), sort)
         return Value(Symbol(ctx.identifier.text, sort), sort)
 
     # Visit a parse tree produced by YouVerifyParser#UNARY.
@@ -220,7 +218,8 @@ class YouVerifyVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by YouVerifyParser#PTR_SORT.
     def visitPTR_SORT(self, ctx: YouVerifyParser.PTR_SORTContext):
-        return RefType(self.visitSimple_sort(ctx.s))
+        contained = self.visitSimple_sort(ctx.s)
+        return YVR_SORT_TO_PYSMT['ARRAY'](INT, BVType(32) if isinstance(contained, str) else contained)
 
     # Visit a parse tree produced by YouVerifyParser#SIMPLE_SORT.
     def visitSIMPLE_SORT(self, ctx: YouVerifyParser.SIMPLE_SORTContext):

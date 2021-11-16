@@ -11,8 +11,8 @@ else:
 
 def serializedATN():
     with StringIO() as buf:
-        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3)")
-        buf.write("\u0153\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7")
+        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\'")
+        buf.write("\u014f\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7")
         buf.write("\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r\4\16")
         buf.write("\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22\4\23\t\23")
         buf.write("\3\2\3\2\3\2\7\2*\n\2\f\2\16\2-\13\2\3\2\5\2\60\n\2\3")
@@ -24,145 +24,145 @@ def serializedATN():
         buf.write("\4\3\4\5\4q\n\4\3\5\3\5\3\5\3\5\3\5\3\5\7\5y\n\5\f\5\16")
         buf.write("\5|\13\5\3\5\5\5\177\n\5\3\5\3\5\3\6\3\6\3\6\3\6\3\6\5")
         buf.write("\6\u0088\n\6\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3")
-        buf.write("\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7")
-        buf.write("\3\7\3\7\3\7\3\7\3\7\7\7\u00a7\n\7\f\7\16\7\u00aa\13\7")
-        buf.write("\3\7\5\7\u00ad\n\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\7\7")
-        buf.write("\u00b7\n\7\f\7\16\7\u00ba\13\7\3\7\5\7\u00bd\n\7\3\7\3")
-        buf.write("\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\7\7\u00c8\n\7\f\7\16\7")
-        buf.write("\u00cb\13\7\3\7\5\7\u00ce\n\7\3\7\3\7\3\7\3\7\3\7\3\7")
-        buf.write("\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\5\7\u00e1")
-        buf.write("\n\7\3\b\3\b\3\b\3\b\5\b\u00e7\n\b\3\t\3\t\7\t\u00eb\n")
-        buf.write("\t\f\t\16\t\u00ee\13\t\3\t\5\t\u00f1\n\t\3\t\3\t\3\t\3")
-        buf.write("\n\3\n\3\n\5\n\u00f9\n\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3")
+        buf.write("\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\7\7\u009d\n\7\f\7\16")
+        buf.write("\7\u00a0\13\7\3\7\5\7\u00a3\n\7\3\7\3\7\3\7\3\7\3\7\3")
+        buf.write("\7\3\7\3\7\7\7\u00ad\n\7\f\7\16\7\u00b0\13\7\3\7\5\7\u00b3")
+        buf.write("\n\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\7\7\u00be\n\7")
+        buf.write("\f\7\16\7\u00c1\13\7\3\7\5\7\u00c4\n\7\3\7\3\7\3\7\3\7")
+        buf.write("\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\5")
+        buf.write("\7\u00d7\n\7\3\b\3\b\3\b\3\b\5\b\u00dd\n\b\3\t\3\t\7\t")
+        buf.write("\u00e1\n\t\f\t\16\t\u00e4\13\t\3\t\5\t\u00e7\n\t\3\t\3")
+        buf.write("\t\3\t\3\n\3\n\3\n\5\n\u00ef\n\n\3\n\3\n\3\n\3\n\3\n\3")
         buf.write("\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n")
-        buf.write("\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\5\n\u0119\n\n\3\13")
-        buf.write("\3\13\3\13\3\13\3\13\3\13\3\13\5\13\u0122\n\13\3\f\3\f")
-        buf.write("\3\f\3\r\3\r\3\r\3\r\3\r\3\16\3\16\3\16\3\16\3\17\3\17")
-        buf.write("\3\17\3\20\3\20\3\20\3\20\3\21\3\21\3\21\3\21\3\21\3\21")
-        buf.write("\3\22\3\22\3\22\3\22\5\22\u0141\n\22\3\23\3\23\5\23\u0145")
-        buf.write("\n\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23")
-        buf.write("\5\23\u0151\n\23\3\23\2\2\24\2\4\6\b\n\f\16\20\22\24\26")
-        buf.write("\30\32\34\36 \"$\2\2\2\u0178\2+\3\2\2\2\4A\3\2\2\2\6C")
-        buf.write("\3\2\2\2\br\3\2\2\2\n\u0087\3\2\2\2\f\u00e0\3\2\2\2\16")
-        buf.write("\u00e6\3\2\2\2\20\u00ec\3\2\2\2\22\u0118\3\2\2\2\24\u0121")
-        buf.write("\3\2\2\2\26\u0123\3\2\2\2\30\u0126\3\2\2\2\32\u012b\3")
-        buf.write("\2\2\2\34\u012f\3\2\2\2\36\u0132\3\2\2\2 \u0136\3\2\2")
-        buf.write("\2\"\u0140\3\2\2\2$\u0150\3\2\2\2&\'\5\4\3\2\'(\7!\2\2")
+        buf.write("\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\5\n\u010f")
+        buf.write("\n\n\3\13\3\13\3\13\3\13\3\13\3\13\3\13\5\13\u0118\n\13")
+        buf.write("\3\f\3\f\3\f\3\f\3\f\3\r\3\r\3\r\3\r\3\16\3\16\3\16\3")
+        buf.write("\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\5\17\u012e\n\17")
+        buf.write("\3\20\3\20\3\20\3\21\3\21\3\21\3\21\3\21\3\21\3\22\3\22")
+        buf.write("\3\22\3\22\5\22\u013d\n\22\3\23\3\23\5\23\u0141\n\23\3")
+        buf.write("\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\5\23")
+        buf.write("\u014d\n\23\3\23\2\2\24\2\4\6\b\n\f\16\20\22\24\26\30")
+        buf.write("\32\34\36 \"$\2\2\2\u0174\2+\3\2\2\2\4A\3\2\2\2\6C\3\2")
+        buf.write("\2\2\br\3\2\2\2\n\u0087\3\2\2\2\f\u00d6\3\2\2\2\16\u00dc")
+        buf.write("\3\2\2\2\20\u00e2\3\2\2\2\22\u010e\3\2\2\2\24\u0117\3")
+        buf.write("\2\2\2\26\u0119\3\2\2\2\30\u011e\3\2\2\2\32\u0122\3\2")
+        buf.write("\2\2\34\u012d\3\2\2\2\36\u012f\3\2\2\2 \u0132\3\2\2\2")
+        buf.write("\"\u013c\3\2\2\2$\u014c\3\2\2\2&\'\5\4\3\2\'(\7\37\2\2")
         buf.write("(*\3\2\2\2)&\3\2\2\2*-\3\2\2\2+)\3\2\2\2+,\3\2\2\2,/\3")
         buf.write("\2\2\2-+\3\2\2\2.\60\5\4\3\2/.\3\2\2\2/\60\3\2\2\2\60")
-        buf.write("\66\3\2\2\2\61\62\5\n\6\2\62\63\7!\2\2\63\65\3\2\2\2\64")
-        buf.write("\61\3\2\2\2\658\3\2\2\2\66\64\3\2\2\2\66\67\3\2\2\2\67")
-        buf.write(":\3\2\2\28\66\3\2\2\29;\5\n\6\2:9\3\2\2\2:;\3\2\2\2;<")
-        buf.write("\3\2\2\2<=\7\2\2\3=\3\3\2\2\2>B\5\20\t\2?B\5\b\5\2@B\5")
-        buf.write("\6\4\2A>\3\2\2\2A?\3\2\2\2A@\3\2\2\2B\5\3\2\2\2CD\7\3")
-        buf.write("\2\2DE\7\37\2\2EK\7$\2\2FG\5\20\t\2GH\7#\2\2HJ\3\2\2\2")
-        buf.write("IF\3\2\2\2JM\3\2\2\2KI\3\2\2\2KL\3\2\2\2LO\3\2\2\2MK\3")
-        buf.write("\2\2\2NP\5\20\t\2ON\3\2\2\2OP\3\2\2\2PQ\3\2\2\2QT\7%\2")
-        buf.write("\2RS\7\"\2\2SU\5\"\22\2TR\3\2\2\2TU\3\2\2\2UV\3\2\2\2")
-        buf.write("VW\7&\2\2W^\7!\2\2XY\7(\2\2YZ\5\20\t\2Z[\7!\2\2[]\3\2")
-        buf.write("\2\2\\X\3\2\2\2]`\3\2\2\2^\\\3\2\2\2^_\3\2\2\2_c\3\2\2")
-        buf.write("\2`^\3\2\2\2ab\7(\2\2bd\5\20\t\2ca\3\2\2\2cd\3\2\2\2d")
-        buf.write("k\3\2\2\2ef\7(\2\2fg\5\n\6\2gh\7!\2\2hj\3\2\2\2ie\3\2")
-        buf.write("\2\2jm\3\2\2\2ki\3\2\2\2kl\3\2\2\2lp\3\2\2\2mk\3\2\2\2")
-        buf.write("no\7(\2\2oq\5\n\6\2pn\3\2\2\2pq\3\2\2\2q\7\3\2\2\2rs\7")
-        buf.write("\4\2\2st\7\37\2\2tz\7$\2\2uv\5\20\t\2vw\7#\2\2wy\3\2\2")
-        buf.write("\2xu\3\2\2\2y|\3\2\2\2zx\3\2\2\2z{\3\2\2\2{~\3\2\2\2|")
-        buf.write("z\3\2\2\2}\177\5\20\t\2~}\3\2\2\2~\177\3\2\2\2\177\u0080")
-        buf.write("\3\2\2\2\u0080\u0081\7%\2\2\u0081\t\3\2\2\2\u0082\u0083")
-        buf.write("\7\5\2\2\u0083\u0084\7\37\2\2\u0084\u0085\7&\2\2\u0085")
-        buf.write("\u0088\5\f\7\2\u0086\u0088\5\f\7\2\u0087\u0082\3\2\2\2")
-        buf.write("\u0087\u0086\3\2\2\2\u0088\13\3\2\2\2\u0089\u008a\7\6")
-        buf.write("\2\2\u008a\u00e1\5\24\13\2\u008b\u00e1\7\6\2\2\u008c\u008d")
-        buf.write("\7\7\2\2\u008d\u008e\7\37\2\2\u008e\u008f\7\b\2\2\u008f")
-        buf.write("\u0090\7\t\2\2\u0090\u0091\7\n\2\2\u0091\u0092\5\"\22")
-        buf.write("\2\u0092\u0093\7#\2\2\u0093\u0094\7 \2\2\u0094\u0095\7")
-        buf.write("\13\2\2\u0095\u00e1\3\2\2\2\u0096\u0097\7\f\2\2\u0097")
-        buf.write("\u00e1\5\24\13\2\u0098\u0099\7\r\2\2\u0099\u00e1\5\24")
-        buf.write("\13\2\u009a\u009b\5\16\b\2\u009b\u009c\7\b\2\2\u009c\u009d")
-        buf.write("\5\24\13\2\u009d\u00e1\3\2\2\2\u009e\u009f\7\16\2\2\u009f")
-        buf.write("\u00a0\5\16\b\2\u00a0\u00a1\7\b\2\2\u00a1\u00a2\7\37\2")
-        buf.write("\2\u00a2\u00a8\7$\2\2\u00a3\u00a4\5\24\13\2\u00a4\u00a5")
-        buf.write("\7#\2\2\u00a5\u00a7\3\2\2\2\u00a6\u00a3\3\2\2\2\u00a7")
-        buf.write("\u00aa\3\2\2\2\u00a8\u00a6\3\2\2\2\u00a8\u00a9\3\2\2\2")
-        buf.write("\u00a9\u00ac\3\2\2\2\u00aa\u00a8\3\2\2\2\u00ab\u00ad\5")
-        buf.write("\24\13\2\u00ac\u00ab\3\2\2\2\u00ac\u00ad\3\2\2\2\u00ad")
-        buf.write("\u00ae\3\2\2\2\u00ae\u00af\7%\2\2\u00af\u00e1\3\2\2\2")
-        buf.write("\u00b0\u00b1\7\16\2\2\u00b1\u00b2\7\37\2\2\u00b2\u00b8")
-        buf.write("\7$\2\2\u00b3\u00b4\5\24\13\2\u00b4\u00b5\7#\2\2\u00b5")
-        buf.write("\u00b7\3\2\2\2\u00b6\u00b3\3\2\2\2\u00b7\u00ba\3\2\2\2")
-        buf.write("\u00b8\u00b6\3\2\2\2\u00b8\u00b9\3\2\2\2\u00b9\u00bc\3")
-        buf.write("\2\2\2\u00ba\u00b8\3\2\2\2\u00bb\u00bd\5\24\13\2\u00bc")
-        buf.write("\u00bb\3\2\2\2\u00bc\u00bd\3\2\2\2\u00bd\u00be\3\2\2\2")
-        buf.write("\u00be\u00e1\7%\2\2\u00bf\u00c0\7\17\2\2\u00c0\u00c1\5")
-        buf.write("\16\b\2\u00c1\u00c2\7\b\2\2\u00c2\u00c3\7\37\2\2\u00c3")
-        buf.write("\u00c9\7$\2\2\u00c4\u00c5\5\24\13\2\u00c5\u00c6\7#\2\2")
-        buf.write("\u00c6\u00c8\3\2\2\2\u00c7\u00c4\3\2\2\2\u00c8\u00cb\3")
-        buf.write("\2\2\2\u00c9\u00c7\3\2\2\2\u00c9\u00ca\3\2\2\2\u00ca\u00cd")
-        buf.write("\3\2\2\2\u00cb\u00c9\3\2\2\2\u00cc\u00ce\5\24\13\2\u00cd")
-        buf.write("\u00cc\3\2\2\2\u00cd\u00ce\3\2\2\2\u00ce\u00cf\3\2\2\2")
-        buf.write("\u00cf\u00d0\7%\2\2\u00d0\u00e1\3\2\2\2\u00d1\u00d2\7")
-        buf.write("\17\2\2\u00d2\u00d3\5\16\b\2\u00d3\u00d4\7\b\2\2\u00d4")
-        buf.write("\u00d5\7\20\2\2\u00d5\u00d6\7\n\2\2\u00d6\u00d7\7\37\2")
-        buf.write("\2\u00d7\u00d8\7\13\2\2\u00d8\u00e1\3\2\2\2\u00d9\u00da")
-        buf.write("\7\21\2\2\u00da\u00db\5\24\13\2\u00db\u00dc\7\22\2\2\u00dc")
-        buf.write("\u00dd\7\37\2\2\u00dd\u00e1\3\2\2\2\u00de\u00df\7\22\2")
-        buf.write("\2\u00df\u00e1\7\37\2\2\u00e0\u0089\3\2\2\2\u00e0\u008b")
-        buf.write("\3\2\2\2\u00e0\u008c\3\2\2\2\u00e0\u0096\3\2\2\2\u00e0")
-        buf.write("\u0098\3\2\2\2\u00e0\u009a\3\2\2\2\u00e0\u009e\3\2\2\2")
-        buf.write("\u00e0\u00b0\3\2\2\2\u00e0\u00bf\3\2\2\2\u00e0\u00d1\3")
-        buf.write("\2\2\2\u00e0\u00d9\3\2\2\2\u00e0\u00de\3\2\2\2\u00e1\r")
-        buf.write("\3\2\2\2\u00e2\u00e7\7\37\2\2\u00e3\u00e7\5\32\16\2\u00e4")
-        buf.write("\u00e7\5\30\r\2\u00e5\u00e7\5\26\f\2\u00e6\u00e2\3\2\2")
-        buf.write("\2\u00e6\u00e3\3\2\2\2\u00e6\u00e4\3\2\2\2\u00e6\u00e5")
-        buf.write("\3\2\2\2\u00e7\17\3\2\2\2\u00e8\u00e9\7\37\2\2\u00e9\u00eb")
-        buf.write("\7#\2\2\u00ea\u00e8\3\2\2\2\u00eb\u00ee\3\2\2\2\u00ec")
-        buf.write("\u00ea\3\2\2\2\u00ec\u00ed\3\2\2\2\u00ed\u00f0\3\2\2\2")
-        buf.write("\u00ee\u00ec\3\2\2\2\u00ef\u00f1\7\37\2\2\u00f0\u00ef")
-        buf.write("\3\2\2\2\u00f0\u00f1\3\2\2\2\u00f1\u00f2\3\2\2\2\u00f2")
-        buf.write("\u00f3\7&\2\2\u00f3\u00f4\5\"\22\2\u00f4\21\3\2\2\2\u00f5")
-        buf.write("\u00f9\7\34\2\2\u00f6\u00f9\7 \2\2\u00f7\u00f9\7\37\2")
-        buf.write("\2\u00f8\u00f5\3\2\2\2\u00f8\u00f6\3\2\2\2\u00f8\u00f7")
-        buf.write("\3\2\2\2\u00f9\u0119\3\2\2\2\u00fa\u00fb\7\23\2\2\u00fb")
-        buf.write("\u00fc\7\n\2\2\u00fc\u00fd\5\24\13\2\u00fd\u00fe\7\13")
-        buf.write("\2\2\u00fe\u0119\3\2\2\2\u00ff\u0100\7\24\2\2\u0100\u0101")
-        buf.write("\7 \2\2\u0101\u0102\7\25\2\2\u0102\u0103\7\n\2\2\u0103")
-        buf.write("\u0104\5\24\13\2\u0104\u0105\7\13\2\2\u0105\u0119\3\2")
-        buf.write("\2\2\u0106\u0107\7\26\2\2\u0107\u0108\7\n\2\2\u0108\u0109")
-        buf.write("\7 \2\2\u0109\u010a\7#\2\2\u010a\u010b\7 \2\2\u010b\u0119")
-        buf.write("\7\13\2\2\u010c\u010d\7\20\2\2\u010d\u010e\7\n\2\2\u010e")
-        buf.write("\u010f\5\"\22\2\u010f\u0110\7\13\2\2\u0110\u0119\3\2\2")
-        buf.write("\2\u0111\u0112\7\20\2\2\u0112\u0113\7\n\2\2\u0113\u0114")
-        buf.write("\7\37\2\2\u0114\u0115\7#\2\2\u0115\u0116\5\"\22\2\u0116")
-        buf.write("\u0117\7\13\2\2\u0117\u0119\3\2\2\2\u0118\u00f8\3\2\2")
-        buf.write("\2\u0118\u00fa\3\2\2\2\u0118\u00ff\3\2\2\2\u0118\u0106")
-        buf.write("\3\2\2\2\u0118\u010c\3\2\2\2\u0118\u0111\3\2\2\2\u0119")
-        buf.write("\23\3\2\2\2\u011a\u0122\5\22\n\2\u011b\u0122\5\26\f\2")
-        buf.write("\u011c\u0122\5\32\16\2\u011d\u0122\5\30\r\2\u011e\u0122")
-        buf.write("\5\34\17\2\u011f\u0122\5\36\20\2\u0120\u0122\5 \21\2\u0121")
-        buf.write("\u011a\3\2\2\2\u0121\u011b\3\2\2\2\u0121\u011c\3\2\2\2")
-        buf.write("\u0121\u011d\3\2\2\2\u0121\u011e\3\2\2\2\u0121\u011f\3")
-        buf.write("\2\2\2\u0121\u0120\3\2\2\2\u0122\25\3\2\2\2\u0123\u0124")
-        buf.write("\7\27\2\2\u0124\u0125\7\37\2\2\u0125\27\3\2\2\2\u0126")
-        buf.write("\u0127\7\37\2\2\u0127\u0128\7\30\2\2\u0128\u0129\5\24")
-        buf.write("\13\2\u0129\u012a\7\25\2\2\u012a\31\3\2\2\2\u012b\u012c")
-        buf.write("\7\37\2\2\u012c\u012d\7\'\2\2\u012d\u012e\7\37\2\2\u012e")
-        buf.write("\33\3\2\2\2\u012f\u0130\7\35\2\2\u0130\u0131\5\22\n\2")
-        buf.write("\u0131\35\3\2\2\2\u0132\u0133\5\22\n\2\u0133\u0134\7\35")
-        buf.write("\2\2\u0134\u0135\5\22\n\2\u0135\37\3\2\2\2\u0136\u0137")
-        buf.write("\5\22\n\2\u0137\u0138\7\36\2\2\u0138\u0139\5\22\n\2\u0139")
-        buf.write("\u013a\7&\2\2\u013a\u013b\5\22\n\2\u013b!\3\2\2\2\u013c")
-        buf.write("\u013d\5$\23\2\u013d\u013e\7\27\2\2\u013e\u0141\3\2\2")
-        buf.write("\2\u013f\u0141\5$\23\2\u0140\u013c\3\2\2\2\u0140\u013f")
-        buf.write("\3\2\2\2\u0141#\3\2\2\2\u0142\u0145\7\31\2\2\u0143\u0145")
-        buf.write("\7\32\2\2\u0144\u0142\3\2\2\2\u0144\u0143\3\2\2\2\u0145")
-        buf.write("\u0151\3\2\2\2\u0146\u0147\7\33\2\2\u0147\u0148\7\n\2")
-        buf.write("\2\u0148\u0149\5\"\22\2\u0149\u014a\7\13\2\2\u014a\u0151")
-        buf.write("\3\2\2\2\u014b\u014c\7\26\2\2\u014c\u014d\7\30\2\2\u014d")
-        buf.write("\u014e\7 \2\2\u014e\u0151\7\25\2\2\u014f\u0151\7\37\2")
-        buf.write("\2\u0150\u0144\3\2\2\2\u0150\u0146\3\2\2\2\u0150\u014b")
-        buf.write("\3\2\2\2\u0150\u014f\3\2\2\2\u0151%\3\2\2\2!+/\66:AKO")
-        buf.write("T^ckpz~\u0087\u00a8\u00ac\u00b8\u00bc\u00c9\u00cd\u00e0")
-        buf.write("\u00e6\u00ec\u00f0\u00f8\u0118\u0121\u0140\u0144\u0150")
+        buf.write("\66\3\2\2\2\61\62\5\n\6\2\62\63\7\37\2\2\63\65\3\2\2\2")
+        buf.write("\64\61\3\2\2\2\658\3\2\2\2\66\64\3\2\2\2\66\67\3\2\2\2")
+        buf.write("\67:\3\2\2\28\66\3\2\2\29;\5\n\6\2:9\3\2\2\2:;\3\2\2\2")
+        buf.write(";<\3\2\2\2<=\7\2\2\3=\3\3\2\2\2>B\5\20\t\2?B\5\b\5\2@")
+        buf.write("B\5\6\4\2A>\3\2\2\2A?\3\2\2\2A@\3\2\2\2B\5\3\2\2\2CD\7")
+        buf.write("\3\2\2DE\7\35\2\2EK\7\"\2\2FG\5\20\t\2GH\7!\2\2HJ\3\2")
+        buf.write("\2\2IF\3\2\2\2JM\3\2\2\2KI\3\2\2\2KL\3\2\2\2LO\3\2\2\2")
+        buf.write("MK\3\2\2\2NP\5\20\t\2ON\3\2\2\2OP\3\2\2\2PQ\3\2\2\2QT")
+        buf.write("\7#\2\2RS\7 \2\2SU\5\"\22\2TR\3\2\2\2TU\3\2\2\2UV\3\2")
+        buf.write("\2\2VW\7$\2\2W^\7\37\2\2XY\7&\2\2YZ\5\20\t\2Z[\7\37\2")
+        buf.write("\2[]\3\2\2\2\\X\3\2\2\2]`\3\2\2\2^\\\3\2\2\2^_\3\2\2\2")
+        buf.write("_c\3\2\2\2`^\3\2\2\2ab\7&\2\2bd\5\20\t\2ca\3\2\2\2cd\3")
+        buf.write("\2\2\2dk\3\2\2\2ef\7&\2\2fg\5\n\6\2gh\7\37\2\2hj\3\2\2")
+        buf.write("\2ie\3\2\2\2jm\3\2\2\2ki\3\2\2\2kl\3\2\2\2lp\3\2\2\2m")
+        buf.write("k\3\2\2\2no\7&\2\2oq\5\n\6\2pn\3\2\2\2pq\3\2\2\2q\7\3")
+        buf.write("\2\2\2rs\7\4\2\2st\7\35\2\2tz\7\"\2\2uv\5\20\t\2vw\7!")
+        buf.write("\2\2wy\3\2\2\2xu\3\2\2\2y|\3\2\2\2zx\3\2\2\2z{\3\2\2\2")
+        buf.write("{~\3\2\2\2|z\3\2\2\2}\177\5\20\t\2~}\3\2\2\2~\177\3\2")
+        buf.write("\2\2\177\u0080\3\2\2\2\u0080\u0081\7#\2\2\u0081\t\3\2")
+        buf.write("\2\2\u0082\u0083\7\5\2\2\u0083\u0084\7\35\2\2\u0084\u0085")
+        buf.write("\7$\2\2\u0085\u0088\5\f\7\2\u0086\u0088\5\f\7\2\u0087")
+        buf.write("\u0082\3\2\2\2\u0087\u0086\3\2\2\2\u0088\13\3\2\2\2\u0089")
+        buf.write("\u008a\5\16\b\2\u008a\u008b\7\6\2\2\u008b\u008c\5\24\13")
+        buf.write("\2\u008c\u00d7\3\2\2\2\u008d\u008e\7\7\2\2\u008e\u00d7")
+        buf.write("\5\24\13\2\u008f\u00d7\7\7\2\2\u0090\u0091\7\b\2\2\u0091")
+        buf.write("\u00d7\5\24\13\2\u0092\u0093\7\t\2\2\u0093\u00d7\5\24")
+        buf.write("\13\2\u0094\u0095\7\n\2\2\u0095\u0096\5\16\b\2\u0096\u0097")
+        buf.write("\7\6\2\2\u0097\u0098\7\35\2\2\u0098\u009e\7\"\2\2\u0099")
+        buf.write("\u009a\5\24\13\2\u009a\u009b\7!\2\2\u009b\u009d\3\2\2")
+        buf.write("\2\u009c\u0099\3\2\2\2\u009d\u00a0\3\2\2\2\u009e\u009c")
+        buf.write("\3\2\2\2\u009e\u009f\3\2\2\2\u009f\u00a2\3\2\2\2\u00a0")
+        buf.write("\u009e\3\2\2\2\u00a1\u00a3\5\24\13\2\u00a2\u00a1\3\2\2")
+        buf.write("\2\u00a2\u00a3\3\2\2\2\u00a3\u00a4\3\2\2\2\u00a4\u00a5")
+        buf.write("\7#\2\2\u00a5\u00d7\3\2\2\2\u00a6\u00a7\7\n\2\2\u00a7")
+        buf.write("\u00a8\7\35\2\2\u00a8\u00ae\7\"\2\2\u00a9\u00aa\5\24\13")
+        buf.write("\2\u00aa\u00ab\7!\2\2\u00ab\u00ad\3\2\2\2\u00ac\u00a9")
+        buf.write("\3\2\2\2\u00ad\u00b0\3\2\2\2\u00ae\u00ac\3\2\2\2\u00ae")
+        buf.write("\u00af\3\2\2\2\u00af\u00b2\3\2\2\2\u00b0\u00ae\3\2\2\2")
+        buf.write("\u00b1\u00b3\5\24\13\2\u00b2\u00b1\3\2\2\2\u00b2\u00b3")
+        buf.write("\3\2\2\2\u00b3\u00b4\3\2\2\2\u00b4\u00d7\7#\2\2\u00b5")
+        buf.write("\u00b6\7\13\2\2\u00b6\u00b7\5\16\b\2\u00b7\u00b8\7\6\2")
+        buf.write("\2\u00b8\u00b9\7\35\2\2\u00b9\u00bf\7\"\2\2\u00ba\u00bb")
+        buf.write("\5\24\13\2\u00bb\u00bc\7!\2\2\u00bc\u00be\3\2\2\2\u00bd")
+        buf.write("\u00ba\3\2\2\2\u00be\u00c1\3\2\2\2\u00bf\u00bd\3\2\2\2")
+        buf.write("\u00bf\u00c0\3\2\2\2\u00c0\u00c3\3\2\2\2\u00c1\u00bf\3")
+        buf.write("\2\2\2\u00c2\u00c4\5\24\13\2\u00c3\u00c2\3\2\2\2\u00c3")
+        buf.write("\u00c4\3\2\2\2\u00c4\u00c5\3\2\2\2\u00c5\u00c6\7#\2\2")
+        buf.write("\u00c6\u00d7\3\2\2\2\u00c7\u00c8\7\13\2\2\u00c8\u00c9")
+        buf.write("\5\16\b\2\u00c9\u00ca\7\6\2\2\u00ca\u00cb\7\f\2\2\u00cb")
+        buf.write("\u00cc\7\r\2\2\u00cc\u00cd\7\35\2\2\u00cd\u00ce\7\16\2")
+        buf.write("\2\u00ce\u00d7\3\2\2\2\u00cf\u00d0\7\17\2\2\u00d0\u00d1")
+        buf.write("\5\24\13\2\u00d1\u00d2\7\20\2\2\u00d2\u00d3\7\35\2\2\u00d3")
+        buf.write("\u00d7\3\2\2\2\u00d4\u00d5\7\20\2\2\u00d5\u00d7\7\35\2")
+        buf.write("\2\u00d6\u0089\3\2\2\2\u00d6\u008d\3\2\2\2\u00d6\u008f")
+        buf.write("\3\2\2\2\u00d6\u0090\3\2\2\2\u00d6\u0092\3\2\2\2\u00d6")
+        buf.write("\u0094\3\2\2\2\u00d6\u00a6\3\2\2\2\u00d6\u00b5\3\2\2\2")
+        buf.write("\u00d6\u00c7\3\2\2\2\u00d6\u00cf\3\2\2\2\u00d6\u00d4\3")
+        buf.write("\2\2\2\u00d7\r\3\2\2\2\u00d8\u00dd\7\35\2\2\u00d9\u00dd")
+        buf.write("\5\30\r\2\u00da\u00dd\5\26\f\2\u00db\u00dd\5\36\20\2\u00dc")
+        buf.write("\u00d8\3\2\2\2\u00dc\u00d9\3\2\2\2\u00dc\u00da\3\2\2\2")
+        buf.write("\u00dc\u00db\3\2\2\2\u00dd\17\3\2\2\2\u00de\u00df\7\35")
+        buf.write("\2\2\u00df\u00e1\7!\2\2\u00e0\u00de\3\2\2\2\u00e1\u00e4")
+        buf.write("\3\2\2\2\u00e2\u00e0\3\2\2\2\u00e2\u00e3\3\2\2\2\u00e3")
+        buf.write("\u00e6\3\2\2\2\u00e4\u00e2\3\2\2\2\u00e5\u00e7\7\35\2")
+        buf.write("\2\u00e6\u00e5\3\2\2\2\u00e6\u00e7\3\2\2\2\u00e7\u00e8")
+        buf.write("\3\2\2\2\u00e8\u00e9\7$\2\2\u00e9\u00ea\5\"\22\2\u00ea")
+        buf.write("\21\3\2\2\2\u00eb\u00ef\7\31\2\2\u00ec\u00ef\7\36\2\2")
+        buf.write("\u00ed\u00ef\7\35\2\2\u00ee\u00eb\3\2\2\2\u00ee\u00ec")
+        buf.write("\3\2\2\2\u00ee\u00ed\3\2\2\2\u00ef\u010f\3\2\2\2\u00f0")
+        buf.write("\u00f1\7\21\2\2\u00f1\u00f2\7\r\2\2\u00f2\u00f3\5\24\13")
+        buf.write("\2\u00f3\u00f4\7\16\2\2\u00f4\u010f\3\2\2\2\u00f5\u00f6")
+        buf.write("\7\22\2\2\u00f6\u00f7\7\36\2\2\u00f7\u00f8\7\23\2\2\u00f8")
+        buf.write("\u00f9\7\r\2\2\u00f9\u00fa\5\24\13\2\u00fa\u00fb\7\16")
+        buf.write("\2\2\u00fb\u010f\3\2\2\2\u00fc\u00fd\7\24\2\2\u00fd\u00fe")
+        buf.write("\7\r\2\2\u00fe\u00ff\7\36\2\2\u00ff\u0100\7!\2\2\u0100")
+        buf.write("\u0101\7\36\2\2\u0101\u010f\7\16\2\2\u0102\u0103\7\f\2")
+        buf.write("\2\u0103\u0104\7\r\2\2\u0104\u0105\5\"\22\2\u0105\u0106")
+        buf.write("\7\16\2\2\u0106\u010f\3\2\2\2\u0107\u0108\7\f\2\2\u0108")
+        buf.write("\u0109\7\r\2\2\u0109\u010a\7\35\2\2\u010a\u010b\7!\2\2")
+        buf.write("\u010b\u010c\5\"\22\2\u010c\u010d\7\16\2\2\u010d\u010f")
+        buf.write("\3\2\2\2\u010e\u00ee\3\2\2\2\u010e\u00f0\3\2\2\2\u010e")
+        buf.write("\u00f5\3\2\2\2\u010e\u00fc\3\2\2\2\u010e\u0102\3\2\2\2")
+        buf.write("\u010e\u0107\3\2\2\2\u010f\23\3\2\2\2\u0110\u0118\5\22")
+        buf.write("\n\2\u0111\u0118\5\30\r\2\u0112\u0118\5\26\f\2\u0113\u0118")
+        buf.write("\5\32\16\2\u0114\u0118\5\34\17\2\u0115\u0118\5 \21\2\u0116")
+        buf.write("\u0118\5\36\20\2\u0117\u0110\3\2\2\2\u0117\u0111\3\2\2")
+        buf.write("\2\u0117\u0112\3\2\2\2\u0117\u0113\3\2\2\2\u0117\u0114")
+        buf.write("\3\2\2\2\u0117\u0115\3\2\2\2\u0117\u0116\3\2\2\2\u0118")
+        buf.write("\25\3\2\2\2\u0119\u011a\7\35\2\2\u011a\u011b\7\25\2\2")
+        buf.write("\u011b\u011c\5\24\13\2\u011c\u011d\7\23\2\2\u011d\27\3")
+        buf.write("\2\2\2\u011e\u011f\7\35\2\2\u011f\u0120\7%\2\2\u0120\u0121")
+        buf.write("\7\35\2\2\u0121\31\3\2\2\2\u0122\u0123\7\32\2\2\u0123")
+        buf.write("\u0124\5\22\n\2\u0124\33\3\2\2\2\u0125\u0126\5\22\n\2")
+        buf.write("\u0126\u0127\7\32\2\2\u0127\u0128\5\22\n\2\u0128\u012e")
+        buf.write("\3\2\2\2\u0129\u012a\5\22\n\2\u012a\u012b\7\33\2\2\u012b")
+        buf.write("\u012c\5\22\n\2\u012c\u012e\3\2\2\2\u012d\u0125\3\2\2")
+        buf.write("\2\u012d\u0129\3\2\2\2\u012e\35\3\2\2\2\u012f\u0130\7")
+        buf.write("\33\2\2\u0130\u0131\7\35\2\2\u0131\37\3\2\2\2\u0132\u0133")
+        buf.write("\5\22\n\2\u0133\u0134\7\34\2\2\u0134\u0135\5\22\n\2\u0135")
+        buf.write("\u0136\7$\2\2\u0136\u0137\5\22\n\2\u0137!\3\2\2\2\u0138")
+        buf.write("\u0139\5$\23\2\u0139\u013a\7\33\2\2\u013a\u013d\3\2\2")
+        buf.write("\2\u013b\u013d\5$\23\2\u013c\u0138\3\2\2\2\u013c\u013b")
+        buf.write("\3\2\2\2\u013d#\3\2\2\2\u013e\u0141\7\26\2\2\u013f\u0141")
+        buf.write("\7\27\2\2\u0140\u013e\3\2\2\2\u0140\u013f\3\2\2\2\u0141")
+        buf.write("\u014d\3\2\2\2\u0142\u0143\7\30\2\2\u0143\u0144\7\r\2")
+        buf.write("\2\u0144\u0145\5\"\22\2\u0145\u0146\7\16\2\2\u0146\u014d")
+        buf.write("\3\2\2\2\u0147\u0148\7\24\2\2\u0148\u0149\7\25\2\2\u0149")
+        buf.write("\u014a\7\36\2\2\u014a\u014d\7\23\2\2\u014b\u014d\7\35")
+        buf.write("\2\2\u014c\u0140\3\2\2\2\u014c\u0142\3\2\2\2\u014c\u0147")
+        buf.write("\3\2\2\2\u014c\u014b\3\2\2\2\u014d%\3\2\2\2\"+/\66:AK")
+        buf.write("OT^ckpz~\u0087\u009e\u00a2\u00ae\u00b2\u00bf\u00c3\u00d6")
+        buf.write("\u00dc\u00e2\u00e6\u00ee\u010e\u0117\u012d\u013c\u0140")
+        buf.write("\u014c")
         return buf.getvalue()
 
 
@@ -176,23 +176,23 @@ class YouVerifyParser ( Parser ):
 
     sharedContextCache = PredictionContextCache()
 
-    literalNames = [ "<INVALID>", "'define'", "'record'", "'LABEL'", "'return'", 
-                     "'ref'", "'='", "'$sym_ref'", "'{'", "'}'", "'assume'", 
-                     "'assert'", "'call'", "'new'", "'$sym'", "'if'", "'goto'", 
-                     "'ARRAY[]'", "'ARRAY['", "']'", "'BV'", "'*'", "'['", 
-                     "'BOOL'", "'INT'", "'ARRAY'", "<INVALID>", "<INVALID>", 
-                     "'?'", "<INVALID>", "<INVALID>", "<INVALID>", "'->'", 
-                     "','", "'('", "')'", "':'", "'.'", "'\t'", "' '" ]
+    literalNames = [ "<INVALID>", "'define'", "'record'", "'LABEL'", "'='", 
+                     "'return'", "'assume'", "'assert'", "'call'", "'new'", 
+                     "'$sym'", "'{'", "'}'", "'if'", "'goto'", "'ARRAY[]'", 
+                     "'ARRAY['", "']'", "'BV'", "'['", "'BOOL'", "'INT'", 
+                     "'ARRAY'", "<INVALID>", "<INVALID>", "'*'", "'?'", 
+                     "<INVALID>", "<INVALID>", "<INVALID>", "'->'", "','", 
+                     "'('", "')'", "':'", "'.'", "'\t'", "' '" ]
 
     symbolicNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "BOOLEAN", "OPERATOR", "TERNARY_OPERATOR", 
-                      "IDENTIFIER", "INTEGER", "NEWLINE", "ARROW", "COMMA", 
-                      "OPAREN", "CPAREN", "COLON", "PERIOD", "TAB", "WHITESPACE" ]
+                      "<INVALID>", "<INVALID>", "<INVALID>", "BOOLEAN", 
+                      "OPERATOR", "STAR", "TERNARY_OPERATOR", "IDENTIFIER", 
+                      "INTEGER", "NEWLINE", "ARROW", "COMMA", "OPAREN", 
+                      "CPAREN", "COLON", "PERIOD", "TAB", "WHITESPACE" ]
 
     RULE_program = 0
     RULE_global_decl = 1
@@ -204,19 +204,19 @@ class YouVerifyParser ( Parser ):
     RULE_decl = 7
     RULE_atomic_expr = 8
     RULE_expr = 9
-    RULE_ptr_deref_expr = 10
-    RULE_array_index_expr = 11
-    RULE_record_index_expr = 12
-    RULE_unary_expr = 13
-    RULE_binary_expr = 14
+    RULE_array_index_expr = 10
+    RULE_record_index_expr = 11
+    RULE_unary_expr = 12
+    RULE_binary_expr = 13
+    RULE_ptr_deref_expr = 14
     RULE_ternary_expr = 15
     RULE_sort = 16
     RULE_simple_sort = 17
 
     ruleNames =  [ "program", "global_decl", "function", "record", "labeled_stmt", 
                    "stmt", "assign_target", "decl", "atomic_expr", "expr", 
-                   "ptr_deref_expr", "array_index_expr", "record_index_expr", 
-                   "unary_expr", "binary_expr", "ternary_expr", "sort", 
+                   "array_index_expr", "record_index_expr", "unary_expr", 
+                   "binary_expr", "ptr_deref_expr", "ternary_expr", "sort", 
                    "simple_sort" ]
 
     EOF = Token.EOF
@@ -242,23 +242,21 @@ class YouVerifyParser ( Parser ):
     T__19=20
     T__20=21
     T__21=22
-    T__22=23
-    T__23=24
-    T__24=25
-    BOOLEAN=26
-    OPERATOR=27
-    TERNARY_OPERATOR=28
-    IDENTIFIER=29
-    INTEGER=30
-    NEWLINE=31
-    ARROW=32
-    COMMA=33
-    OPAREN=34
-    CPAREN=35
-    COLON=36
-    PERIOD=37
-    TAB=38
-    WHITESPACE=39
+    BOOLEAN=23
+    OPERATOR=24
+    STAR=25
+    TERNARY_OPERATOR=26
+    IDENTIFIER=27
+    INTEGER=28
+    NEWLINE=29
+    ARROW=30
+    COMMA=31
+    OPAREN=32
+    CPAREN=33
+    COLON=34
+    PERIOD=35
+    TAB=36
+    WHITESPACE=37
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
@@ -362,7 +360,7 @@ class YouVerifyParser ( Parser ):
             self.state = 56
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << YouVerifyParser.T__2) | (1 << YouVerifyParser.T__3) | (1 << YouVerifyParser.T__4) | (1 << YouVerifyParser.T__9) | (1 << YouVerifyParser.T__10) | (1 << YouVerifyParser.T__11) | (1 << YouVerifyParser.T__12) | (1 << YouVerifyParser.T__14) | (1 << YouVerifyParser.T__15) | (1 << YouVerifyParser.T__20) | (1 << YouVerifyParser.IDENTIFIER))) != 0):
+            if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << YouVerifyParser.T__2) | (1 << YouVerifyParser.T__4) | (1 << YouVerifyParser.T__5) | (1 << YouVerifyParser.T__6) | (1 << YouVerifyParser.T__7) | (1 << YouVerifyParser.T__8) | (1 << YouVerifyParser.T__12) | (1 << YouVerifyParser.T__13) | (1 << YouVerifyParser.STAR) | (1 << YouVerifyParser.IDENTIFIER))) != 0):
                 self.state = 55
                 localctx._labeled_stmt = self.labeled_stmt()
                 localctx.stmts.append(localctx._labeled_stmt)
@@ -851,7 +849,7 @@ class YouVerifyParser ( Parser ):
                 self.state = 131
                 localctx.statement = self.stmt()
                 pass
-            elif token in [YouVerifyParser.T__3, YouVerifyParser.T__4, YouVerifyParser.T__9, YouVerifyParser.T__10, YouVerifyParser.T__11, YouVerifyParser.T__12, YouVerifyParser.T__14, YouVerifyParser.T__15, YouVerifyParser.T__20, YouVerifyParser.IDENTIFIER]:
+            elif token in [YouVerifyParser.T__4, YouVerifyParser.T__5, YouVerifyParser.T__6, YouVerifyParser.T__7, YouVerifyParser.T__8, YouVerifyParser.T__12, YouVerifyParser.T__13, YouVerifyParser.STAR, YouVerifyParser.IDENTIFIER]:
                 localctx = YouVerifyParser.UNLABELEDContext(self, localctx)
                 self.enterOuterAlt(localctx, 2)
                 self.state = 132
@@ -937,32 +935,6 @@ class YouVerifyParser ( Parser ):
         def accept(self, visitor:ParseTreeVisitor):
             if hasattr( visitor, "visitRETURN" ):
                 return visitor.visitRETURN(self)
-            else:
-                return visitor.visitChildren(self)
-
-
-    class SYMB_PTRContext(StmtContext):
-
-        def __init__(self, parser, ctx:ParserRuleContext): # actually a YouVerifyParser.StmtContext
-            super().__init__(parser)
-            self.identifier = None # Token
-            self.t = None # SortContext
-            self.s = None # Token
-            self.copyFrom(ctx)
-
-        def COMMA(self):
-            return self.getToken(YouVerifyParser.COMMA, 0)
-        def IDENTIFIER(self):
-            return self.getToken(YouVerifyParser.IDENTIFIER, 0)
-        def sort(self):
-            return self.getTypedRuleContext(YouVerifyParser.SortContext,0)
-
-        def INTEGER(self):
-            return self.getToken(YouVerifyParser.INTEGER, 0)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitSYMB_PTR" ):
-                return visitor.visitSYMB_PTR(self)
             else:
                 return visitor.visitChildren(self)
 
@@ -1177,234 +1149,211 @@ class YouVerifyParser ( Parser ):
         self.enterRule(localctx, 10, self.RULE_stmt)
         self._la = 0 # Token type
         try:
-            self.state = 222
+            self.state = 212
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,21,self._ctx)
             if la_ == 1:
-                localctx = YouVerifyParser.RETURNContext(self, localctx)
+                localctx = YouVerifyParser.ASSIGNContext(self, localctx)
                 self.enterOuterAlt(localctx, 1)
                 self.state = 135
-                self.match(YouVerifyParser.T__3)
+                localctx.target = self.assign_target()
                 self.state = 136
+                self.match(YouVerifyParser.T__3)
+                self.state = 137
                 localctx.expression = self.expr()
                 pass
 
             elif la_ == 2:
-                localctx = YouVerifyParser.RETURN_NO_VALUEContext(self, localctx)
+                localctx = YouVerifyParser.RETURNContext(self, localctx)
                 self.enterOuterAlt(localctx, 2)
-                self.state = 137
-                self.match(YouVerifyParser.T__3)
+                self.state = 139
+                self.match(YouVerifyParser.T__4)
+                self.state = 140
+                localctx.expression = self.expr()
                 pass
 
             elif la_ == 3:
-                localctx = YouVerifyParser.SYMB_PTRContext(self, localctx)
+                localctx = YouVerifyParser.RETURN_NO_VALUEContext(self, localctx)
                 self.enterOuterAlt(localctx, 3)
-                self.state = 138
-                self.match(YouVerifyParser.T__4)
-                self.state = 139
-                localctx.identifier = self.match(YouVerifyParser.IDENTIFIER)
-                self.state = 140
-                self.match(YouVerifyParser.T__5)
                 self.state = 141
-                self.match(YouVerifyParser.T__6)
-                self.state = 142
-                self.match(YouVerifyParser.T__7)
-                self.state = 143
-                localctx.t = self.sort()
-                self.state = 144
-                self.match(YouVerifyParser.COMMA)
-                self.state = 145
-                localctx.s = self.match(YouVerifyParser.INTEGER)
-                self.state = 146
-                self.match(YouVerifyParser.T__8)
+                self.match(YouVerifyParser.T__4)
                 pass
 
             elif la_ == 4:
                 localctx = YouVerifyParser.ASSUMEContext(self, localctx)
                 self.enterOuterAlt(localctx, 4)
-                self.state = 148
-                self.match(YouVerifyParser.T__9)
-                self.state = 149
+                self.state = 142
+                self.match(YouVerifyParser.T__5)
+                self.state = 143
                 localctx.expression = self.expr()
                 pass
 
             elif la_ == 5:
                 localctx = YouVerifyParser.ASSERTContext(self, localctx)
                 self.enterOuterAlt(localctx, 5)
-                self.state = 150
-                self.match(YouVerifyParser.T__10)
-                self.state = 151
+                self.state = 144
+                self.match(YouVerifyParser.T__6)
+                self.state = 145
                 localctx.expression = self.expr()
                 pass
 
             elif la_ == 6:
-                localctx = YouVerifyParser.ASSIGNContext(self, localctx)
-                self.enterOuterAlt(localctx, 6)
-                self.state = 152
-                localctx.target = self.assign_target()
-                self.state = 153
-                self.match(YouVerifyParser.T__5)
-                self.state = 154
-                localctx.expression = self.expr()
-                pass
-
-            elif la_ == 7:
                 localctx = YouVerifyParser.FUNC_CALLContext(self, localctx)
-                self.enterOuterAlt(localctx, 7)
-                self.state = 156
-                self.match(YouVerifyParser.T__11)
-                self.state = 157
+                self.enterOuterAlt(localctx, 6)
+                self.state = 146
+                self.match(YouVerifyParser.T__7)
+                self.state = 147
                 localctx.target = self.assign_target()
-                self.state = 158
-                self.match(YouVerifyParser.T__5)
-                self.state = 159
+                self.state = 148
+                self.match(YouVerifyParser.T__3)
+                self.state = 149
                 localctx.operator = self.match(YouVerifyParser.IDENTIFIER)
-                self.state = 160
+                self.state = 150
                 self.match(YouVerifyParser.OPAREN)
 
-                self.state = 166
+                self.state = 156
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input,15,self._ctx)
                 while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                     if _alt==1:
-                        self.state = 161
+                        self.state = 151
                         localctx._expr = self.expr()
                         localctx.operands.append(localctx._expr)
-                        self.state = 162
+                        self.state = 152
                         self.match(YouVerifyParser.COMMA) 
-                    self.state = 168
+                    self.state = 158
                     self._errHandler.sync(self)
                     _alt = self._interp.adaptivePredict(self._input,15,self._ctx)
 
-                self.state = 170
+                self.state = 160
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << YouVerifyParser.T__13) | (1 << YouVerifyParser.T__16) | (1 << YouVerifyParser.T__17) | (1 << YouVerifyParser.T__19) | (1 << YouVerifyParser.T__20) | (1 << YouVerifyParser.BOOLEAN) | (1 << YouVerifyParser.OPERATOR) | (1 << YouVerifyParser.IDENTIFIER) | (1 << YouVerifyParser.INTEGER))) != 0):
-                    self.state = 169
+                if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << YouVerifyParser.T__9) | (1 << YouVerifyParser.T__14) | (1 << YouVerifyParser.T__15) | (1 << YouVerifyParser.T__17) | (1 << YouVerifyParser.BOOLEAN) | (1 << YouVerifyParser.OPERATOR) | (1 << YouVerifyParser.STAR) | (1 << YouVerifyParser.IDENTIFIER) | (1 << YouVerifyParser.INTEGER))) != 0):
+                    self.state = 159
                     localctx._expr = self.expr()
                     localctx.operands.append(localctx._expr)
 
 
-                self.state = 172
+                self.state = 162
                 self.match(YouVerifyParser.CPAREN)
                 pass
 
-            elif la_ == 8:
+            elif la_ == 7:
                 localctx = YouVerifyParser.FUNC_CALL_NO_VALUEContext(self, localctx)
-                self.enterOuterAlt(localctx, 8)
-                self.state = 174
-                self.match(YouVerifyParser.T__11)
-                self.state = 175
+                self.enterOuterAlt(localctx, 7)
+                self.state = 164
+                self.match(YouVerifyParser.T__7)
+                self.state = 165
                 localctx.operator = self.match(YouVerifyParser.IDENTIFIER)
-                self.state = 176
+                self.state = 166
                 self.match(YouVerifyParser.OPAREN)
 
-                self.state = 182
+                self.state = 172
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input,17,self._ctx)
                 while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                     if _alt==1:
-                        self.state = 177
+                        self.state = 167
                         localctx._expr = self.expr()
                         localctx.operands.append(localctx._expr)
-                        self.state = 178
+                        self.state = 168
                         self.match(YouVerifyParser.COMMA) 
-                    self.state = 184
+                    self.state = 174
                     self._errHandler.sync(self)
                     _alt = self._interp.adaptivePredict(self._input,17,self._ctx)
 
-                self.state = 186
+                self.state = 176
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << YouVerifyParser.T__13) | (1 << YouVerifyParser.T__16) | (1 << YouVerifyParser.T__17) | (1 << YouVerifyParser.T__19) | (1 << YouVerifyParser.T__20) | (1 << YouVerifyParser.BOOLEAN) | (1 << YouVerifyParser.OPERATOR) | (1 << YouVerifyParser.IDENTIFIER) | (1 << YouVerifyParser.INTEGER))) != 0):
-                    self.state = 185
+                if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << YouVerifyParser.T__9) | (1 << YouVerifyParser.T__14) | (1 << YouVerifyParser.T__15) | (1 << YouVerifyParser.T__17) | (1 << YouVerifyParser.BOOLEAN) | (1 << YouVerifyParser.OPERATOR) | (1 << YouVerifyParser.STAR) | (1 << YouVerifyParser.IDENTIFIER) | (1 << YouVerifyParser.INTEGER))) != 0):
+                    self.state = 175
                     localctx._expr = self.expr()
                     localctx.operands.append(localctx._expr)
 
 
-                self.state = 188
+                self.state = 178
                 self.match(YouVerifyParser.CPAREN)
                 pass
 
-            elif la_ == 9:
+            elif la_ == 8:
                 localctx = YouVerifyParser.ALLOC_CONCContext(self, localctx)
-                self.enterOuterAlt(localctx, 9)
-                self.state = 189
-                self.match(YouVerifyParser.T__12)
-                self.state = 190
+                self.enterOuterAlt(localctx, 8)
+                self.state = 179
+                self.match(YouVerifyParser.T__8)
+                self.state = 180
                 localctx.target = self.assign_target()
-                self.state = 191
-                self.match(YouVerifyParser.T__5)
-                self.state = 192
+                self.state = 181
+                self.match(YouVerifyParser.T__3)
+                self.state = 182
                 localctx.operator = self.match(YouVerifyParser.IDENTIFIER)
-                self.state = 193
+                self.state = 183
                 self.match(YouVerifyParser.OPAREN)
 
-                self.state = 199
+                self.state = 189
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input,19,self._ctx)
                 while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                     if _alt==1:
-                        self.state = 194
+                        self.state = 184
                         localctx._expr = self.expr()
                         localctx.operands.append(localctx._expr)
-                        self.state = 195
+                        self.state = 185
                         self.match(YouVerifyParser.COMMA) 
-                    self.state = 201
+                    self.state = 191
                     self._errHandler.sync(self)
                     _alt = self._interp.adaptivePredict(self._input,19,self._ctx)
 
-                self.state = 203
+                self.state = 193
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << YouVerifyParser.T__13) | (1 << YouVerifyParser.T__16) | (1 << YouVerifyParser.T__17) | (1 << YouVerifyParser.T__19) | (1 << YouVerifyParser.T__20) | (1 << YouVerifyParser.BOOLEAN) | (1 << YouVerifyParser.OPERATOR) | (1 << YouVerifyParser.IDENTIFIER) | (1 << YouVerifyParser.INTEGER))) != 0):
-                    self.state = 202
+                if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << YouVerifyParser.T__9) | (1 << YouVerifyParser.T__14) | (1 << YouVerifyParser.T__15) | (1 << YouVerifyParser.T__17) | (1 << YouVerifyParser.BOOLEAN) | (1 << YouVerifyParser.OPERATOR) | (1 << YouVerifyParser.STAR) | (1 << YouVerifyParser.IDENTIFIER) | (1 << YouVerifyParser.INTEGER))) != 0):
+                    self.state = 192
                     localctx._expr = self.expr()
                     localctx.operands.append(localctx._expr)
 
 
-                self.state = 205
+                self.state = 195
                 self.match(YouVerifyParser.CPAREN)
                 pass
 
-            elif la_ == 10:
+            elif la_ == 9:
                 localctx = YouVerifyParser.ALLOC_SYMBContext(self, localctx)
-                self.enterOuterAlt(localctx, 10)
-                self.state = 207
-                self.match(YouVerifyParser.T__12)
-                self.state = 208
-                localctx.target = self.assign_target()
-                self.state = 209
-                self.match(YouVerifyParser.T__5)
-                self.state = 210
-                self.match(YouVerifyParser.T__13)
-                self.state = 211
-                self.match(YouVerifyParser.T__7)
-                self.state = 212
-                localctx.identifier = self.match(YouVerifyParser.IDENTIFIER)
-                self.state = 213
+                self.enterOuterAlt(localctx, 9)
+                self.state = 197
                 self.match(YouVerifyParser.T__8)
+                self.state = 198
+                localctx.target = self.assign_target()
+                self.state = 199
+                self.match(YouVerifyParser.T__3)
+                self.state = 200
+                self.match(YouVerifyParser.T__9)
+                self.state = 201
+                self.match(YouVerifyParser.T__10)
+                self.state = 202
+                localctx.identifier = self.match(YouVerifyParser.IDENTIFIER)
+                self.state = 203
+                self.match(YouVerifyParser.T__11)
                 pass
 
-            elif la_ == 11:
+            elif la_ == 10:
                 localctx = YouVerifyParser.CONDITIONAL_BRANCHContext(self, localctx)
-                self.enterOuterAlt(localctx, 11)
-                self.state = 215
-                self.match(YouVerifyParser.T__14)
-                self.state = 216
+                self.enterOuterAlt(localctx, 10)
+                self.state = 205
+                self.match(YouVerifyParser.T__12)
+                self.state = 206
                 localctx.expression = self.expr()
-                self.state = 217
-                self.match(YouVerifyParser.T__15)
-                self.state = 218
+                self.state = 207
+                self.match(YouVerifyParser.T__13)
+                self.state = 208
                 localctx.label = self.match(YouVerifyParser.IDENTIFIER)
                 pass
 
-            elif la_ == 12:
+            elif la_ == 11:
                 localctx = YouVerifyParser.UNCONDITIONAL_BRANCHContext(self, localctx)
-                self.enterOuterAlt(localctx, 12)
-                self.state = 220
-                self.match(YouVerifyParser.T__15)
-                self.state = 221
+                self.enterOuterAlt(localctx, 11)
+                self.state = 210
+                self.match(YouVerifyParser.T__13)
+                self.state = 211
                 localctx.label = self.match(YouVerifyParser.IDENTIFIER)
                 pass
 
@@ -1511,34 +1460,34 @@ class YouVerifyParser ( Parser ):
         localctx = YouVerifyParser.Assign_targetContext(self, self._ctx, self.state)
         self.enterRule(localctx, 12, self.RULE_assign_target)
         try:
-            self.state = 228
+            self.state = 218
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,22,self._ctx)
             if la_ == 1:
                 localctx = YouVerifyParser.ASSIGN_TARGET_IDENTIFIERContext(self, localctx)
                 self.enterOuterAlt(localctx, 1)
-                self.state = 224
+                self.state = 214
                 localctx.identifier = self.match(YouVerifyParser.IDENTIFIER)
                 pass
 
             elif la_ == 2:
                 localctx = YouVerifyParser.ASSIGN_TARGET_RECORD_INDEXContext(self, localctx)
                 self.enterOuterAlt(localctx, 2)
-                self.state = 225
+                self.state = 215
                 localctx.expression = self.record_index_expr()
                 pass
 
             elif la_ == 3:
                 localctx = YouVerifyParser.ASSIGN_TARGET_ARRAY_INDEXContext(self, localctx)
                 self.enterOuterAlt(localctx, 3)
-                self.state = 226
+                self.state = 216
                 localctx.expression = self.array_index_expr()
                 pass
 
             elif la_ == 4:
                 localctx = YouVerifyParser.ASSIGN_TARGET_PTR_DEREFContext(self, localctx)
                 self.enterOuterAlt(localctx, 4)
-                self.state = 227
+                self.state = 217
                 localctx.expression = self.ptr_deref_expr()
                 pass
 
@@ -1599,32 +1548,32 @@ class YouVerifyParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 234
+            self.state = 224
             self._errHandler.sync(self)
             _alt = self._interp.adaptivePredict(self._input,23,self._ctx)
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                 if _alt==1:
-                    self.state = 230
+                    self.state = 220
                     localctx._IDENTIFIER = self.match(YouVerifyParser.IDENTIFIER)
                     localctx.identifiers.append(localctx._IDENTIFIER)
-                    self.state = 231
+                    self.state = 221
                     self.match(YouVerifyParser.COMMA) 
-                self.state = 236
+                self.state = 226
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input,23,self._ctx)
 
-            self.state = 238
+            self.state = 228
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==YouVerifyParser.IDENTIFIER:
-                self.state = 237
+                self.state = 227
                 localctx._IDENTIFIER = self.match(YouVerifyParser.IDENTIFIER)
                 localctx.identifiers.append(localctx._IDENTIFIER)
 
 
-            self.state = 240
+            self.state = 230
             self.match(YouVerifyParser.COLON)
-            self.state = 241
+            self.state = 231
             localctx.s = self.sort()
         except RecognitionException as re:
             localctx.exception = re
@@ -1781,25 +1730,25 @@ class YouVerifyParser ( Parser ):
         localctx = YouVerifyParser.Atomic_exprContext(self, self._ctx, self.state)
         self.enterRule(localctx, 16, self.RULE_atomic_expr)
         try:
-            self.state = 278
+            self.state = 268
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,26,self._ctx)
             if la_ == 1:
                 localctx = YouVerifyParser.SIMPLEContext(self, localctx)
                 self.enterOuterAlt(localctx, 1)
-                self.state = 246
+                self.state = 236
                 self._errHandler.sync(self)
                 token = self._input.LA(1)
                 if token in [YouVerifyParser.BOOLEAN]:
-                    self.state = 243
+                    self.state = 233
                     localctx.atom = self.match(YouVerifyParser.BOOLEAN)
                     pass
                 elif token in [YouVerifyParser.INTEGER]:
-                    self.state = 244
+                    self.state = 234
                     localctx.atom = self.match(YouVerifyParser.INTEGER)
                     pass
                 elif token in [YouVerifyParser.IDENTIFIER]:
-                    self.state = 245
+                    self.state = 235
                     localctx.atom = self.match(YouVerifyParser.IDENTIFIER)
                     pass
                 else:
@@ -1810,78 +1759,78 @@ class YouVerifyParser ( Parser ):
             elif la_ == 2:
                 localctx = YouVerifyParser.ARRAYContext(self, localctx)
                 self.enterOuterAlt(localctx, 2)
-                self.state = 248
-                self.match(YouVerifyParser.T__16)
-                self.state = 249
-                self.match(YouVerifyParser.T__7)
-                self.state = 250
+                self.state = 238
+                self.match(YouVerifyParser.T__14)
+                self.state = 239
+                self.match(YouVerifyParser.T__10)
+                self.state = 240
                 localctx.expression = self.expr()
-                self.state = 251
-                self.match(YouVerifyParser.T__8)
+                self.state = 241
+                self.match(YouVerifyParser.T__11)
                 pass
 
             elif la_ == 3:
                 localctx = YouVerifyParser.FIXED_SIZE_ARRAYContext(self, localctx)
                 self.enterOuterAlt(localctx, 3)
-                self.state = 253
-                self.match(YouVerifyParser.T__17)
-                self.state = 254
+                self.state = 243
+                self.match(YouVerifyParser.T__15)
+                self.state = 244
                 localctx.length = self.match(YouVerifyParser.INTEGER)
-                self.state = 255
-                self.match(YouVerifyParser.T__18)
-                self.state = 256
-                self.match(YouVerifyParser.T__7)
-                self.state = 257
+                self.state = 245
+                self.match(YouVerifyParser.T__16)
+                self.state = 246
+                self.match(YouVerifyParser.T__10)
+                self.state = 247
                 localctx.expression = self.expr()
-                self.state = 258
-                self.match(YouVerifyParser.T__8)
+                self.state = 248
+                self.match(YouVerifyParser.T__11)
                 pass
 
             elif la_ == 4:
                 localctx = YouVerifyParser.BIT_VECTORContext(self, localctx)
                 self.enterOuterAlt(localctx, 4)
-                self.state = 260
-                self.match(YouVerifyParser.T__19)
-                self.state = 261
-                self.match(YouVerifyParser.T__7)
-                self.state = 262
+                self.state = 250
+                self.match(YouVerifyParser.T__17)
+                self.state = 251
+                self.match(YouVerifyParser.T__10)
+                self.state = 252
                 localctx.value = self.match(YouVerifyParser.INTEGER)
-                self.state = 263
+                self.state = 253
                 self.match(YouVerifyParser.COMMA)
-                self.state = 264
+                self.state = 254
                 localctx.size = self.match(YouVerifyParser.INTEGER)
-                self.state = 265
-                self.match(YouVerifyParser.T__8)
+                self.state = 255
+                self.match(YouVerifyParser.T__11)
                 pass
 
             elif la_ == 5:
                 localctx = YouVerifyParser.SYMBOLContext(self, localctx)
                 self.enterOuterAlt(localctx, 5)
-                self.state = 266
-                self.match(YouVerifyParser.T__13)
-                self.state = 267
-                self.match(YouVerifyParser.T__7)
-                self.state = 268
+                self.state = 256
+                self.match(YouVerifyParser.T__9)
+                self.state = 257
+                self.match(YouVerifyParser.T__10)
+                self.state = 258
                 localctx.s = self.sort()
-                self.state = 269
-                self.match(YouVerifyParser.T__8)
+                self.state = 259
+                self.match(YouVerifyParser.T__11)
                 pass
 
             elif la_ == 6:
                 localctx = YouVerifyParser.NAMED_SYMBOLContext(self, localctx)
                 self.enterOuterAlt(localctx, 6)
-                self.state = 271
-                self.match(YouVerifyParser.T__13)
-                self.state = 272
-                self.match(YouVerifyParser.T__7)
-                self.state = 273
+                self.state = 261
+                self.match(YouVerifyParser.T__9)
+                self.state = 262
+                self.match(YouVerifyParser.T__10)
+                self.state = 263
                 localctx.identifier = self.match(YouVerifyParser.IDENTIFIER)
-                self.state = 274
+                self.state = 264
                 self.match(YouVerifyParser.COMMA)
-                self.state = 275
+                self.state = 265
                 localctx.s = self.sort()
-                self.state = 276
-                self.match(YouVerifyParser.T__8)
+                self.state = 266
+                self.match(YouVerifyParser.T__11)
                 pass
 
 
@@ -1904,10 +1853,6 @@ class YouVerifyParser ( Parser ):
             return self.getTypedRuleContext(YouVerifyParser.Atomic_exprContext,0)
 
 
-        def ptr_deref_expr(self):
-            return self.getTypedRuleContext(YouVerifyParser.Ptr_deref_exprContext,0)
-
-
         def record_index_expr(self):
             return self.getTypedRuleContext(YouVerifyParser.Record_index_exprContext,0)
 
@@ -1928,6 +1873,10 @@ class YouVerifyParser ( Parser ):
             return self.getTypedRuleContext(YouVerifyParser.Ternary_exprContext,0)
 
 
+        def ptr_deref_expr(self):
+            return self.getTypedRuleContext(YouVerifyParser.Ptr_deref_exprContext,0)
+
+
         def getRuleIndex(self):
             return YouVerifyParser.RULE_expr
 
@@ -1945,93 +1894,52 @@ class YouVerifyParser ( Parser ):
         localctx = YouVerifyParser.ExprContext(self, self._ctx, self.state)
         self.enterRule(localctx, 18, self.RULE_expr)
         try:
-            self.state = 287
+            self.state = 277
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,27,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 280
+                self.state = 270
                 self.atomic_expr()
                 pass
 
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 281
-                self.ptr_deref_expr()
+                self.state = 271
+                self.record_index_expr()
                 pass
 
             elif la_ == 3:
                 self.enterOuterAlt(localctx, 3)
-                self.state = 282
-                self.record_index_expr()
+                self.state = 272
+                self.array_index_expr()
                 pass
 
             elif la_ == 4:
                 self.enterOuterAlt(localctx, 4)
-                self.state = 283
-                self.array_index_expr()
+                self.state = 273
+                self.unary_expr()
                 pass
 
             elif la_ == 5:
                 self.enterOuterAlt(localctx, 5)
-                self.state = 284
-                self.unary_expr()
+                self.state = 274
+                self.binary_expr()
                 pass
 
             elif la_ == 6:
                 self.enterOuterAlt(localctx, 6)
-                self.state = 285
-                self.binary_expr()
+                self.state = 275
+                self.ternary_expr()
                 pass
 
             elif la_ == 7:
                 self.enterOuterAlt(localctx, 7)
-                self.state = 286
-                self.ternary_expr()
+                self.state = 276
+                self.ptr_deref_expr()
                 pass
 
 
-        except RecognitionException as re:
-            localctx.exception = re
-            self._errHandler.reportError(self, re)
-            self._errHandler.recover(self, re)
-        finally:
-            self.exitRule()
-        return localctx
-
-
-    class Ptr_deref_exprContext(ParserRuleContext):
-
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
-            super().__init__(parent, invokingState)
-            self.parser = parser
-            self.identifier = None # Token
-
-        def IDENTIFIER(self):
-            return self.getToken(YouVerifyParser.IDENTIFIER, 0)
-
-        def getRuleIndex(self):
-            return YouVerifyParser.RULE_ptr_deref_expr
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitPtr_deref_expr" ):
-                return visitor.visitPtr_deref_expr(self)
-            else:
-                return visitor.visitChildren(self)
-
-
-
-
-    def ptr_deref_expr(self):
-
-        localctx = YouVerifyParser.Ptr_deref_exprContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 20, self.RULE_ptr_deref_expr)
-        try:
-            self.enterOuterAlt(localctx, 1)
-            self.state = 289
-            self.match(YouVerifyParser.T__20)
-            self.state = 290
-            localctx.identifier = self.match(YouVerifyParser.IDENTIFIER)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -2082,18 +1990,18 @@ class YouVerifyParser ( Parser ):
     def array_index_expr(self):
 
         localctx = YouVerifyParser.Array_index_exprContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 22, self.RULE_array_index_expr)
+        self.enterRule(localctx, 20, self.RULE_array_index_expr)
         try:
             localctx = YouVerifyParser.ARRAY_INDEXContext(self, localctx)
             self.enterOuterAlt(localctx, 1)
-            self.state = 292
+            self.state = 279
             localctx.array = self.match(YouVerifyParser.IDENTIFIER)
-            self.state = 293
-            self.match(YouVerifyParser.T__21)
-            self.state = 294
-            localctx.index = self.expr()
-            self.state = 295
+            self.state = 280
             self.match(YouVerifyParser.T__18)
+            self.state = 281
+            localctx.index = self.expr()
+            self.state = 282
+            self.match(YouVerifyParser.T__16)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -2146,15 +2054,15 @@ class YouVerifyParser ( Parser ):
     def record_index_expr(self):
 
         localctx = YouVerifyParser.Record_index_exprContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 24, self.RULE_record_index_expr)
+        self.enterRule(localctx, 22, self.RULE_record_index_expr)
         try:
             localctx = YouVerifyParser.RECORD_INDEXContext(self, localctx)
             self.enterOuterAlt(localctx, 1)
-            self.state = 297
+            self.state = 284
             localctx.rec = self.match(YouVerifyParser.IDENTIFIER)
-            self.state = 298
+            self.state = 285
             self.match(YouVerifyParser.PERIOD)
-            self.state = 299
+            self.state = 286
             localctx.item = self.match(YouVerifyParser.IDENTIFIER)
         except RecognitionException as re:
             localctx.exception = re
@@ -2206,13 +2114,13 @@ class YouVerifyParser ( Parser ):
     def unary_expr(self):
 
         localctx = YouVerifyParser.Unary_exprContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 26, self.RULE_unary_expr)
+        self.enterRule(localctx, 24, self.RULE_unary_expr)
         try:
             localctx = YouVerifyParser.UNARYContext(self, localctx)
             self.enterOuterAlt(localctx, 1)
-            self.state = 301
+            self.state = 288
             localctx.op = self.match(YouVerifyParser.OPERATOR)
-            self.state = 302
+            self.state = 289
             localctx.e = self.atomic_expr()
         except RecognitionException as re:
             localctx.exception = re
@@ -2256,6 +2164,8 @@ class YouVerifyParser ( Parser ):
 
         def OPERATOR(self):
             return self.getToken(YouVerifyParser.OPERATOR, 0)
+        def STAR(self):
+            return self.getToken(YouVerifyParser.STAR, 0)
 
         def accept(self, visitor:ParseTreeVisitor):
             if hasattr( visitor, "visitBINARY" ):
@@ -2268,16 +2178,76 @@ class YouVerifyParser ( Parser ):
     def binary_expr(self):
 
         localctx = YouVerifyParser.Binary_exprContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 28, self.RULE_binary_expr)
+        self.enterRule(localctx, 26, self.RULE_binary_expr)
         try:
             localctx = YouVerifyParser.BINARYContext(self, localctx)
             self.enterOuterAlt(localctx, 1)
-            self.state = 304
-            localctx.lhs = self.atomic_expr()
-            self.state = 305
-            localctx.op = self.match(YouVerifyParser.OPERATOR)
-            self.state = 306
-            localctx.rhs = self.atomic_expr()
+            self.state = 299
+            self._errHandler.sync(self)
+            la_ = self._interp.adaptivePredict(self._input,28,self._ctx)
+            if la_ == 1:
+                self.state = 291
+                localctx.lhs = self.atomic_expr()
+                self.state = 292
+                localctx.op = self.match(YouVerifyParser.OPERATOR)
+                self.state = 293
+                localctx.rhs = self.atomic_expr()
+                pass
+
+            elif la_ == 2:
+                self.state = 295
+                localctx.lhs = self.atomic_expr()
+                self.state = 296
+                localctx.op = self.match(YouVerifyParser.STAR)
+                self.state = 297
+                localctx.rhs = self.atomic_expr()
+                pass
+
+
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class Ptr_deref_exprContext(ParserRuleContext):
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+            self.identifier = None # Token
+
+        def STAR(self):
+            return self.getToken(YouVerifyParser.STAR, 0)
+
+        def IDENTIFIER(self):
+            return self.getToken(YouVerifyParser.IDENTIFIER, 0)
+
+        def getRuleIndex(self):
+            return YouVerifyParser.RULE_ptr_deref_expr
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitPtr_deref_expr" ):
+                return visitor.visitPtr_deref_expr(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def ptr_deref_expr(self):
+
+        localctx = YouVerifyParser.Ptr_deref_exprContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 28, self.RULE_ptr_deref_expr)
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 301
+            self.match(YouVerifyParser.STAR)
+            self.state = 302
+            localctx.identifier = self.match(YouVerifyParser.IDENTIFIER)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -2339,15 +2309,15 @@ class YouVerifyParser ( Parser ):
         try:
             localctx = YouVerifyParser.TERNARYContext(self, localctx)
             self.enterOuterAlt(localctx, 1)
-            self.state = 308
+            self.state = 304
             localctx.first = self.atomic_expr()
-            self.state = 309
+            self.state = 305
             localctx.op = self.match(YouVerifyParser.TERNARY_OPERATOR)
-            self.state = 310
+            self.state = 306
             localctx.second = self.atomic_expr()
-            self.state = 311
+            self.state = 307
             self.match(YouVerifyParser.COLON)
-            self.state = 312
+            self.state = 308
             localctx.third = self.atomic_expr()
         except RecognitionException as re:
             localctx.exception = re
@@ -2381,6 +2351,8 @@ class YouVerifyParser ( Parser ):
             self.s = None # Simple_sortContext
             self.copyFrom(ctx)
 
+        def STAR(self):
+            return self.getToken(YouVerifyParser.STAR, 0)
         def simple_sort(self):
             return self.getTypedRuleContext(YouVerifyParser.Simple_sortContext,0)
 
@@ -2416,22 +2388,22 @@ class YouVerifyParser ( Parser ):
         localctx = YouVerifyParser.SortContext(self, self._ctx, self.state)
         self.enterRule(localctx, 32, self.RULE_sort)
         try:
-            self.state = 318
+            self.state = 314
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,28,self._ctx)
+            la_ = self._interp.adaptivePredict(self._input,29,self._ctx)
             if la_ == 1:
                 localctx = YouVerifyParser.PTR_SORTContext(self, localctx)
                 self.enterOuterAlt(localctx, 1)
-                self.state = 314
+                self.state = 310
                 localctx.s = self.simple_sort()
-                self.state = 315
-                self.match(YouVerifyParser.T__20)
+                self.state = 311
+                self.match(YouVerifyParser.STAR)
                 pass
 
             elif la_ == 2:
                 localctx = YouVerifyParser.SIMPLE_SORTContext(self, localctx)
                 self.enterOuterAlt(localctx, 2)
-                self.state = 317
+                self.state = 313
                 localctx.s = self.simple_sort()
                 pass
 
@@ -2481,51 +2453,51 @@ class YouVerifyParser ( Parser ):
         localctx = YouVerifyParser.Simple_sortContext(self, self._ctx, self.state)
         self.enterRule(localctx, 34, self.RULE_simple_sort)
         try:
-            self.state = 334
+            self.state = 330
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [YouVerifyParser.T__22, YouVerifyParser.T__23]:
+            if token in [YouVerifyParser.T__19, YouVerifyParser.T__20]:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 322
+                self.state = 318
                 self._errHandler.sync(self)
                 token = self._input.LA(1)
-                if token in [YouVerifyParser.T__22]:
-                    self.state = 320
-                    localctx.s = self.match(YouVerifyParser.T__22)
+                if token in [YouVerifyParser.T__19]:
+                    self.state = 316
+                    localctx.s = self.match(YouVerifyParser.T__19)
                     pass
-                elif token in [YouVerifyParser.T__23]:
-                    self.state = 321
-                    localctx.s = self.match(YouVerifyParser.T__23)
+                elif token in [YouVerifyParser.T__20]:
+                    self.state = 317
+                    localctx.s = self.match(YouVerifyParser.T__20)
                     pass
                 else:
                     raise NoViableAltException(self)
 
                 pass
-            elif token in [YouVerifyParser.T__24]:
+            elif token in [YouVerifyParser.T__21]:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 324
-                localctx.s = self.match(YouVerifyParser.T__24)
-                self.state = 325
-                self.match(YouVerifyParser.T__7)
-                self.state = 326
+                self.state = 320
+                localctx.s = self.match(YouVerifyParser.T__21)
+                self.state = 321
+                self.match(YouVerifyParser.T__10)
+                self.state = 322
                 localctx.contained_sort = self.sort()
-                self.state = 327
-                self.match(YouVerifyParser.T__8)
+                self.state = 323
+                self.match(YouVerifyParser.T__11)
                 pass
-            elif token in [YouVerifyParser.T__19]:
+            elif token in [YouVerifyParser.T__17]:
                 self.enterOuterAlt(localctx, 3)
-                self.state = 329
-                localctx.s = self.match(YouVerifyParser.T__19)
-                self.state = 330
-                self.match(YouVerifyParser.T__21)
-                self.state = 331
-                localctx.size = self.match(YouVerifyParser.INTEGER)
-                self.state = 332
+                self.state = 325
+                localctx.s = self.match(YouVerifyParser.T__17)
+                self.state = 326
                 self.match(YouVerifyParser.T__18)
+                self.state = 327
+                localctx.size = self.match(YouVerifyParser.INTEGER)
+                self.state = 328
+                self.match(YouVerifyParser.T__16)
                 pass
             elif token in [YouVerifyParser.IDENTIFIER]:
                 self.enterOuterAlt(localctx, 4)
-                self.state = 333
+                self.state = 329
                 localctx.s = self.match(YouVerifyParser.IDENTIFIER)
                 pass
             else:

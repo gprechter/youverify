@@ -1,0 +1,25 @@
+a: ARRAY{INT}
+i, j, r1, r2: INT
+
+define getItem(base: ARRAY{INT}, offset: INT, length: INT) -> INT:
+	i, ret: INT
+	i = 0
+	ret = -1
+	LABEL LOOP: if i >= length goto END
+	if i != offset goto CONTINUE
+	ret = base[i]
+	LABEL CONTINUE: i = i + 1
+	goto LOOP
+	LABEL END: return ret
+
+i = $sym{i, INT}
+j = $sym{j, INT}
+a = ARRAY[5]{0}
+a[0] = 4
+a[1] = 9
+a[2] = 3
+a[3] = 5
+a[4] = 7
+assume i != j
+call r1 = getItem(a, i, 5)
+call r2 = getItem(a, j, 5)

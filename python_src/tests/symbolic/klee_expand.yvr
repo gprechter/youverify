@@ -28,8 +28,8 @@ define expand(arg: BV[8]*, buffer: BV[8]*):
 	LABEL END: return
 arg, buffer: BV[8]*
 null_terminated: BOOL
-ref arg = $sym_ref{BV[8], 3}
-ref buffer = $sym_ref{BV[8], 3}
+arg = $sym{arg, ARRAY{BV[8]}}
+buffer = $sym{buffer, ARRAY{BV[8]}}
 call null_terminated = is_null_terminated(arg, 3)
 assume null_terminated
 call null_terminated = is_null_terminated(buffer, 3)

@@ -1,7 +1,7 @@
 define single_array(x, y: INT) -> BOOL:
 	a: INT*
 	v1, v2: INT
-	ref a = $sym_ref{INT, 4}
+	a = ARRAY[4]{0}
 	*a = x
 	a = a + 1
 	*a = 0

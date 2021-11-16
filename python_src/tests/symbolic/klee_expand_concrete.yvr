@@ -1,0 +1,19 @@
+define expand(arg: BV[8]*, buffer: BV[8]*):
+	i, ac: BV[8]
+	arg_val: BV[8]
+	cond: BOOL
+	LABEL LOOP1: arg_val = *arg
+	if arg_val == BV{0, 8} goto END
+	call cond = bvult(arg_val, BV{5, 8})
+	if cond goto ELSE
+	*buffer = arg_val
+	LABEL ELSE: arg = arg + 1
+	buffer = buffer + 1
+	goto LOOP1
+	LABEL END: return
+arg, buffer: BV[8]*
+arg = ARRAY[3]{BV{0, 8}}
+buffer = ARRAY[3]{BV{0, 8}}
+arg[0] = BV{4, 8}
+arg[1] = BV{8, 8}
+call expand(arg, buffer)

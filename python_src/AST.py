@@ -7,6 +7,7 @@ from copy import copy
 from Mappings import YVR_BUILTIN_OP_TO_PYSMT
 from TypeCheckingRules import both_same, unary_type_checking_rules, binary_type_checking_rules, both_records_or_null, builtin_type_checking_rules
 from pysmt.type_checker import SimpleTypeChecker
+from pysmt.fnode import FNode
 
 class Program:
     def __init__(self, statements = [], variables = {}, labels = {}, functions={}):
@@ -97,29 +98,23 @@ class Value(AtomicExpression):
         return f"{self.value}"
 
 class YouVerifyArray:
-    def __init__(self, default_value=0, length=None, array=None):
+    def __init__(self, default_value=0, length=None, array=None, index=Int(0)):
+        self.default_value = default_value
         self.length = length
-        if array:
-            self.array = array
-        else:
-            self.array = Array(INT, default_value)
-
-    def __copy__(self):
-        return YouVerifyArray(self.default_value, self.length, copy(self.array))
-
-class YouVerifyPointer:
-
-    def __init__(self, memory, index, size):
-        self.memory = memory
         self.index = index
-        self.size = size
+        if array:
+            self._array = array
+        else:
+            self._array = [Array(INT, default_value)]
 
-    def __copy__(self):
-        return YouVerifyPointer(self.memory, self.index, self.size)
+    def get_array(self):
+        return self._array[0]
 
-class RefType:
-    def __init__(self, type):
-        self.type = type
+    def set_array(self, array):
+        self._array[0] = array
+
+    def __repr__(self):
+        return f"{[simplify(self.get_array().array_value_get(Int(i))) for i in range(simplify(self.length).constant_value())]}"
 
 class UniqueSymbol(Value):
     def __init__(self, type):
@@ -157,9 +152,8 @@ class BinaryExpression(Expression):
     def eval(self, state):
         lhs = self.lhs.eval(state)
         rhs = self.rhs.eval(state)
-        if isinstance(lhs, YouVerifyPointer):
-            lhs.index = self.op(lhs.index, rhs)
-            return lhs
+        if isinstance(lhs, YouVerifyArray):
+            return YouVerifyArray(lhs.default_value, lhs.length, lhs._array, self.op(lhs.index, rhs))
         return self.op(lhs, rhs)
 
     def type_check(self, context):
@@ -212,9 +206,7 @@ class ArrayIndexExpression(Expression):
     def eval(self, state):
         arr = self.arr.eval(state)
         index = self.index.eval(state)
-        if arr.length:
-            state.path_cond = And(state.path_cond, And(GE(index, Int(0)), LT(index, Int(arr.length))))
-        return Select(arr.array, index)
+        return Select(arr.get_array(), index)
 
     def __repr__(self):
         return f"{self.arr}[{self.index}]"
@@ -233,7 +225,7 @@ class NewArrayExpression(Expression):
         return ArrayType(INT, (BVType(32) if isinstance(default_type, str) and default_type == 'null' else default_type)), ""
 
     def eval(self, state):
-        arr = YouVerifyArray(self.default.eval(state), self.length)
+        arr = YouVerifyArray(self.default.eval(state), Int(self.length))
         return arr
 
 class Function:
@@ -306,30 +298,14 @@ class Assert(Statement):
         else:
             return [state.advance_pc()]
 
-class Alloc_Symbolic_ptr(Statement):
-    def __init__(self, target, type, size):
-        self.target = target
-        self.type = type
-        self.size = size
-
-    def exec(self, state):
-        state.assign_variable(self.target.name, YouVerifyPointer([FreshSymbol(ArrayType(INT, self.type))], Int(0), self.size))
-        return [state.advance_pc()]
-
 class Pointer_Dereference_Expression(Expression):
     def __init__(self, name):
         self.name = name
 
     def eval(self, state):
         variable = state.get_variable(self.name)
-        original = state.path_cond
-        state.path_cond = And(state.path_cond, GE(variable.index, Int(0)), LT(variable.index, variable.size))
-        if not is_sat(state.path_cond):
-            print(simplify(variable.index), variable.size)
-            print(simplify(original), is_sat(original))
-            print(get_model(original))
-            assert False, "OVERFLOW!"
-        return Select(variable.memory[0], variable.index)
+        state.path_cond = And(state.path_cond, GE(variable.index, Int(0)), LT(variable.index, variable.length))
+        return Select(variable.get_array(), variable.index)
 
 class Alloc_Concrete(Statement):
     def __init__(self, target, record, arguments):
@@ -392,29 +368,28 @@ class Assignment(Statement):
         if isinstance(self.target, ArrayIndexExpression):
             index = self.target.index.eval(state)
             arr = self.target.arr.eval(state)
-            arr.array = Store(arr.array, index, self.expression.eval(state))
-            state.assign_variable(self.target.arr.name, arr)
+            arr.set_array(Store(arr.get_array(), index, self.expression.eval(state)))
             if arr.length:
-                state.path_cond = And(state.path_cond, And(GE(index, Int(0)), LT(index, Int(arr.length))))
+                state.path_cond = And(state.path_cond, And(GE(index, Int(0)), LT(index, arr.length)))
         elif isinstance(self.target, RecordIndexExpression):
             address = simplify(state.get_variable(self.target.record))
             state.addr_map[address.constant_value()][self.target.element] = self.expression.eval(state)
         elif isinstance(self.target, Pointer_Dereference_Expression):
             ref = state.get_variable(self.target.name)
-            state.path_cond = And(state.path_cond, GE(ref.index, Int(0)), LT(ref.index, ref.size))
+            state.path_cond = And(state.path_cond, GE(ref.index, Int(0)), LT(ref.index, ref.length))
             if not is_sat(state.path_cond):
                 assert False, "OVERFLOW!"
-            ref.memory[0] = Store(ref.memory[0], ref.index, self.expression.eval(state))
+            ref.set_array(Store(ref.get_array(), ref.index, self.expression.eval(state)))
         else:
-            if isinstance(state.get_variable(self.target.name), YouVerifyPointer):
+            if isinstance(state.get_variable(self.target.name), YouVerifyArray):
                 ref = state.get_variable(self.target.name)
                 val = copy(self.expression.eval(state))
-                if isinstance(val, YouVerifyPointer):
-                    state.assign_variable(self.target.name, val)
-                else:
+                if isinstance(val, FNode) and val.is_symbol():
                     ref.index = val
+                else:
+                    state.assign_variable(self.target.name, val)
             else:
-                state.assign_variable(self.target.name, copy(self.expression.eval(state)))
+                state.assign_variable(self.target.name, self.expression.eval(state))
         return [state.advance_pc()]
 
     def type_check(self, context):
@@ -445,9 +420,9 @@ def wrap_target_arr_index(arr, index):
     def return_to_arr_index(state, value):
         i = index.eval(state)
         a = arr.eval(state)
-        a.array = Store(a.array, i, value)
+        a.set_array(Store(a.get_array(), i, value))
         if a.length:
-            state.path_cond = And(state.path_cond, And(GE(i, Int(0)), LT(i, Int(a.length))))
+            state.path_cond = And(state.path_cond, And(GE(i, Int(0)), LT(i, a.length)))
     return return_to_arr_index
 
 class FunctionCallAndAssignment(Statement):

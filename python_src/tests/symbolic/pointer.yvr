@@ -1,7 +1,7 @@
-a: *INT
+a: INT*
 b, c, d: INT
 was_null, done: BOOL
-ref a = $sym_ref{INT, 10}
+a = ARRAY[10]{0}
 b = *a
 a = a + 1
 c = *a

@@ -49,6 +49,11 @@ class YouVerifyVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by YouVerifyParser#ASSIGN.
+    def visitASSIGN(self, ctx:YouVerifyParser.ASSIGNContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by YouVerifyParser#RETURN.
     def visitRETURN(self, ctx:YouVerifyParser.RETURNContext):
         return self.visitChildren(ctx)
@@ -59,11 +64,6 @@ class YouVerifyVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by YouVerifyParser#SYMB_PTR.
-    def visitSYMB_PTR(self, ctx:YouVerifyParser.SYMB_PTRContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by YouVerifyParser#ASSUME.
     def visitASSUME(self, ctx:YouVerifyParser.ASSUMEContext):
         return self.visitChildren(ctx)
@@ -71,11 +71,6 @@ class YouVerifyVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by YouVerifyParser#ASSERT.
     def visitASSERT(self, ctx:YouVerifyParser.ASSERTContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by YouVerifyParser#ASSIGN.
-    def visitASSIGN(self, ctx:YouVerifyParser.ASSIGNContext):
         return self.visitChildren(ctx)
 
 
@@ -169,11 +164,6 @@ class YouVerifyVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by YouVerifyParser#ptr_deref_expr.
-    def visitPtr_deref_expr(self, ctx:YouVerifyParser.Ptr_deref_exprContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by YouVerifyParser#ARRAY_INDEX.
     def visitARRAY_INDEX(self, ctx:YouVerifyParser.ARRAY_INDEXContext):
         return self.visitChildren(ctx)
@@ -191,6 +181,11 @@ class YouVerifyVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by YouVerifyParser#BINARY.
     def visitBINARY(self, ctx:YouVerifyParser.BINARYContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YouVerifyParser#ptr_deref_expr.
+    def visitPtr_deref_expr(self, ctx:YouVerifyParser.Ptr_deref_exprContext):
         return self.visitChildren(ctx)
 
 
