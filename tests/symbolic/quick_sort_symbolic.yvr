@@ -35,12 +35,10 @@ define qsort(arr: ARRAY{INT}, begin: INT, end: INT):
 	LABEL END: return
 
 arr: ARRAY{INT}
-arr = ARRAY[5]{0}
+arr = ARRAY[3]{0}
 arr[0] = $sym{INT}
 arr[1] = $sym{INT}
 arr[2] = $sym{INT}
-arr[3] = $sym{INT}
-arr[4] = $sym{INT}
 
-call qsort(arr, 0, 5)
+call qsort(arr, 0, 3)
 

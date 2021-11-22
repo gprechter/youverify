@@ -123,6 +123,9 @@ class UniqueSymbol(Value):
     def eval(self, state):
         return FreshSymbol(self.type)
 
+    def __repr__(self):
+        return "$sym"
+
 class UnaryExpression(Expression):
     def __init__(self, op, op_name, arg):
         self.op = op
@@ -203,6 +206,7 @@ class ArrayIndexExpression(Expression):
     def eval(self, state):
         arr = self.arr.eval(state)
         index = self.index.eval(state)
+        state.add_path_constraint(And(GE(index, Int(0)), LT(index, arr.length)))
         return Select(arr.get_array(), index)
 
     def __repr__(self):

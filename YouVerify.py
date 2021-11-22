@@ -78,7 +78,10 @@ def display_model(state, variables, model, depth = 0):
                           {k: [types[elems.index(k)], v] for k, v in state.addr_map[model.get_value(v[1]).constant_value()].items()},
                           model, depth = depth + 1)
         elif isinstance(v[1], YouVerifyArray):
-            print(f"{'  ' * depth}{k}: []->{[simplify(model.get_value(v[1].get_array())).array_value_get(Int(i)) for i in range(simplify(model.get_value(v[1].length)).constant_value())]}")
+            if v[1].length:
+                print(f"{'  ' * depth}{k}: []->{[simplify(model.get_value(v[1].get_array())).array_value_get(Int(i)) for i in range(simplify(model.get_value(v[1].length)).constant_value())]}")
+            else:
+                print(f"{'  ' * depth}{k}: []->{simplify(model.get_value(v[1].get_array()))}")
         else:
             print(f"{'  ' * depth}{k}: {model.get_value(v[1])}")
     #print("MODEL", model)

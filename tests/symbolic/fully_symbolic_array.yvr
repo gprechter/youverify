@@ -1,0 +1,5 @@
+arr: ARRAY{INT}
+v: INT
+arr = $sym{arr, ARRAY{INT}}
+v = arr[0]
+assume v == 11
