@@ -2,12 +2,13 @@ from pysmt.shortcuts import And, Or, Not, Symbol, TRUE, FALSE, is_sat, Array, GE
 from pysmt.shortcuts import Solver, simplify, Int, FreshSymbol, Plus, Store, Select, BV
 from pysmt.shortcuts import LE, LT, get_model
 from pysmt.typing import INT, BVType, BOOL, ArrayType, _BVType
-from State import SubState, Frame
+from State import Frame, PathConstraint
 from copy import copy
 from Mappings import YVR_BUILTIN_OP_TO_PYSMT
 from TypeCheckingRules import both_same, unary_type_checking_rules, binary_type_checking_rules, both_records_or_null, builtin_type_checking_rules
 from pysmt.type_checker import SimpleTypeChecker
-from pysmt.fnode import FNode 
+from pysmt.fnode import FNode
+from YouVerifyArray import YouVerifyArray
 
 class Program:
     def __init__(self, statements = [], variables = {}, labels = {}, functions={}):
@@ -89,29 +90,13 @@ class Value(AtomicExpression):
         self.type = type
 
     def eval(self, state):
-        return self.value
+        return [[PathConstraint(), self.value]]
 
     def type_check(self, context):
         return self.type, ""
 
     def __repr__(self):
         return f"{self.value}"
-
-class YouVerifyArray:
-    def __init__(self, default_value=0, length=None, array=None, index=Int(0)):
-        self.default_value = default_value
-        self.length = length
-        self.index = index
-        if array:
-            self._array = array
-        else:
-            self._array = [Array(INT, default_value)]
-
-    def get_array(self):
-        return self._array[0]
-
-    def set_array(self, array):
-        self._array[0] = array
 
 class UniqueSymbol(Value):
     def __init__(self, type):
@@ -121,7 +106,7 @@ class UniqueSymbol(Value):
         return self.type, ""
 
     def eval(self, state):
-        return FreshSymbol(self.type)
+        return [[PathConstraint(), FreshSymbol(self.type)]]
 
     def __repr__(self):
         return "$sym"
@@ -152,9 +137,11 @@ class BinaryExpression(Expression):
     def eval(self, state):
         lhs = self.lhs.eval(state)
         rhs = self.rhs.eval(state)
-        if isinstance(lhs, YouVerifyArray):
-            return YouVerifyArray(lhs.default_value, lhs.length, lhs._array, self.op(lhs.index, rhs))
-        return self.op(lhs, rhs)
+        new_vs = []
+        for lvs in lhs:
+            for rvs in rhs:
+                new_vs.append([lvs[0].apply_AND(rvs[0]), self.op(lvs[1], rvs[1])])
+        return new_vs
 
     def type_check(self, context):
         comp_func, type = binary_type_checking_rules[self.op_name]
@@ -206,8 +193,11 @@ class ArrayIndexExpression(Expression):
     def eval(self, state):
         arr = self.arr.eval(state)
         index = self.index.eval(state)
-        state.add_path_constraint(And(GE(index, Int(0)), LT(index, arr.length)))
-        return Select(arr.get_array(), index)
+        new_vals = []
+        for g_a, v_a in arr:
+            for g_i, v_i in index:
+                new_vals.append([g_a.apply_AND(g_i), Select(v_a.get_array(), v_i)])
+        return new_vals
 
     def __repr__(self):
         return f"{self.arr}[{self.index}]"
@@ -226,8 +216,10 @@ class NewArrayExpression(Expression):
         return ArrayType(INT, (BVType(32) if isinstance(default_type, str) and default_type == 'null' else default_type)), ""
 
     def eval(self, state):
-        arr = YouVerifyArray(self.default.eval(state), Int(self.length))
-        return arr
+        values = []
+        for g, v in self.default.eval(state):
+            values.append([g, YouVerifyArray(v, self.length)])
+        return values
 
 class Function:
     def __init__(self, name, params, variables, statements, labels, return_value):
@@ -244,6 +236,16 @@ class Function:
 
 class Statement:
     def exec(self, state):
+        state.advance_pc()
+
+class BeginMergeStatement(Statement):
+    def exec(self, state):
+        state.in_conditional = True
+        state.advance_pc()
+
+class EndMergeStatement(Statement):
+    def exec(self, state):
+        state.in_conditional = False
         state.advance_pc()
 
 class Return(Statement):
@@ -366,28 +368,20 @@ class Assignment(Statement):
         if isinstance(self.target, ArrayIndexExpression):
             index = self.target.index.eval(state)
             arr = self.target.arr.eval(state)
-            arr.set_array(Store(arr.get_array(), index, self.expression.eval(state)))
-            if arr.length:
-                state.add_path_constraint(And(GE(index, Int(0)), LT(index, arr.length)))
+            value = self.expression.eval(state)
+            new_arr = [[g, copy(v)] for g, v in arr]
+            new_values = []
+            for g_a, v_a in new_arr:
+                for g_i, v_i in index:
+                    for g_v, v_v in value:
+                        v_a.set_array(Store(v_a.get_array(), v_i, v_v))
+                        new_values.append([g_v.apply_AND(g_i).apply_AND(g_a), v_a])
+            state.assign_variable(self.target.arr.name, new_values)
         elif isinstance(self.target, RecordIndexExpression):
             address = simplify(state.get_variable(self.target.record))
-            state.current_state.addr_map[address.constant_value()][self.target.element] = self.expression.eval(state)
-        elif isinstance(self.target, Pointer_Dereference_Expression):
-            ref = state.get_variable(self.target.name)
-            state.add_path_constraint(And(GE(ref.index, Int(0)), LT(ref.index, ref.length)))
-            if not is_sat(state.current_state.path_cond):
-                assert False, "OVERFLOW!"
-            ref.set_array(Store(ref.get_array(), ref.index, self.expression.eval(state)))
+            state.addr_map[address.constant_value()][self.target.element] = self.expression.eval(state)
         else:
-            if isinstance(state.get_variable(self.target.name), YouVerifyArray):
-                ref = state.get_variable(self.target.name)
-                val = copy(self.expression.eval(state))
-                if isinstance(val, FNode) and val.is_symbol():
-                    ref.index = val
-                else:
-                    state.assign_variable(self.target.name, val)
-            else:
-                state.assign_variable(self.target.name, self.expression.eval(state))
+            state.assign_variable(self.target.name, self.expression.eval(state))
         state.advance_pc()
 
     def type_check(self, context):
@@ -535,7 +529,7 @@ class ConditionalBranch(Statement):
         return None, "" if cond_type == BOOL else "The condition to a conditional branch must be a boolean value."
 
     def exec(self, state):
-        state.conditional_branch(self.condition.eval(state), state.current_state.head_frame().function.labels[self.dest])
+        state.conditional_branch(self.condition.eval(state), state.head_frame.function.labels[self.dest])
 
     def __repr__(self):
         return f"if {self.condition} goto {self.dest}"
@@ -544,7 +538,7 @@ class UnconditionalBranch(ConditionalBranch):
     def __init__(self, dest):
         self.dest = dest
     def exec(self, state):
-        state.unconditional_branch(state.current_state.head_frame().function.labels[self.dest])
+        state.unconditional_branch(state.head_frame.function.labels[self.dest])
 
     def type_check(self, context):
         return None, ""

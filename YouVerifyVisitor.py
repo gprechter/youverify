@@ -104,6 +104,16 @@ class YouVerifyVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by YouVerifyParser#BEGIN_MERGE.
+    def visitBEGIN_MERGE(self, ctx:YouVerifyParser.BEGIN_MERGEContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YouVerifyParser#END_MERGE.
+    def visitEND_MERGE(self, ctx:YouVerifyParser.END_MERGEContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by YouVerifyParser#ASSIGN_TARGET_IDENTIFIER.
     def visitASSIGN_TARGET_IDENTIFIER(self, ctx:YouVerifyParser.ASSIGN_TARGET_IDENTIFIERContext):
         return self.visitChildren(ctx)

@@ -238,4 +238,12 @@ class YouVerifyVisitor(ParseTreeVisitor):
         else:
             return outer_sort
 
+    # Visit a parse tree produced by YouVerifyParser#BEGIN_MERGE.
+    def visitBEGIN_MERGE(self, ctx: YouVerifyParser.BEGIN_MERGEContext):
+        return BeginMergeStatement()
+
+    # Visit a parse tree produced by YouVerifyParser#END_MERGE.
+    def visitEND_MERGE(self, ctx: YouVerifyParser.END_MERGEContext):
+        return EndMergeStatement()
+
 del YouVerifyParser

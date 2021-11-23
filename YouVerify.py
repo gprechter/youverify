@@ -1,5 +1,6 @@
 import sys
 import json
+import time
 from antlr4 import *
 
 from YouVerifyVisitorOld import YouVerifyVisitor
@@ -9,7 +10,7 @@ from YouVerifyParser import YouVerifyParser
 from pysmt.shortcuts import TRUE, is_sat, simplify, get_model, get_free_variables, Solver, Int
 from pysmt.typing import _BoolType
 from AST import Program, Variable, array_to_length_map, YouVerifyArray, TCContext
-from State import SubState, Frame, DefaultState
+from State import ObliCheckState, Frame, DefaultState, PathConstraint
 from SMTLibUtil import *
 
 def main(argv):
@@ -20,7 +21,6 @@ def main(argv):
     variables, functions, statements, labels, records = YouVerifyVisitor().visitProgram(parser.program())
     program = Program(statements, variables, labels, functions)
 
-    SubState.records = records
     not_sanitary = False
     '''
     global_tc_context = TCContext({k: v.name for k, v in program.variables.items()}, functions)
@@ -45,12 +45,13 @@ def main(argv):
     '''
 
     def exec(program):
-        state = DefaultState([SubState(TRUE(), [Frame(program, 0, {k: [v.name, None] for k, v in program.variables.copy().items()}, None)])])
-        SubState.controller = state
+        state = ObliCheckState(Frame(program, 0, {k: [v.name, None] for k, v in program.variables.copy().items()}, None))
         while state.next_state():
             stmt = state.current_statement
             stmt.exec(state)
-        return state.sub_states
+        state.value_summaries = {k: [[g, v] for g, v in val if is_sat(g.pc)] for k, val in
+                                 state.value_summaries.items()}
+        return state
 
     return exec(program)
 
@@ -59,45 +60,35 @@ def simplify_smt(value, type):
         return str({k: simplify_smt(v) for k, v in value.items()})
     elif isinstance(value, YouVerifyArray):
         if value.length:
-            return simplify(value.get_array())
+            return f"{[simplify(value.get_array()).array_value_get(Int(i)) for i in range(value.length)]}"
+        else:
+            return simplify(value.array.get_array())
     else:
-        return simplify(value)
+        return simplify(value[1])
 
 def display_model(state, variables, model, depth = 0):
-    if not model:
-        return
     for k, v in variables.items():
         if isinstance(v[0], str):
-            elems = SubState.records[v[0]].elements
-            types = SubState.records[v[0]].types
+            elems = None
             if model.get_value(v[1]).constant_value() == 0:
                 print(f"{'  ' * depth}{k}: {'null'}")
             else:
                 print(f"{'  ' * depth}{k}:")
                 display_model(state,
-                          {k: [types[elems.index(k)], v] for k, v in state.addr_map[model.get_value(v[1]).constant_value()].items()},
+                          {k: [elems[k].name, v] for k, v in state.addr_map[model.get_value(v[1]).constant_value()].items()},
                           model, depth = depth + 1)
         elif isinstance(v[1], YouVerifyArray):
-            if v[1].length:
-                print(f"{'  ' * depth}{k}: []->{[simplify(model.get_value(v[1].get_array())).array_value_get(Int(i)) for i in range(simplify(model.get_value(v[1].length)).constant_value())]}")
-            else:
-                print(f"{'  ' * depth}{k}: []->{simplify(model.get_value(v[1].get_array()))}")
+            print(f"{'  ' * depth}{k}: {model.get_value(v[1].get_array())}")
         else:
             print(f"{'  ' * depth}{k}: {model.get_value(v[1])}")
     #print("MODEL", model)
 
-def display_states_smt2(states):
-    for i, state in enumerate(states):
-        state_desc = f"{i}\t" + str({k: simplify_smt(v[1], v[0]) for k, v in state.head_frame().variables.items()})
-        print("" + "=" * 40 + "")
-        #print(state_desc)
-        print(i)
-        #print("Memory Map: ", state.addr_map)
-        print("=" * 40)
-        print("(set-option :produce-models true)")
-        print('\n'.join(gen_declare_const(state.path_cond)))
-        print(gen_assert(simplify(state.path_cond)))
-        display_model(state, state.head_frame().variables, get_model(state.path_cond))
+def display_states_smt2(state):
+    for v, vs in state.value_summaries.items():
+        if v != '_pc':
+            print(v, ', '.join([f": {simplify(val) if not isinstance(val, YouVerifyArray) else simplify(val.get_array())}" for g, val in vs]))
+    print(PathConstraint.bdd_vars)
+
 
 def concrete_evaluation(states):
     state = states[0]
@@ -107,4 +98,7 @@ def concrete_evaluation(states):
                        for k, v in state.head_frame().variables.items()})
 
 if __name__ == '__main__':
+    start = time.time()
     display_states_smt2(main(sys.argv))
+    end = time.time()
+    print(end - start)

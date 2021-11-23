@@ -20,7 +20,9 @@ stmt: target=assign_target '=' expression=expr # ASSIGN
     | 'new' target=assign_target '=' operator=IDENTIFIER OPAREN ((operands+=expr COMMA)* (operands+=expr)?) CPAREN #ALLOC_CONC
     | 'new' target=assign_target '=' '$sym' '{' identifier=IDENTIFIER '}' # ALLOC_SYMB
     | 'if' expression=expr 'goto' label=IDENTIFIER # CONDITIONAL_BRANCH
-    | 'goto' label=IDENTIFIER # UNCONDITIONAL_BRANCH;
+    | 'goto' label=IDENTIFIER # UNCONDITIONAL_BRANCH
+    | 'begin_merge' # BEGIN_MERGE
+    | 'end_merge' # END_MERGE;
 assign_target: identifier=IDENTIFIER # ASSIGN_TARGET_IDENTIFIER
              | expression=record_index_expr # ASSIGN_TARGET_RECORD_INDEX
              | expression=array_index_expr # ASSIGN_TARGET_ARRAY_INDEX
