@@ -195,6 +195,14 @@ class ObliCheckState(State):
                 [self.current_guard[0].apply_AND(new_g.apply_NOT()), self.current_guard[1] + 1])
 
     def next_state(self):
+        merge = {}
+        for g, v in self.value_summaries['_pc']:
+            if not g.is_zero() and not g.is_unsat():
+                if v not in merge:
+                    merge[v] = g
+                else:
+                    merge[v] = merge[v].apply_OR(g)
+        self.value_summaries['_pc'] = [[v, k] for k, v in merge.items()]
         if any([not (v >= len(self.head_frame.function.statements)) for c, v in self.value_summaries['_pc']]):
             for i, s in enumerate(self.value_summaries['_pc']):
                 c, v = s

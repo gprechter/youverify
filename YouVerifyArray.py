@@ -15,3 +15,6 @@ class YouVerifyArray:
 
     def set_array(self, array):
         self._array[0] = array
+
+    def copy(self):
+        return YouVerifyArray(self.default_value, self.length, [])
