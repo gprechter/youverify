@@ -5,14 +5,14 @@ buf1_length: INT
 buf2: ARRAY{INT}
 buf2_length: INT
 i,k,t: INT
-k = 2
+k = 3
 i = 0
 
-private_data = ARRAY[2]{$sym{INT}}
+private_data = ARRAY[1]{$sym{INT}}
 private_data_length = 0
-buf1 = ARRAY[2]{0}
+buf1 = ARRAY[3]{0}
 buf1_length = 0
-buf2 = ARRAY[2]{0}
+buf2 = ARRAY[3]{0}
 buf2_length = 0
 
 LABEL LOOP1: if i >= k goto END1
@@ -32,4 +32,17 @@ LABEL ELSE: buf1[buf1_length] = 0
 buf1_length = buf1_length + 1
 LABEL ENDCOND: i = i + 1
 goto LOOP2
-LABEL END2: t = 0
+LABEL END2: i = 0
+
+LABEL LOOP3: if i >= k goto END3
+t = buf1[i]
+if t != 0 goto ELSE2
+buf2[buf2_length] = 1
+buf2_length = buf2_length + 1
+goto ENDCOND2
+LABEL ELSE2: if t != 1 goto ENDCOND2
+buf2[buf2_length] = 0
+buf2_length = buf2_length + 1
+LABEL ENDCOND2: i = i + 1
+goto LOOP3
+LABEL END3: t = 0

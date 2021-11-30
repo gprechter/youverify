@@ -150,14 +150,14 @@ class ObliCheckState(State):
     def assign_variable(self, var, val):
         merge = {}
         old_vs = [[self.current_guard[0].apply_NOT().apply_AND(g), v] for g, v in self.value_summaries[var]]
-        new_vs = [[self.current_guard[0].apply_AND(g), v] for g, v in val]
+        new_vs = [[self.current_guard[0].apply_AND(g), copy(v) if isinstance(v, YouVerifyArray) else v] for g, v in val]
 
         if self.in_conditional and 'length' not in var:
             new_guard = PathConstraint()
             new_value = None
             for g, v in old_vs + new_vs:
                 new_guard = new_guard.apply_OR(g)
-                new_value = YouVerifyArray(0, length=FreshSymbol(INT), array=[FreshSymbol(ArrayType(INT, INT))]) if isinstance(v, YouVerifyArray) else FreshSymbol(INT)
+                new_value = YouVerifyArray(0, length=v.length, array=[FreshSymbol(ArrayType(INT, INT))]) if isinstance(v, YouVerifyArray) else FreshSymbol(INT)
 
 
             vs = [[new_guard, new_value]]

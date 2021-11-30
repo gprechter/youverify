@@ -7,9 +7,9 @@ i: INT
 k: INT
 t: INT
 
-privateData = ARRAY[5]{$sym{INT}}
+privateData = ARRAY[3]{$sym{INT}}
 privateData_length = 0
-k = 5
+k = 3
 i = 0
 LABEL LOOP1: if i >= k goto END1
 privateData[i] = $sym{INT}

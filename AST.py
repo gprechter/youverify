@@ -137,11 +137,7 @@ class BinaryExpression(Expression):
     def eval(self, state):
         lhs = self.lhs.eval(state)
         rhs = self.rhs.eval(state)
-        new_vs = []
-        for lvs in lhs:
-            for rvs in rhs:
-                new_vs.append([lvs[0].apply_AND(rvs[0]), self.op(lvs[1], rvs[1])])
-        return new_vs
+        return self.op(lhs, rhs)
 
     def type_check(self, context):
         comp_func, type = binary_type_checking_rules[self.op_name]
