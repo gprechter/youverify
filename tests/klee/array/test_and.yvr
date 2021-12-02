@@ -1,0 +1,30 @@
+array: ARRAY{INT}
+arr_elem:INT
+k: BV[8]
+k_nat: INT
+cond: BOOL
+done: BOOL
+
+yes, no: BOOL
+yes = false
+no = false
+
+array = ARRAY[5]{0}
+array[0] = 1
+array[1] = -2
+array[2] = 3
+array[3] = -4
+array[4] = -5
+
+k = $sym{k, BV[8]}
+call cond = bvult(k, BV{5, 8})
+assume cond
+call k = bvand(k, BV{1, 8})
+call k_nat = bv2nat(k)
+arr_elem = array[k_nat]
+if arr_elem <= 0 goto ELSE
+yes = true
+goto END
+LABEL ELSE: no = true
+goto END
+LABEL END: done = true

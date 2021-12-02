@@ -1,0 +1,23 @@
+array: ARRAY{INT}
+idx, elem: INT
+yes, no, done: BOOL
+yes = false
+no = false
+
+array = ARRAY[5]{0}
+array[0] = 1
+array[1] = 2
+array[2] = 3
+array[3] = 4
+array[4] = 5
+
+idx = $sym{k, INT}
+assume idx < 5
+
+elem = array[idx]
+
+if elem != 3 goto ELSE
+yes = true
+goto END
+LABEL ELSE: no = true
+LABEL END: done = true

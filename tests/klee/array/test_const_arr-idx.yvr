@@ -1,0 +1,24 @@
+array, arr: ARRAY{INT}
+x, k, arr_elem: INT
+yes, done: BOOL
+
+array = ARRAY[5]{0}
+array[0] = 1
+array[1] = 2
+array[2] = 3
+array[3] = 4
+array[4] = 5
+
+arr = ARRAY[3]{0}
+arr[0] = 0
+arr[1] = 1
+arr[2] = 2
+
+
+yes = false
+x = 2
+k = arr[x]
+arr_elem = array[k]
+if arr_elem != 3 goto ELSE
+yes = true
+LABEL ELSE: done = true

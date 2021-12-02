@@ -59,6 +59,11 @@ class YouVerifyVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by YouVerifyParser#REPORT.
+    def visitREPORT(self, ctx:YouVerifyParser.REPORTContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by YouVerifyParser#RETURN_NO_VALUE.
     def visitRETURN_NO_VALUE(self, ctx:YouVerifyParser.RETURN_NO_VALUEContext):
         return self.visitChildren(ctx)

@@ -47,6 +47,7 @@ class DefaultState(State):
     def __init__(self, sub_states):
         self.current_state = None
         self.sub_states = sub_states
+        self.reports = []
 
     @property
     def current_statement(self):

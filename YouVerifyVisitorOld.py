@@ -238,4 +238,8 @@ class YouVerifyVisitor(ParseTreeVisitor):
         else:
             return outer_sort
 
+    # Visit a parse tree produced by YouVerifyParser#REPORT.
+    def visitREPORT(self, ctx: YouVerifyParser.REPORTContext):
+        return Report(ctx.identifier.text)
+
 del YouVerifyParser

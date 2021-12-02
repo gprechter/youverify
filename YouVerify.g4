@@ -12,6 +12,7 @@ labeled_stmt: 'LABEL' identifier=IDENTIFIER ':' statement=stmt # LABELED
             | statement=stmt # UNLABELED;
 stmt: target=assign_target '=' expression=expr # ASSIGN
     | 'return' expression=expr # RETURN
+    | 'report' identifier=IDENTIFIER # REPORT
     | 'return' # RETURN_NO_VALUE
     | 'assume' expression=expr # ASSUME
     | 'assert' expression=expr # ASSERT

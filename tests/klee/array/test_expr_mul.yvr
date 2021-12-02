@@ -1,0 +1,49 @@
+array, array2: ARRAY{BV[8]}
+r, arr_elem: BV[8]
+r_nat, k: INT
+yes, no, done: BOOL
+
+yes = false
+no = false
+
+array = ARRAY[10]{BV{0, 8}}
+array[0] = BV{1, 8}
+array[1] = BV{2, 8}
+array[2] = BV{3, 8}
+array[3] = BV{4, 8}
+array[4] = BV{5, 8}
+array[5] = BV{6, 8}
+array[6] = BV{7, 8}
+array[7] = BV{8, 8}
+array[8] = BV{9, 8}
+array[9] = BV{10, 8}
+
+array2 = ARRAY[10]{BV{0, 8}}
+array2[0] = BV{0, 8}
+array2[1] = BV{1, 8}
+array2[2] = BV{7, 8}
+array2[3] = BV{19, 8}
+array2[4] = BV{20, 8}
+array2[5] = BV{21, 8}
+array2[6] = BV{22, 8}
+array2[7] = BV{23, 8}
+array2[8] = BV{24, 8}
+array2[9] = BV{25, 8}
+
+k = $sym{k, INT}
+assume k < 4
+assume k >= 0
+
+arr_elem = array[k]
+call r = bvmul(arr_elem, BV{3, 8})
+call r = bvand(r, BV{1, 8})
+call r_nat = bv2nat(r)
+arr_elem = array2[r_nat]
+if arr_elem != BV{0, 8} goto ELSE1
+yes = true
+goto END
+LABEL ELSE1: if arr_elem != BV{1, 8} goto ELSE2
+yes = true
+goto END
+LABEL ELSE2: no = true
+LABEL END: done = true

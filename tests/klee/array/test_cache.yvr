@@ -1,0 +1,64 @@
+array, arrayconc: ARRAY{INT}
+arraychar: ARRAY{BV[8]}
+k, x, i: INT
+arr_elem: INT
+arr_char_elem: BV[8]
+temp: INT
+cond: BOOL
+
+yes, no, good, char, concrete: BOOL
+yes = false
+no = false
+good = false
+char = false
+concrete = false
+
+array = ARRAY[5]{0}
+array[0] = 1
+array[1] = 2
+array[2] = 3
+array[3] = 4
+array[4] = 5
+
+arrayconc = ARRAY[4]{0}
+arrayconc[0] = 2
+arrayconc[1] = 4
+arrayconc[2] = 6
+arrayconc[3] = 8
+
+arraychar = ARRAY[2]{BV{0, 8}}
+arraychar[0] = BV{97, 8}
+arraychar[1] = BV{127, 8}
+
+k = $sym{k, INT}
+assume k < 5
+assume k >= 0
+x = $sym{x, INT}
+assume x < 2
+assume x >= 0
+
+arr_elem = array[k]
+temp = arr_elem + k
+temp = temp - 2
+if arr_elem != 3 goto ELSE1
+yes = true
+goto END1
+LABEL ELSE1: if arr_elem <= 4 goto ELSE2
+no = true
+goto END1
+LABEL ELSE2: if temp != 6 goto END1
+good = true
+goto END1
+LABEL END1: arr_char_elem = arraychar[x]
+
+call cond = bvult(BV{126,8}, arr_char_elem)
+if ! cond goto ELSE3
+char = true
+LABEL ELSE3: i = array[4]
+i = i * 3
+i = i - 12
+
+arr_elem = arrayconc[i]
+if arr_elem <= 3 goto ELSE4
+concrete = true
+LABEL ELSE4: temp = 0

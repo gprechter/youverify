@@ -50,7 +50,7 @@ def main(argv):
         while state.next_state():
             stmt = state.current_statement
             stmt.exec(state)
-        return state.sub_states
+        return state
 
     return exec(program)
 
@@ -86,18 +86,22 @@ def display_model(state, variables, model, depth = 0):
             print(f"{'  ' * depth}{k}: {model.get_value(v[1])}")
     #print("MODEL", model)
 
-def display_states_smt2(states):
-    for i, state in enumerate(states):
-        state_desc = f"{i}\t" + str({k: simplify_smt(v[1], v[0]) for k, v in state.head_frame().variables.items()})
+def display_states_smt2(state):
+    for i, s in enumerate(state.sub_states):
+        state_desc = f"{i}\t" + str({k: simplify_smt(v[1], v[0]) for k, v in s.head_frame().variables.items()})
         print("" + "=" * 40 + "")
         #print(state_desc)
         print(i)
         #print("Memory Map: ", state.addr_map)
         print("=" * 40)
         print("(set-option :produce-models true)")
-        print('\n'.join(gen_declare_const(state.path_cond)))
-        print(gen_assert(simplify(state.path_cond)))
-        display_model(state, state.head_frame().variables, get_model(state.path_cond))
+        print('\n'.join(gen_declare_const(s.path_cond)))
+        print(gen_assert(simplify(s.path_cond)))
+        display_model(s, s.head_frame().variables, get_model(s.path_cond))
+    if state.reports:
+        print("REPORTS:")
+        for i, r in enumerate(state.reports):
+            print(i, r)
 
 def concrete_evaluation(states):
     state = states[0]

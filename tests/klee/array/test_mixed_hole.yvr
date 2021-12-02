@@ -1,0 +1,35 @@
+array: ARRAY{INT}
+elem:INT
+idx, symHole, symHole2: INT
+
+yes, no, done: BOOL
+yes = false
+no = false
+
+array = ARRAY[6]{0}
+array[0] = 1
+array[1] = 2
+array[2] = 3
+array[3] = 4
+array[4] = 5
+array[5] = 0
+
+symHole = $sym{symHole, INT}
+symHole2 = $sym{symHole2, INT}
+idx = $sym{idx, INT}
+assume idx < 5
+assume idx > 0
+assume symHole < 401
+assume symHole > 399
+assume symHole2 != 400
+array[2] = symHole
+array[0] = symHole2
+
+idx = idx + 1
+
+elem = array[idx]
+if elem != 400 goto ELSE
+yes = true
+goto END
+LABEL ELSE: no = true
+LABEL END: done = true

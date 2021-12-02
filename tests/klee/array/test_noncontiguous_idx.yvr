@@ -1,0 +1,21 @@
+array: ARRAY{INT}
+k, elem: INT
+zero, done: BOOL
+
+zero = false
+
+array = ARRAY[5]{0}
+array[0] = 0
+array[1] = 1
+array[2] = 0
+array[3] = 1
+array[4] = 0
+
+k = $sym{k, INT}
+assume k < 5
+
+elem = array[k]
+
+if elem != 0 goto ELSE
+zero = true
+LABEL ELSE: done = true

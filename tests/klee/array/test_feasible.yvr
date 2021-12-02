@@ -1,0 +1,38 @@
+array: ARRAY{INT}
+k, elem: INT
+cond, temp, done, zero, correct, wrong: BOOL
+
+cond = false
+temp = false
+zero = false
+correct = false
+wrong = false
+
+array = ARRAY[5]{0}
+array[0] = 0
+array[1] = 1
+array[2] = 0
+array[3] = 1
+array[4] = 0
+
+k = $sym{k, INT}
+assume k < 5
+
+elem = array[k]
+if elem != 0 goto ELSE1
+
+zero = true
+
+temp = k == 0
+cond = cond | temp
+temp = k == 2
+cond = cond | temp
+temp = k == 4
+cond = cond | temp
+
+if !cond goto ELSE2
+correct = true
+goto ELSE1
+LABEL ELSE2: wrong = true
+
+LABEL ELSE1: done = true

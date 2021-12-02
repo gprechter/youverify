@@ -409,6 +409,14 @@ class Record:
     def __str__(self):
         return f"{self.name}({', '.join(self.elements)})"
 
+class Report(Statement):
+    def __init__(self, id):
+        self.id = id
+
+    def exec(self, state):
+        state.reports.append(self.id)
+        state.advance_pc()
+
 def wrap_target_var(var):
     def return_to_var(state, value):
         state.assign_variable(var.name, value)
