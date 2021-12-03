@@ -10,37 +10,97 @@ class Frame:
         self.return_target = return_target
 
 class State(ABC):
+    """
+    Abstract class template for a representation of State in *YouVerify*.
+    """
 
     @abstractmethod
     def next_state(self):
+        """
+            This abstract method is invoked by the framework when before the next
+            statement is to be executed. This gives the :code:`State` object the opportunity
+            to modify the backend and setup for the next
+            statement execution. A developer would modify this to change
+            how the paths of a program are explored and how state is handled.
+
+        :return: :code:`True` if there is more state to be executed, :code:`False` otherwise.
+        :rtype: bool
+        """
         pass
 
     @abstractproperty
     def current_statement(self):
+        """
+            This abstract property is invoked to retrieve the next statement to be executed by
+            the symbolic interpreter.
+
+        :return: The next :code:`Statement` object to be *executed*.
+        :rtype: Statement
+        """
         pass
 
     @abstractmethod
     def assign_variable(self, var, val):
+        """
+            This abstract method is invoked when the framework wants to assign a value to a variable.
+
+        :param var: The identifier of the variable being assigned to.
+        :param val: The value to be assigned to the variable.
+        :return: None
+        """
         pass
 
     @abstractmethod
     def get_variable(self, var):
+        """
+            This abstract method is invoked when an identifier is evaluated and a variable is
+            to be fetched from the state's variable store.
+
+        :param var: The identifier of the variable that will be retrieved.
+        :return: The value of the variable that was retrieved.
+        """
         pass
 
     @abstractmethod
     def advance_pc(self, i):
+        """
+            This abstract method is invoked when the framework wants to advance the program counter.
+
+        :param i: The number of statements to advance through.
+        :return: None
+        """
         pass
 
     @abstractmethod
     def unconditional_branch(self, pc):
+        """
+            This abstract method is invoked when the framework reaches an unconditional branching statement.
+
+        :param pc: The destination program counter for the branch.
+        :return: None
+        """
         pass
 
     @abstractmethod
     def conditional_branch(self, cond, pc):
+        """
+            This abstract method is invoked when the framework reaches a conditional branching statement. Here,
+            a developer would likely want to implement state splitting.
+
+        :param cond: The condition guarding the branch.
+        :param pc: The destination program counter for the branch.
+        :return: None
+        """
         pass
 
     @abstractmethod
     def add_path_constraint(self, cond):
+        """
+            This abstract method is invoked when the framework wants to add an assumption to the current state.
+
+        :param cond: The condition to be affixed to the path constraint.
+        :return: None
+        """
         pass
 
 class DefaultState(State):

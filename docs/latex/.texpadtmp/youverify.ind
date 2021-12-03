@@ -1,0 +1,56 @@
+\begin{theindex}
+
+  \item \spxentry{add\_path\_constraint()}\spxextra{State.State method}, 
+		\hyperpage{1}
+  \item \spxentry{advance\_pc()}\spxextra{State.State method}, 
+		\hyperpage{1}
+  \item \spxentry{assign\_variable()}\spxextra{State.State method}, 
+		\hyperpage{1}
+
+  \indexspace
+
+  \item \spxentry{binary\_operator\_wrapper()}\spxextra{in module Wrappers}, 
+		\hyperpage{2}
+
+  \indexspace
+
+  \item \spxentry{conditional\_branch()}\spxextra{State.State method}, 
+		\hyperpage{1}
+  \item \spxentry{current\_statement}\spxextra{State.State property}, 
+		\hyperpage{1}
+
+  \indexspace
+
+  \item \spxentry{get\_variable()}\spxextra{State.State method}, 
+		\hyperpage{1}
+
+  \indexspace
+
+  \item \spxentry{module}
+    \subitem \spxentry{State}, \hyperpage{1}
+    \subitem \spxentry{Wrappers}, \hyperpage{2}
+
+  \indexspace
+
+  \item \spxentry{next\_state()}\spxextra{State.State method}, 
+		\hyperpage{2}
+
+  \indexspace
+
+  \item \spxentry{State}
+    \subitem \spxentry{module}, \hyperpage{1}
+  \item \spxentry{State}\spxextra{class in State}, \hyperpage{1}
+
+  \indexspace
+
+  \item \spxentry{unary\_operator\_wrapper()}\spxextra{in module Wrappers}, 
+		\hyperpage{2}
+  \item \spxentry{unconditional\_branch()}\spxextra{State.State method}, 
+		\hyperpage{2}
+
+  \indexspace
+
+  \item \spxentry{Wrappers}
+    \subitem \spxentry{module}, \hyperpage{2}
+
+\end{theindex}
