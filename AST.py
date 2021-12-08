@@ -1,6 +1,6 @@
 from pysmt.shortcuts import And, Or, Not, Symbol, TRUE, FALSE, is_sat, Array, GE, LT, Equals
 from pysmt.shortcuts import Solver, simplify, Int, FreshSymbol, Plus, Store, Select, BV
-from pysmt.shortcuts import LE, LT, get_model
+from pysmt.shortcuts import LE, LT, get_model, NotEquals
 from pysmt.typing import INT, BVType, BOOL, ArrayType, _BVType
 from State import Frame, PathConstraint
 from copy import copy
@@ -9,6 +9,7 @@ from TypeCheckingRules import both_same, unary_type_checking_rules, binary_type_
 from pysmt.type_checker import SimpleTypeChecker
 from pysmt.fnode import FNode
 from YouVerifyArray import YouVerifyArray
+from Statement import Statement
 
 class Program:
     def __init__(self, statements = [], variables = {}, labels = {}, functions={}):
@@ -139,6 +140,25 @@ class BinaryExpression(Expression):
         rhs = self.rhs.eval(state)
         return self.op(lhs, rhs)
 
+    def eval_symb(self, state):
+        if isinstance(self.lhs, Variable):
+            lhs = Symbol(self.lhs.name, INT)
+        else:
+            lhs = self.lhs.value
+
+        if isinstance(self.rhs, Variable):
+            rhs = Symbol(self.rhs.name, INT)
+        else:
+            rhs = self.rhs.value
+
+        if self.op_name == '>=':
+            return GE(lhs, rhs)
+        elif self.op_name == '<':
+            return LT(lhs, rhs)
+        else:
+            return NotEquals(lhs, rhs)
+
+
     def type_check(self, context):
         comp_func, type = binary_type_checking_rules[self.op_name]
         lhs = self.lhs.type_check(context)
@@ -230,19 +250,7 @@ class Function:
     def __str__(self):
         return f"define {self.name}({', '.join(self.params)}): {', '.join(self.variables)}"
 
-class Statement:
-    def exec(self, state):
-        state.advance_pc()
 
-class BeginMergeStatement(Statement):
-    def exec(self, state):
-        state.in_conditional = True
-        state.advance_pc()
-
-class EndMergeStatement(Statement):
-    def exec(self, state):
-        state.in_conditional = False
-        state.advance_pc()
 
 class Return(Statement):
     def __init__(self, expression):
@@ -525,7 +533,8 @@ class ConditionalBranch(Statement):
         return None, "" if cond_type == BOOL else "The condition to a conditional branch must be a boolean value."
 
     def exec(self, state):
-        state.conditional_branch(self.condition.eval(state), state.head_frame.function.labels[self.dest])
+
+        state.conditional_branch(self.condition.eval(state), state.head_frame.function.labels[self.dest], guard = self.condition.eval_symb(state))
 
     def __repr__(self):
         return f"if {self.condition} goto {self.dest}"

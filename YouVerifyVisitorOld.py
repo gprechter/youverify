@@ -9,6 +9,7 @@ else:
 
 from pysmt.shortcuts import Int, ArrayType, BV
 from pysmt.typing import BOOL, INT, BVType, _ArrayType
+from Statement import BeginMergeStatement, EndMergeStatement, VerifyStatement
 
 # This class defines a complete generic visitor for a parse tree produced by YouVerifyParser.
 
@@ -245,5 +246,9 @@ class YouVerifyVisitor(ParseTreeVisitor):
     # Visit a parse tree produced by YouVerifyParser#END_MERGE.
     def visitEND_MERGE(self, ctx: YouVerifyParser.END_MERGEContext):
         return EndMergeStatement()
+
+        # Visit a parse tree produced by YouVerifyParser#VERIFY.
+    def visitVERIFY(self, ctx: YouVerifyParser.VERIFYContext):
+        return VerifyStatement(self.visit(ctx.expression))
 
 del YouVerifyParser

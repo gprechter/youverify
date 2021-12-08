@@ -1,0 +1,53 @@
+private_data: ARRAY{INT}
+private_data_length: INT
+buf1: ARRAY{INT}
+buf1_length: INT
+buf2: ARRAY{INT}
+buf2_length: INT
+i,k,t,t2: INT
+k = 5
+i = 0
+
+private_data = ARRAY[5]{$sym{INT}}
+private_data_length = 0
+buf1 = ARRAY[5]{0}
+buf1_length = 0
+buf2 = ARRAY[5]{0}
+buf2_length = 0
+
+LABEL LOOP1: if i >= k goto END1
+private_data[i] = $sym{INT}
+private_data_length = private_data_length + 1
+i = i + 1
+goto LOOP1
+LABEL END1: i = 0
+
+LABEL LOOP2: if i >= k goto END2
+begin_merge
+t = private_data[i]
+if t < 0 goto ELSE
+buf1[buf1_length] = 1
+buf1_length = buf1_length + 1
+goto ENDCOND
+LABEL ELSE: buf1[buf1_length] = 0
+buf1_length = buf1_length + 1
+end_merge
+LABEL ENDCOND: i = i + 1
+goto LOOP2
+LABEL END2: i = 0
+
+LABEL LOOP3: if i >= k goto END3
+begin_merge
+t = buf1[i]
+if t != 0 goto ELSE2
+buf2[buf2_length] = 1
+buf2_length = buf2_length + 1
+goto ENDCOND2
+LABEL ELSE2: if t != 1 goto ENDCOND2
+buf2[buf2_length] = 0
+buf2_length = buf2_length + 1
+end_merge
+LABEL ENDCOND2: i = i + 1
+goto LOOP3
+LABEL END3: t = 0
+verify buf2_length == buf1_length

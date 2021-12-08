@@ -51,6 +51,7 @@ def main(argv):
             stmt.exec(state)
         state.value_summaries = {k: [[g, v] for g, v in val if is_sat(g.pc)] for k, val in
                                  state.value_summaries.items()}
+        print(state.unmerged)
         return state
 
     return exec(program)

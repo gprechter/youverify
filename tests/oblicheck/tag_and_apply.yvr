@@ -1,29 +1,41 @@
-private_data: ARRAY{INT}
-private_data_length: INT
+private_data1, private_data2: ARRAY{INT}
+private_data1_length, private_data2_length: INT
 buf1: ARRAY{INT}
 buf1_length: INT
 buf2: ARRAY{INT}
 buf2_length: INT
-i,k,t: INT
+buf3: ARRAY{INT}
+buf3_length: INT
+buf4: ARRAY{INT}
+buf4_length: INT
+i,k,t,t2: INT
 k = 3
 i = 0
 
-private_data = ARRAY[1]{$sym{INT}}
-private_data_length = 0
+private_data1 = ARRAY[3]{$sym{INT}}
+private_data1_length = 0
+private_data2 = ARRAY[3]{$sym{INT}}
+private_data2_length = 0
 buf1 = ARRAY[3]{0}
 buf1_length = 0
 buf2 = ARRAY[3]{0}
 buf2_length = 0
+buf3 = ARRAY[3]{0}
+buf3_length = 0
+buf4 = ARRAY[3]{0}
+buf4_length = 0
 
 LABEL LOOP1: if i >= k goto END1
-private_data[i] = $sym{INT}
-private_data_length = private_data_length + 1
+private_data1[i] = $sym{INT}
+private_data1_length = private_data1_length + 1
+private_data2[i] = $sym{INT}
+private_data2_length = private_data2_length + 1
 i = i + 1
 goto LOOP1
 LABEL END1: i = 0
 
 LABEL LOOP2: if i >= k goto END2
-t = private_data[i]
+t = private_data1[i]
 if t < 0 goto ELSE
 buf1[buf1_length] = 1
 buf1_length = buf1_length + 1
@@ -45,4 +57,29 @@ buf2[buf2_length] = 0
 buf2_length = buf2_length + 1
 LABEL ENDCOND2: i = i + 1
 goto LOOP3
-LABEL END3: t = 0
+LABEL END3: i = 0
+
+LABEL LOOP4: if i >= k goto END4
+t = private_data2[i]
+if t < 0 goto ELSE3
+buf3[buf3_length] = 1
+buf3_length = buf3_length + 1
+goto ENDCOND3
+LABEL ELSE3: buf3[buf3_length] = 0
+buf3_length = buf3_length + 1
+LABEL ENDCOND3: i = i + 1
+goto LOOP4
+LABEL END4: i = 0
+
+LABEL LOOP5: if i >= k goto END5
+t = buf3[i]
+if t != 0 goto ELSE4
+buf4[buf4_length] = 1
+buf4_length = buf4_length + 1
+goto ENDCOND4
+LABEL ELSE4: if t != 1 goto ENDCOND4
+buf4[buf4_length] = 0
+buf4_length = buf4_length + 1
+LABEL ENDCOND4: i = i + 1
+goto LOOP5
+LABEL END5: t = 0

@@ -22,7 +22,8 @@ stmt: target=assign_target '=' expression=expr # ASSIGN
     | 'if' expression=expr 'goto' label=IDENTIFIER # CONDITIONAL_BRANCH
     | 'goto' label=IDENTIFIER # UNCONDITIONAL_BRANCH
     | 'begin_merge' # BEGIN_MERGE
-    | 'end_merge' # END_MERGE;
+    | 'end_merge' # END_MERGE
+    | 'verify' expression=expr #VERIFY;
 assign_target: identifier=IDENTIFIER # ASSIGN_TARGET_IDENTIFIER
              | expression=record_index_expr # ASSIGN_TARGET_RECORD_INDEX
              | expression=array_index_expr # ASSIGN_TARGET_ARRAY_INDEX
