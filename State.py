@@ -155,7 +155,7 @@ class ObliCheckState(State):
             else:
                 if is_merging:
                     ObliCheckState.merge_statements.append(i)
-        ObliCheckState.verification_condition = self.head_frame.function.statements.pop()
+        #ObliCheckState.verification_condition = self.head_frame.function.statements.pop()
 
 
 
@@ -233,7 +233,7 @@ class ObliCheckState(State):
             i = min(range(len(self.value_summaries['_pc'])), key = lambda i: self.value_summaries['_pc'][i][1])
             self.current_guard = self.value_summaries['_pc'].pop(i)
             return True
-        if False and self.verification_condition:
+        if self.verification_condition:
             for g,v in self.verification_condition.expr.eval(self):
                 if not get_model(g.pc).get_value(v).constant_value():
 
