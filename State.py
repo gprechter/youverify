@@ -157,13 +157,13 @@ class SubState:
     def __copy__(self):
         return SubState(self.path_cond, deepcopy(self.frame_stack), self.base_addr, {k: copy(v) for k, v in self.addr_map.items()}, copy(self.concrete_symbolic_pointers))
 
-    def assign_variable(self, var, val):
+    def store_variable(self, var, val):
         if var in self.head_frame().variables:
             self.head_frame().variables[var] = [self.head_frame().variables[var][0], val]
         else:
             self.frame_stack[0].variables[var] = [self.frame_stack[0].variables[var][0], val]
 
-    def get_variable(self, var):
+    def load_variable(self, var):
         if var in self.head_frame().variables:
             return self.head_frame().variables[var][1]
         else:
