@@ -1,14 +1,14 @@
 \indexentry{module@\spxentry{module}!State@\spxentry{State}|hyperpage}{1}
 \indexentry{State@\spxentry{State}!module@\spxentry{module}|hyperpage}{1}
 \indexentry{State (class in State)@\spxentry{State}\spxextra{class in State}|hyperpage}{1}
-\indexentry{add\_path\_constraint() (State.State method)@\spxentry{add\_path\_constraint()}\spxextra{State.State method}|hyperpage}{1}
 \indexentry{advance\_pc() (State.State method)@\spxentry{advance\_pc()}\spxextra{State.State method}|hyperpage}{1}
-\indexentry{assign\_variable() (State.State method)@\spxentry{assign\_variable()}\spxextra{State.State method}|hyperpage}{1}
+\indexentry{assume() (State.State method)@\spxentry{assume()}\spxextra{State.State method}|hyperpage}{1}
 \indexentry{conditional\_branch() (State.State method)@\spxentry{conditional\_branch()}\spxextra{State.State method}|hyperpage}{1}
 \indexentry{current\_statement (State.State property)@\spxentry{current\_statement}\spxextra{State.State property}|hyperpage}{1}
-\indexentry{get\_variable() (State.State method)@\spxentry{get\_variable()}\spxextra{State.State method}|hyperpage}{1}
+\indexentry{jump() (State.State method)@\spxentry{jump()}\spxextra{State.State method}|hyperpage}{1}
+\indexentry{load\_variable() (State.State method)@\spxentry{load\_variable()}\spxextra{State.State method}|hyperpage}{1}
 \indexentry{next\_state() (State.State method)@\spxentry{next\_state()}\spxextra{State.State method}|hyperpage}{2}
-\indexentry{unconditional\_branch() (State.State method)@\spxentry{unconditional\_branch()}\spxextra{State.State method}|hyperpage}{2}
+\indexentry{store\_variable() (State.State method)@\spxentry{store\_variable()}\spxextra{State.State method}|hyperpage}{2}
 \indexentry{module@\spxentry{module}!Wrappers@\spxentry{Wrappers}|hyperpage}{2}
 \indexentry{Wrappers@\spxentry{Wrappers}!module@\spxentry{module}|hyperpage}{2}
 \indexentry{unary\_operator\_wrapper() (in module Wrappers)@\spxentry{unary\_operator\_wrapper()}\spxextra{in module Wrappers}|hyperpage}{2}

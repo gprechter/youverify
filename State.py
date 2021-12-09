@@ -15,7 +15,7 @@ class State(ABC):
     """
 
     @abstractmethod
-    def next_state(self):
+    def update_state(self):
         """
             This abstract method is invoked by the framework when before the next
             statement is to be executed. This gives the :code:`State` object the opportunity
@@ -128,7 +128,7 @@ class DefaultState(State):
     def conditional_branch(self, cond, destination):
         self.current_state = self.current_state.split(cond, destination)
 
-    def next_state(self):
+    def update_state(self):
         if self.current_state:
             for s in [s for s in self.current_state if is_sat(s.path_cond)]:
                 self.sub_states.append(s)

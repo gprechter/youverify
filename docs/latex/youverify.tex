@@ -60,7 +60,7 @@
 
 
 \title{YouVerify}
-\date{Dec 02, 2021}
+\date{Dec 09, 2021}
 \release{1.0}
 \author{Griffin Prechter}
 \newcommand{\sphinxlogo}{\vbox{}}
@@ -81,31 +81,10 @@
 \phantomsection\label{\detokenize{index:State.State}}\pysigline{\sphinxbfcode{\sphinxupquote{class\DUrole{w}{  }}}\sphinxcode{\sphinxupquote{State.}}\sphinxbfcode{\sphinxupquote{State}}}
 \sphinxAtStartPar
 Abstract class template for a representation of State in \sphinxstyleemphasis{YouVerify}.
-\index{add\_path\_constraint() (State.State method)@\spxentry{add\_path\_constraint()}\spxextra{State.State method}}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{index:State.State.add_path_constraint}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{abstract\DUrole{w}{  }}}\sphinxbfcode{\sphinxupquote{add\_path\_constraint}}}{\emph{\DUrole{n}{cond}}}{}~\begin{quote}
-
-\sphinxAtStartPar
-This abstract method is invoked when the framework wants to add an assumption to the current state.
-\end{quote}
-\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode
-\sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{cond}} \textendash{} The condition to be affixed to the path constraint.
-
-\item[{Returns}] \leavevmode
-\sphinxAtStartPar
-None
-
-\end{description}\end{quote}
-
-\end{fulllineitems}
-
 \index{advance\_pc() (State.State method)@\spxentry{advance\_pc()}\spxextra{State.State method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{index:State.State.advance_pc}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{abstract\DUrole{w}{  }}}\sphinxbfcode{\sphinxupquote{advance\_pc}}}{\emph{\DUrole{n}{i}}}{}~\begin{quote}
+\phantomsection\label{\detokenize{index:State.State.advance_pc}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{abstract\DUrole{w}{  }}}\sphinxbfcode{\sphinxupquote{advance\_pc}}}{\emph{\DUrole{n}{i}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{int}}}{}~\begin{quote}
 
 \sphinxAtStartPar
 This abstract method is invoked when the framework wants to advance the program counter.
@@ -123,25 +102,18 @@ None
 
 \end{fulllineitems}
 
-\index{assign\_variable() (State.State method)@\spxentry{assign\_variable()}\spxextra{State.State method}}
+\index{assume() (State.State method)@\spxentry{assume()}\spxextra{State.State method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{index:State.State.assign_variable}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{abstract\DUrole{w}{  }}}\sphinxbfcode{\sphinxupquote{assign\_variable}}}{\emph{\DUrole{n}{var}}, \emph{\DUrole{n}{val}}}{}~\begin{quote}
+\phantomsection\label{\detokenize{index:State.State.assume}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{abstract\DUrole{w}{  }}}\sphinxbfcode{\sphinxupquote{assume}}}{\emph{\DUrole{n}{cond}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{object}}}{}~\begin{quote}
 
 \sphinxAtStartPar
-This abstract method is invoked when the framework wants to assign a value to a variable.
+This abstract method is invoked when the framework wants to add an assumption to the current state.
 \end{quote}
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
-\item {} 
+\item[{Parameters}] \leavevmode
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{var}} \textendash{} The identifier of the variable being assigned to.
-
-\item {} 
-\sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{val}} \textendash{} The value to be assigned to the variable.
-
-\end{itemize}
+\sphinxstyleliteralstrong{\sphinxupquote{cond}} \textendash{} The condition to be affixed to the path constraint.
 
 \item[{Returns}] \leavevmode
 \sphinxAtStartPar
@@ -154,7 +126,7 @@ None
 \index{conditional\_branch() (State.State method)@\spxentry{conditional\_branch()}\spxextra{State.State method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{index:State.State.conditional_branch}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{abstract\DUrole{w}{  }}}\sphinxbfcode{\sphinxupquote{conditional\_branch}}}{\emph{\DUrole{n}{cond}}, \emph{\DUrole{n}{pc}}}{}~\begin{quote}
+\phantomsection\label{\detokenize{index:State.State.conditional_branch}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{abstract\DUrole{w}{  }}}\sphinxbfcode{\sphinxupquote{conditional\_branch}}}{\emph{\DUrole{n}{cond}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{object}}, \emph{\DUrole{n}{destination}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{int}}}{}~\begin{quote}
 
 \sphinxAtStartPar
 This abstract method is invoked when the framework reaches a conditional branching statement. Here,
@@ -168,7 +140,7 @@ a developer would likely want to implement state splitting.
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{pc}} \textendash{} The destination program counter for the branch.
+\sphinxstyleliteralstrong{\sphinxupquote{destination}} \textendash{} The destination program counter for the branch.
 
 \end{itemize}
 
@@ -202,10 +174,31 @@ Statement
 
 \end{fulllineitems}
 
-\index{get\_variable() (State.State method)@\spxentry{get\_variable()}\spxextra{State.State method}}
+\index{jump() (State.State method)@\spxentry{jump()}\spxextra{State.State method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{index:State.State.get_variable}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{abstract\DUrole{w}{  }}}\sphinxbfcode{\sphinxupquote{get\_variable}}}{\emph{\DUrole{n}{var}}}{}~\begin{quote}
+\phantomsection\label{\detokenize{index:State.State.jump}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{abstract\DUrole{w}{  }}}\sphinxbfcode{\sphinxupquote{jump}}}{\emph{\DUrole{n}{destination}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{int}}}{}~\begin{quote}
+
+\sphinxAtStartPar
+This abstract method is invoked when the framework reaches an unconditional branching statement.
+\end{quote}
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{destination}} \textendash{} The destination program counter for the branch.
+
+\item[{Returns}] \leavevmode
+\sphinxAtStartPar
+None
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{load\_variable() (State.State method)@\spxentry{load\_variable()}\spxextra{State.State method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{index:State.State.load_variable}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{abstract\DUrole{w}{  }}}\sphinxbfcode{\sphinxupquote{load\_variable}}}{\emph{\DUrole{n}{var}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{str}}}{}~\begin{quote}
 
 \sphinxAtStartPar
 This abstract method is invoked when an identifier is evaluated and a variable is
@@ -224,10 +217,38 @@ The value of the variable that was retrieved.
 
 \end{fulllineitems}
 
-\index{next\_state() (State.State method)@\spxentry{next\_state()}\spxextra{State.State method}}
+\index{store\_variable() (State.State method)@\spxentry{store\_variable()}\spxextra{State.State method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{index:State.State.next_state}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{abstract\DUrole{w}{  }}}\sphinxbfcode{\sphinxupquote{next\_state}}}{}{}~\begin{quote}
+\phantomsection\label{\detokenize{index:State.State.store_variable}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{abstract\DUrole{w}{  }}}\sphinxbfcode{\sphinxupquote{store\_variable}}}{\emph{\DUrole{n}{var}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{str}}, \emph{\DUrole{n}{val}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{object}}}{}~\begin{quote}
+
+\sphinxAtStartPar
+This abstract method is invoked when the framework wants to assign a value to a variable.
+\end{quote}
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{var}} \textendash{} The identifier of the variable being assigned to.
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{val}} \textendash{} The value to be assigned to the variable.
+
+\end{itemize}
+
+\item[{Returns}] \leavevmode
+\sphinxAtStartPar
+None
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{update\_state() (State.State method)@\spxentry{update\_state()}\spxextra{State.State method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{index:State.State.update_state}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{abstract\DUrole{w}{  }}}\sphinxbfcode{\sphinxupquote{update\_state}}}{}{}~\begin{quote}
 
 \sphinxAtStartPar
 This abstract method is invoked by the framework when before the next
@@ -249,34 +270,13 @@ bool
 
 \end{fulllineitems}
 
-\index{unconditional\_branch() (State.State method)@\spxentry{unconditional\_branch()}\spxextra{State.State method}}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{index:State.State.unconditional_branch}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{abstract\DUrole{w}{  }}}\sphinxbfcode{\sphinxupquote{unconditional\_branch}}}{\emph{\DUrole{n}{pc}}}{}~\begin{quote}
-
-\sphinxAtStartPar
-This abstract method is invoked when the framework reaches an unconditional branching statement.
-\end{quote}
-\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode
-\sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{pc}} \textendash{} The destination program counter for the branch.
-
-\item[{Returns}] \leavevmode
-\sphinxAtStartPar
-None
-
-\end{description}\end{quote}
-
-\end{fulllineitems}
-
 
 \end{fulllineitems}
 
 \phantomsection\label{\detokenize{index:module-Wrappers}}\index{module@\spxentry{module}!Wrappers@\spxentry{Wrappers}}\index{Wrappers@\spxentry{Wrappers}!module@\spxentry{module}}\index{unary\_operator\_wrapper() (in module Wrappers)@\spxentry{unary\_operator\_wrapper()}\spxextra{in module Wrappers}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{index:Wrappers.unary_operator_wrapper}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{Wrappers.}}\sphinxbfcode{\sphinxupquote{unary\_operator\_wrapper}}}{\emph{\DUrole{n}{f}}}{}~\begin{quote}
+\phantomsection\label{\detokenize{index:Wrappers.unary_operator_wrapper}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{Wrappers.}}\sphinxbfcode{\sphinxupquote{unary\_operator\_wrapper}}}{\emph{\DUrole{n}{f}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{function}}}{}~\begin{quote}
 
 \sphinxAtStartPar
 The wrapper takes in the original unary operator as its parameter and
@@ -298,7 +298,7 @@ A new unary function.
 \index{binary\_operator\_wrapper() (in module Wrappers)@\spxentry{binary\_operator\_wrapper()}\spxextra{in module Wrappers}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{index:Wrappers.binary_operator_wrapper}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{Wrappers.}}\sphinxbfcode{\sphinxupquote{binary\_operator\_wrapper}}}{\emph{\DUrole{n}{f}}}{}~\begin{quote}
+\phantomsection\label{\detokenize{index:Wrappers.binary_operator_wrapper}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{Wrappers.}}\sphinxbfcode{\sphinxupquote{binary\_operator\_wrapper}}}{\emph{\DUrole{n}{f}\DUrole{p}{:}\DUrole{w}{  }\DUrole{n}{function}}}{}~\begin{quote}
 
 \sphinxAtStartPar
 The wrapper takes in the original binary operator as its parameter and

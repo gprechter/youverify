@@ -47,7 +47,7 @@ def main(argv):
     def exec(program):
         state = DefaultState([SubState(TRUE(), [Frame(program, 0, {k: [v.name, None] for k, v in program.variables.copy().items()}, None)])])
         SubState.controller = state
-        while state.next_state():
+        while state.update_state():
             stmt = state.current_statement
             stmt.exec(state)
         return state

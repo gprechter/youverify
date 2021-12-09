@@ -1,4 +1,4 @@
-This is LuaTeX, Version 1.10.0 (TeX Live 2019)  (format=lualatex 2019.5.8)  2 DEC 2021 12:20
+This is LuaTeX, Version 1.10.0 (TeX Live 2019)  (format=lualatex 2019.5.8)  9 DEC 2021 12:00
  restricted system commands enabled.
  file:line:error style messages enabled.
 **youverify.tex
@@ -34,7 +34,7 @@ Inserting `luaotfload.aux.patch_cambria_domh' at position 2 in `luaotfload.patch
 Inserting `luaotfload.aux.fixup_fontdata' at position 1 in `luaotfload.patch_font_unsafe'.
 Inserting `luaotfload.aux.set_capheight' at position 3 in `luaotfload.patch_font'.
 Inserting `luaotfload.rewrite_fontname' at position 4 in `luaotfload.patch_font'.
-luaotfload | main : initialization completed in 0.061 seconds
+luaotfload | main : initialization completed in 0.074 seconds
 (./sphinxmanual.cls
 Document Class: sphinxmanual 2019/12/01 v2.3.0 Document class (Sphinx manual)
 (/usr/local/texlive/2019/texmf-dist/tex/latex/base/report.cls
@@ -872,12 +872,12 @@ File: t1txtt.fd 2000/12/15 v3.1
 )
 LaTeX Font Info:    Font shape `T1/txtt/b/n' in size <10> not available
 (Font)              Font shape `T1/txtt/bx/n' tried instead on input line 81.
-LaTeX Font Info:    Try loading font information for TS1+qtm on input line 136.
+LaTeX Font Info:    Try loading font information for TS1+qtm on input line 137.
  (/usr/local/texlive/2019/texmf-dist/tex/latex/tex-gyre/ts1qtm.fd
 File: ts1qtm.fd 2009/09/25 v1.2 font definition file for TS1/qtm
-) [1] [2
+) [1
 Missing character: There is no ’ (U+2019) in font ec-qtmr!
-]
+] [2]
 
 LaTeX Warning: Reference `index:module-State' on page 3 undefined on input line 326.
 
@@ -886,33 +886,23 @@ LaTeX Warning: Reference `index:module-State' on page 3 undefined on input line 
 
 
 ] ("/Users/griffinprechter/Documents/School/Research/SE Research/youverify/docs/latex/.texpadtmp/youverify.ind"
-Underfull \hbox (badness 10000) in paragraph at lines 3--5
-[]\T1/qtm/m/n/10 \spx-en-tryadd_path_con-straint()\spx-ex-traState.State
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 12--14
+Underfull \hbox (badness 10000) in paragraph at lines 9--11
 []\T1/qtm/m/n/10 \spx-en-try-bi-nary_op-er-a-tor_wrap-per()\spx-ex-train mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 17--19
+Underfull \hbox (badness 10000) in paragraph at lines 14--16
 []\T1/qtm/m/n/10 \spx-en-trycon-di-tional_branch()\spx-ex-traState.State
  []
 
 
-Underfull \hbox (badness 5533) in paragraph at lines 19--21
+Underfull \hbox (badness 5533) in paragraph at lines 16--18
 []\T1/qtm/m/n/10 \spx-en-trycur-rent_state-ment\spx-ex-traState.State prop-erty,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 46--48
+Underfull \hbox (badness 10000) in paragraph at lines 49--51
 []\T1/qtm/m/n/10 \spx-en-tryu-nary_op-er-a-tor_wrap-per()\spx-ex-train mod-ule
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 48--50
-[]\T1/qtm/m/n/10 \spx-en-tryun-con-di-tional_branch()\spx-ex-traState.State
  []
 
 [4
@@ -937,14 +927,14 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 334.
 Here is how much of LuaTeX's memory you used:
  14281 strings out of 494291
  100000,319454 words of node,token memory allocated
- 805 words of node memory still in use:
-   6 hlist, 2 vlist, 2 rule, 1 dir, 2 glue, 27 kern, 1 glyph, 53 attribute, 64 glue_spec, 28 attribute_list, 2 write nodes
-   avail lists: 2:1056,3:159,4:72,5:263,6:52,7:2017,8:30,9:182,10:7,11:203
+ 827 words of node memory still in use:
+   6 hlist, 2 vlist, 2 rule, 1 dir, 2 glue, 29 kern, 1 glyph, 57 attribute, 64 glue_spec, 30 attribute_list, 2 write nodes
+   avail lists: 2:1044,3:158,4:72,5:276,6:52,7:2097,8:30,9:179,10:7,11:201
  17774 multiletter control sequences out of 65536+600000
  51 fonts using 3308503 bytes
- 37i,11n,45p,317b,614s stack positions out of 5000i,500n,10000p,200000b,100000s
+ 37i,11n,45p,411b,680s stack positions out of 5000i,500n,10000p,200000b,100000s
 {/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/tex-gyre/q-ec.enc}{/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/tex-gyre/q-ts1.enc}</usr/local/texlive/2019/texmf-dist/fonts/type1/public/tex-gyre/qhvb.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/tex-gyre/qhvbi.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/tex-gyre/qhvr.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/tex-gyre/qtmb.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/tex-gyre/qtmr.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/tex-gyre/qtmri.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/txfonts/t1xbtt.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/txfonts/t1xtt.pfb>
-Output written on youverify.pdf (8 pages, 136951 bytes).
+Output written on youverify.pdf (8 pages, 137649 bytes).
 
 PDF statistics: 114 PDF objects out of 1000 (max. 8388607)
  95 compressed objects within 1 object stream

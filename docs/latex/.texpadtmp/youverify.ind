@@ -1,11 +1,8 @@
 \begin{theindex}
 
-  \item \spxentry{add\_path\_constraint()}\spxextra{State.State method}, 
-		\hyperpage{1}
   \item \spxentry{advance\_pc()}\spxextra{State.State method}, 
 		\hyperpage{1}
-  \item \spxentry{assign\_variable()}\spxextra{State.State method}, 
-		\hyperpage{1}
+  \item \spxentry{assume()}\spxextra{State.State method}, \hyperpage{1}
 
   \indexspace
 
@@ -21,7 +18,11 @@
 
   \indexspace
 
-  \item \spxentry{get\_variable()}\spxextra{State.State method}, 
+  \item \spxentry{jump()}\spxextra{State.State method}, \hyperpage{1}
+
+  \indexspace
+
+  \item \spxentry{load\_variable()}\spxextra{State.State method}, 
 		\hyperpage{1}
 
   \indexspace
@@ -40,12 +41,12 @@
   \item \spxentry{State}
     \subitem \spxentry{module}, \hyperpage{1}
   \item \spxentry{State}\spxextra{class in State}, \hyperpage{1}
+  \item \spxentry{store\_variable()}\spxextra{State.State method}, 
+		\hyperpage{2}
 
   \indexspace
 
   \item \spxentry{unary\_operator\_wrapper()}\spxextra{in module Wrappers}, 
-		\hyperpage{2}
-  \item \spxentry{unconditional\_branch()}\spxextra{State.State method}, 
 		\hyperpage{2}
 
   \indexspace
