@@ -1,0 +1,37 @@
+define bvxor(a: BV[8], b: BV[8]) -> BV[8]:
+	n_a, n_b: BV[8]
+	a_b_bar, a_bar_b, res: BV[8]
+	call n_a = bvnot(a)
+	call n_b = bvnot(b)
+	call a_b_bar = bvand(a, n_b)
+	call a_bar_b = bvand(n_a, b)
+	call res = bvor(a_b_bar, a_bar_b)
+	return res
+
+define decrypt_char(cipher: BV[8], key: BV[8]) -> BV[8]:
+	res: BV[8]
+	call res = bvxor(cipher, key)
+	return res
+
+define decrypt(cipher: ARRAY{BV[8]}, IV: BV[8], key: BV[8]) -> ARRAY{BV[8]}:
+	i: INT
+	plaintext: ARRAY{BV[8]}
+
+	plaintext = ARRAY[6]{BV{0, 8}}
+
+	LABEL LOOP: if
+
+	LABEL END:
+
+IV, key: BV[8]
+cipher: ARRAY{BV[8]}
+
+
+IV = $sym{IV, BV[8]}
+key = $sym{key, BV[8]}
+
+cipher = ARRAY[6]{BV{0, 8}}
+
+
+
+

@@ -1,0 +1,67 @@
+define below_max_length(arg: BV[8]*, max_length: INT) -> BOOL:
+	null_terminated, cond: BOOL
+	i: INT
+	val: BV[8]
+	null_terminated = false
+	i = 0
+	LABEL LOOP: if i >= max_length goto END
+	val = *arg
+	i = i + 1
+	arg = arg + 1
+	cond = val == BV{0, 8}
+	null_terminated = cond | null_terminated
+	goto LOOP
+	LABEL END: return null_terminated
+
+define sum(arr: ARRAY{BV[8]}, len: INT) -> INT:
+	s, t, i: INT
+	elem: BV[8]
+	i = 0
+	s = 0
+	LABEL LOOP: if i >= len goto END
+	elem = arr[i]
+	call t = bv2nat(elem)
+	s = s + t
+	i = i + 1
+	goto LOOP
+	LABEL END: i = 0
+	return s
+
+define play_game(buttons: ARRAY{BOOL}, map: ARRAY{BV[8]}) -> BV[16]:
+	i: INT
+	map_elem: BV[8]
+	score, temp: BV[16]
+	cond: BOOL
+	i = 0
+
+	score = BV{0, 16}
+
+	LABEL LOOP: map_elem = map[i]
+	if map_elem == BV{0, 8} goto END_LOOP
+
+	cond = buttons[i]
+	if cond goto END_COND
+	call temp = concat(BV{0, 8}, map_elem)
+	call score = bvadd(score, temp)
+	LABEL END_COND: i = i + 1
+	goto LOOP
+	LABEL END_LOOP: return score
+
+buttons: ARRAY{BOOL}
+level: ARRAY{BV[8]}
+max_level_length: INT
+is_below_max_length: BOOL
+level_sum, final_score: INT
+
+level = $sym{level, ARRAY{BV[8]}}
+max_level_length = 5
+
+call is_below_max_length = below_max_length(level, max_level_length)
+call level_sum = sum(level, max_level_length)
+
+assume is_below_max_length
+assume level_sum == 100
+
+buttons = $sym{buttons, ARRAY{BOOL}}
+
+call final_score = play_game(buttons, level)

@@ -42,10 +42,10 @@ class Variable(AtomicExpression):
         self.name = name
 
     def eval(self, state):
-        return state.get_variable(self.name)
+        return state.load_variable(self.name)
 
-    def type_check(self, context):
-        return context.variables[self.name], ""
+    # def type_check(self, context):
+    #     return context.variables[self.name], ""
 
     def __repr__(self):
         return f"{self.name}"
@@ -56,13 +56,13 @@ class RecordIndexExpression(Expression):
         self.element = element
 
     def eval(self, state):
-        address = simplify(state.get_variable(self.record))
+        address = simplify(state.load_variable(self.record))
         if address.is_constant():
             return state.current_state.addr_map[address.constant_value()][self.element]
         else:
             if address.symbol_name() not in state.current_state.concrete_symbolic_pointers:
                 concrete_address = state.current_state.base_addr
-                state.add_path_constraint(Equals(address, BV(concrete_address, 32)))
+                state.assume(Equals(address, BV(concrete_address, 32)))
                 state.current_state.concrete_symbolic_pointers[address.symbol_name()] = concrete_address
                 state.current_state.base_addr = state.current_state.base_addr + 1
             else:
@@ -77,10 +77,10 @@ class RecordIndexExpression(Expression):
             state.current_state.addr_map[concrete_address] = symb_elems
             return state.current_state.addr_map[concrete_address][self.element]
 
-    def type_check(self, context):
-        rec_type = context.variables[self.record]
-        record = SubState.records[rec_type]
-        return record.types[record.elements.index(self.element)], ""
+    # def type_check(self, context):
+    #     rec_type = context.variables[self.record]
+    #     record = SubState.records[rec_type]
+    #     return record.types[record.elements.index(self.element)], ""
 
 
 class Value(AtomicExpression):
@@ -91,8 +91,8 @@ class Value(AtomicExpression):
     def eval(self, state):
         return self.value
 
-    def type_check(self, context):
-        return self.type, ""
+    # def type_check(self, context):
+    #     return self.type, ""
 
     def __repr__(self):
         return f"{self.value}"
@@ -117,8 +117,8 @@ class UniqueSymbol(Value):
     def __init__(self, type):
         self.type = type
 
-    def type_check(self, context):
-        return self.type, ""
+    # def type_check(self, context):
+    #     return self.type, ""
 
     def eval(self, state):
         return FreshSymbol(self.type)
@@ -132,12 +132,12 @@ class UnaryExpression(Expression):
         self.op_name = op_name
         self.arg = arg
 
-    def type_check(self, context):
-        comp_func, type = unary_type_checking_rules[self.op_name]
-        operand = self.arg.type_check(context)
-        if operand[1]:
-            return operand
-        return type, "" if comp_func(operand[0]) else f"{self.op_name} is being used on the incorrect operand."
+    # def type_check(self, context):
+    #     comp_func, type = unary_type_checking_rules[self.op_name]
+    #     operand = self.arg.type_check(context)
+    #     if operand[1]:
+    #         return operand
+    #     return type, "" if comp_func(operand[0]) else f"{self.op_name} is being used on the incorrect operand."
 
     def eval(self, state):
         return self.op(self.arg.eval(state))
@@ -156,15 +156,15 @@ class BinaryExpression(Expression):
             return YouVerifyArray(lhs.default_value, lhs.length, lhs._array, self.op(lhs.index, rhs))
         return self.op(lhs, rhs)
 
-    def type_check(self, context):
-        comp_func, type = binary_type_checking_rules[self.op_name]
-        lhs = self.lhs.type_check(context)
-        rhs = self.rhs.type_check(context)
-        if lhs[1]:
-            return lhs
-        if rhs[1]:
-            return rhs
-        return type, "" if comp_func(lhs[0], rhs[0]) else f"{self.op_name} is being used on the incorrect operands."
+    # def type_check(self, context):
+    #     comp_func, type = binary_type_checking_rules[self.op_name]
+    #     lhs = self.lhs.type_check(context)
+    #     rhs = self.rhs.type_check(context)
+    #     if lhs[1]:
+    #         return lhs
+    #     if rhs[1]:
+    #         return rhs
+    #     return type, "" if comp_func(lhs[0], rhs[0]) else f"{self.op_name} is being used on the incorrect operands."
 
     def __repr__(self):
         return f"{self.lhs} {self.op} {self.rhs}"
@@ -176,18 +176,18 @@ class TernaryExpression(Expression):
         self.second = second
         self.third = third
 
-    def type_check(self, context):
-        f, s, t = self.first.type_check(context), self.second.type_check(context), self.third.type_check(context)
-        f_type, f_err = f
-        s_type, s_err = s
-        t_type, t_err = t
-        if f_err:
-            return f_type, f_err
-        if s_err:
-            return s_type, s_err
-        if t_err:
-            return t_type, t_err
-        return s_type, "" if (f_type == BOOL and (both_records_or_null(s_type, t_type) or both_same(s_type, t_type))) else "The types were incorrect."
+    # def type_check(self, context):
+    #     f, s, t = self.first.type_check(context), self.second.type_check(context), self.third.type_check(context)
+    #     f_type, f_err = f
+    #     s_type, s_err = s
+    #     t_type, t_err = t
+    #     if f_err:
+    #         return f_type, f_err
+    #     if s_err:
+    #         return s_type, s_err
+    #     if t_err:
+    #         return t_type, t_err
+    #     return s_type, "" if (f_type == BOOL and (both_records_or_null(s_type, t_type) or both_same(s_type, t_type))) else "The types were incorrect."
 
     def eval(self, state):
         return self.op(self.first.eval(state), self.second.eval(state), self.third.eval(state))
@@ -197,16 +197,16 @@ class ArrayIndexExpression(Expression):
         self.arr = arr
         self.index = index
 
-    def type_check(self, context):
-        arr_type, err = self.arr.type_check(context)
-        if err:
-            return arr_type, err
-        return arr_type.elem_type, ""
+    # def type_check(self, context):
+    #     arr_type, err = self.arr.type_check(context)
+    #     if err:
+    #         return arr_type, err
+    #     return arr_type.elem_type, ""
 
     def eval(self, state):
         arr = self.arr.eval(state)
         index = self.index.eval(state)
-        state.add_path_constraint(And(GE(index, Int(0)), LT(index, arr.length)))
+        state.assume(And(GE(index, Int(0)), LT(index, arr.length)))
         return Select(arr.get_array(), index)
 
     def __repr__(self):
@@ -219,11 +219,11 @@ class NewArrayExpression(Expression):
         self.default = default
         self.length = length
 
-    def type_check(self, context):
-        default_type, err = self.default.type_check(context)
-        if err:
-            return default_type, err
-        return ArrayType(INT, (BVType(32) if isinstance(default_type, str) and default_type == 'null' else default_type)), ""
+    # def type_check(self, context):
+    #     default_type, err = self.default.type_check(context)
+    #     if err:
+    #         return default_type, err
+    #     return ArrayType(INT, (BVType(32) if isinstance(default_type, str) and default_type == 'null' else default_type)), ""
 
     def eval(self, state):
         arr = YouVerifyArray(self.default.eval(state), Int(self.length))
@@ -250,15 +250,15 @@ class Return(Statement):
     def __init__(self, expression):
         self.expression = expression
 
-    def type_check(self, context):
-        if self.expression == None and context.return_type == None:
-            return None, ""
-        elif self.expression == None or context.return_type == None:
-            return None, "A function with no return type cannot return a value, and a function with a return type must have a return value."
-        return_expr_type, err = self.expression.type_check(context)
-        if err:
-            return return_expr_type, err
-        return None, "" if return_expr_type == context.return_type else "The return expression type must match the function's return type"
+    # def type_check(self, context):
+    #     if self.expression == None and context.return_type == None:
+    #         return None, ""
+    #     elif self.expression == None or context.return_type == None:
+    #         return None, "A function with no return type cannot return a value, and a function with a return type must have a return value."
+    #     return_expr_type, err = self.expression.type_check(context)
+    #     if err:
+    #         return return_expr_type, err
+    #     return None, "" if return_expr_type == context.return_type else "The return expression type must match the function's return type"
 
     def exec(self, state):
         if self.expression:
@@ -278,18 +278,18 @@ class Assume(Statement):
         return None, "" if cond_type == BOOL else "The condition to a conditional branch must be a boolean value."
 
     def exec(self, state):
-        state.add_path_constraint(self.expression.eval(state))
+        state.assume(self.expression.eval(state))
         state.advance_pc()
 
 class Assert(Statement):
     def __init__(self, expression):
         self.expression = expression
 
-    def type_check(self, context):
-        cond_type, err = self.expression.type_check(context)
-        if err:
-            return cond_type, err
-        return None, "" if cond_type == BOOL else "The condition to a conditional branch must be a boolean value."
+    # def type_check(self, context):
+    #     cond_type, err = self.expression.type_check(context)
+    #     if err:
+    #         return cond_type, err
+    #     return None, "" if cond_type == BOOL else "The condition to a conditional branch must be a boolean value."
 
 
     def exec(self, state):
@@ -301,8 +301,8 @@ class Pointer_Dereference_Expression(Expression):
         self.name = name
 
     def eval(self, state):
-        variable = state.get_variable(self.name)
-        state.add_path_constraint(And(GE(variable.index, Int(0)), LT(variable.index, variable.length)))
+        variable = state.load_variable(self.name)
+        state.assume(And(GE(variable.index, Int(0)), LT(variable.index, variable.length)))
         return Select(variable.get_array(), variable.index)
 
 class Alloc_Concrete(Statement):
@@ -311,27 +311,27 @@ class Alloc_Concrete(Statement):
         self.record = record
         self.arguments = arguments
 
-    def type_check(self, context):
-        target, target_issue = self.target.type_check(context)
-        record = SubState.records[self.record]
-        if len(self.arguments) != len(record.elements):
-            return None, f"There must be {len(record.elements)} values to initialize the {self.record} record."
-        for t, e in zip(record.types, self.arguments):
-            elem_t, err = e.type_check(context)
-            if err:
-                return None, err
-            if not(both_records_or_null(elem_t, t) or both_same(elem_t, t)):
-                return None, f"The expression {e} is the incorrect type for the given element, {t}."
-        if target_issue:
-            return target, target_issue
-        return None, "" if both_records_or_null(target, self.record) else "The record must be assigned to the same type."
+    # def type_check(self, context):
+    #     target, target_issue = self.target.type_check(context)
+    #     record = SubState.records[self.record]
+    #     if len(self.arguments) != len(record.elements):
+    #         return None, f"There must be {len(record.elements)} values to initialize the {self.record} record."
+    #     for t, e in zip(record.types, self.arguments):
+    #         elem_t, err = e.type_check(context)
+    #         if err:
+    #             return None, err
+    #         if not(both_records_or_null(elem_t, t) or both_same(elem_t, t)):
+    #             return None, f"The expression {e} is the incorrect type for the given element, {t}."
+    #     if target_issue:
+    #         return target, target_issue
+    #     return None, "" if both_records_or_null(target, self.record) else "The record must be assigned to the same type."
 
     def exec(self, state):
         address = state.current_state.base_addr
         arguments = [arg.eval(state) for arg in self.arguments]
         state.current_state.addr_map[address] = {k: v for k, v in zip(SubState.records[self.record].elements, arguments)}
         state.current_state.base_addr = state.current_state.base_addr + 1
-        state.assign_variable(self.target.name, BV(address, 32))
+        state.store_variable(self.target.name, BV(address, 32))
         state.advance_pc()
 
 class Alloc_Symbolic(Statement):
@@ -339,14 +339,14 @@ class Alloc_Symbolic(Statement):
         self.target = target
         self.record = record
 
-    def type_check(self, context):
-        target, target_issue = self.target.type_check(context)
-        if target_issue:
-            return target, target_issue
-        return None, "" if target == self.record else "The type of a symbolic record must match the target."
+    # def type_check(self, context):
+    #     target, target_issue = self.target.type_check(context)
+    #     if target_issue:
+    #         return target, target_issue
+    #     return None, "" if target == self.record else "The type of a symbolic record must match the target."
 
     def exec(self, state):
-        state.assign_variable(self.target.name, Symbol(f"{self.record}_{self.target.name}", BVType(32)))
+        state.store_variable(self.target.name, Symbol(f"{self.record}_{self.target.name}", BVType(32)))
         state.advance_pc()
 
 class NULL(AtomicExpression):
@@ -368,34 +368,34 @@ class Assignment(Statement):
             arr = self.target.arr.eval(state)
             arr.set_array(Store(arr.get_array(), index, self.expression.eval(state)))
             if arr.length:
-                state.add_path_constraint(And(GE(index, Int(0)), LT(index, arr.length)))
+                state.assume(And(GE(index, Int(0)), LT(index, arr.length)))
         elif isinstance(self.target, RecordIndexExpression):
-            address = simplify(state.get_variable(self.target.record))
+            address = simplify(state.load_variable(self.target.record))
             state.current_state.addr_map[address.constant_value()][self.target.element] = self.expression.eval(state)
         elif isinstance(self.target, Pointer_Dereference_Expression):
-            ref = state.get_variable(self.target.name)
-            state.add_path_constraint(And(GE(ref.index, Int(0)), LT(ref.index, ref.length)))
+            ref = state.load_variable(self.target.name)
+            state.assume(And(GE(ref.index, Int(0)), LT(ref.index, ref.length)))
             if not is_sat(state.current_state.path_cond):
                 assert False, "OVERFLOW!"
             ref.set_array(Store(ref.get_array(), ref.index, self.expression.eval(state)))
         else:
-            if isinstance(state.get_variable(self.target.name), YouVerifyArray):
-                ref = state.get_variable(self.target.name)
+            if isinstance(state.load_variable(self.target.name), YouVerifyArray):
+                ref = state.load_variable(self.target.name)
                 val = copy(self.expression.eval(state))
                 if isinstance(val, FNode) and val.is_symbol():
                     ref.index = val
                 else:
-                    state.assign_variable(self.target.name, val)
+                    state.store_variable(self.target.name, val)
             else:
-                state.assign_variable(self.target.name, self.expression.eval(state))
+                state.store_variable(self.target.name, self.expression.eval(state))
         state.advance_pc()
 
-    def type_check(self, context):
-        target, target_issue = self.target.type_check(context)
-        value, value_issue = self.expression.type_check(context)
-        if value_issue or target_issue:
-            return None, f"{value_issue}, {target_issue}"
-        return None, "" if both_records_or_null(target, value) or both_same(target, value) else f"Target {target} and value {value} types must match."
+    # def type_check(self, context):
+    #     target, target_issue = self.target.type_check(context)
+    #     value, value_issue = self.expression.type_check(context)
+    #     if value_issue or target_issue:
+    #         return None, f"{value_issue}, {target_issue}"
+    #     return None, "" if both_records_or_null(target, value) or both_same(target, value) else f"Target {target} and value {value} types must match."
 
     def __repr__(self):
         return f"{repr(self.target)} = {repr(self.expression)}"
@@ -419,7 +419,7 @@ class Report(Statement):
 
 def wrap_target_var(var):
     def return_to_var(state, value):
-        state.assign_variable(var.name, value)
+        state.store_variable(var.name, value)
     return return_to_var
 
 def wrap_target_arr_index(arr, index):
@@ -428,7 +428,7 @@ def wrap_target_arr_index(arr, index):
         a = arr.eval(state)
         a.set_array(Store(a.get_array(), i, value))
         if a.length:
-            state.add_path_constraint(And(GE(i, Int(0)), LT(i, a.length)))
+            state.assume(And(GE(i, Int(0)), LT(i, a.length)))
     return return_to_arr_index
 
 class FunctionCallAndAssignment(Statement):
@@ -437,30 +437,30 @@ class FunctionCallAndAssignment(Statement):
         self.function = function
         self.arguments = arguments
 
-    def type_check(self, context):
-        if self.function in builtin_type_checking_rules:
-            type_check_func, return_type_func, num_args = builtin_type_checking_rules[self.function]
-            if self.function == 'extract':
-                return_type_func = lambda bv, s, e: BVType(1 + self.arguments[2].eval(None).constant_value() - self.arguments[1].eval(None).constant_value())
-        else:
-            type_check_func = lambda *args: all([a == p.name for a, p in zip(args, context.functions[self.function].params.values())])
-            return_type_func = lambda *args: context.functions[self.function].return_value
-            num_args = len(context.functions[self.function].params)
-        if num_args != len(self.arguments):
-            return None, "The number of arguments allowed and the number present are not the same!"
-        args = [arg.type_check(context) for arg in self.arguments]
-        for type, err in args:
-            if err:
-                return None, err
-        if not type_check_func(*[arg[0] for arg in args]):
-            return None, "The arguments to the function are of the wrong type."
-        return_type = return_type_func(*[arg[0] for arg in args])
-        target, target_issue = self.target.type_check(context)
-        if target_issue:
-            return None, target_issue
-        if not return_type:
-            return None, "Return type must not be NONE."
-        return None, "" if both_same(target, return_type) or both_records_or_null(target, return_type) else f"Target {target} and value {return_type} types must match."
+    # def type_check(self, context):
+    #     if self.function in builtin_type_checking_rules:
+    #         type_check_func, return_type_func, num_args = builtin_type_checking_rules[self.function]
+    #         if self.function == 'extract':
+    #             return_type_func = lambda bv, s, e: BVType(1 + self.arguments[2].eval(None).constant_value() - self.arguments[1].eval(None).constant_value())
+    #     else:
+    #         type_check_func = lambda *args: all([a == p.name for a, p in zip(args, context.functions[self.function].params.values())])
+    #         return_type_func = lambda *args: context.functions[self.function].return_value
+    #         num_args = len(context.functions[self.function].params)
+    #     if num_args != len(self.arguments):
+    #         return None, "The number of arguments allowed and the number present are not the same!"
+    #     args = [arg.type_check(context) for arg in self.arguments]
+    #     for type, err in args:
+    #         if err:
+    #             return None, err
+    #     if not type_check_func(*[arg[0] for arg in args]):
+    #         return None, "The arguments to the function are of the wrong type."
+    #     return_type = return_type_func(*[arg[0] for arg in args])
+    #     target, target_issue = self.target.type_check(context)
+    #     if target_issue:
+    #         return None, target_issue
+    #     if not return_type:
+    #         return None, "Return type must not be NONE."
+    #     return None, "" if both_same(target, return_type) or both_records_or_null(target, return_type) else f"Target {target} and value {return_type} types must match."
 
 
     def exec(self, state):
@@ -470,11 +470,11 @@ class FunctionCallAndAssignment(Statement):
             for argument in self.arguments:
                 arguments.append(argument.eval(state))
             if isinstance(self.target, ArrayIndexExpression):
-                state.assign_variable(self.target.arr.name,
-                                      Store(self.target.arr.eval(state), self.target.index.eval(state),
+                state.store_variable(self.target.arr.name,
+                                     Store(self.target.arr.eval(state), self.target.index.eval(state),
                                             YVR_BUILTIN_OP_TO_PYSMT[self.function](*arguments)))
             else:
-                state.assign_variable(self.target.name, YVR_BUILTIN_OP_TO_PYSMT[self.function](*arguments))
+                state.store_variable(self.target.name, YVR_BUILTIN_OP_TO_PYSMT[self.function](*arguments))
             state.advance_pc()
         else:
             function = state.current_state.frame_stack[0].function.functions[self.function]
@@ -486,7 +486,7 @@ class FunctionCallAndAssignment(Statement):
                 if isinstance(self.target, ArrayIndexExpression) else wrap_target_var(self.target)
             state.current_state.push_frame(Frame(function, 0, {k: [v.name, None] for k, v in function.variables.items()}, wrapped_target))
             for i, param in enumerate(function.params):
-                state.assign_variable(param, copy(arguments[i]))
+                state.store_variable(param, copy(arguments[i]))
             state.advance_pc(0)
 
 class FunctionCallWithNoAssignment(Statement):
@@ -494,24 +494,24 @@ class FunctionCallWithNoAssignment(Statement):
         self.function = function
         self.arguments = arguments
 
-    def type_check(self, context):
-        if self.function in builtin_type_checking_rules:
-            return None, "Builtins can never be called with a target."
-        else:
-            type_check_func = lambda *args: all([a == p.name for a, p in zip(args, context.functions[self.function].params.values())])
-            return_type_func = lambda *args: context.functions[self.function].return_value
-            num_args = len(context.functions[self.function].params)
-        if num_args != len(self.arguments):
-            return None, "The number of arguments allowed and the number present are not the same!"
-        args = [arg.type_check(context) for arg in self.arguments]
-        print(args)
-        for type, err in args:
-            if err:
-                return None, err
-        if not type_check_func(*[arg[0] for arg in args]):
-            return None, "The arguments to the function are of the wrong type."
-
-        return None, ""
+    # def type_check(self, context):
+    #     if self.function in builtin_type_checking_rules:
+    #         return None, "Builtins can never be called with a target."
+    #     else:
+    #         type_check_func = lambda *args: all([a == p.name for a, p in zip(args, context.functions[self.function].params.values())])
+    #         return_type_func = lambda *args: context.functions[self.function].return_value
+    #         num_args = len(context.functions[self.function].params)
+    #     if num_args != len(self.arguments):
+    #         return None, "The number of arguments allowed and the number present are not the same!"
+    #     args = [arg.type_check(context) for arg in self.arguments]
+    #     print(args)
+    #     for type, err in args:
+    #         if err:
+    #             return None, err
+    #     if not type_check_func(*[arg[0] for arg in args]):
+    #         return None, "The arguments to the function are of the wrong type."
+    #
+    #     return None, ""
 
 
 
@@ -528,7 +528,7 @@ class FunctionCallWithNoAssignment(Statement):
 
         state.current_state.push_frame(Frame(function, 0, {k: [v.name, None] for k, v in function.variables.items()}, None))
         for i, param in enumerate(function.params):
-            state.assign_variable(param, arguments[i])
+            state.store_variable(param, arguments[i])
         state.advance_pc(0)
 
 class ConditionalBranch(Statement):
@@ -536,11 +536,11 @@ class ConditionalBranch(Statement):
         self.condition = condition
         self.dest = dest
 
-    def type_check(self, context):
-        cond_type, err = self.condition.type_check(context)
-        if err:
-            return cond_type, err
-        return None, "" if cond_type == BOOL else "The condition to a conditional branch must be a boolean value."
+    # def type_check(self, context):
+    #     cond_type, err = self.condition.type_check(context)
+    #     if err:
+    #         return cond_type, err
+    #     return None, "" if cond_type == BOOL else "The condition to a conditional branch must be a boolean value."
 
     def exec(self, state):
         state.conditional_branch(self.condition.eval(state), state.current_state.head_frame().function.labels[self.dest])
@@ -552,10 +552,10 @@ class UnconditionalBranch(ConditionalBranch):
     def __init__(self, dest):
         self.dest = dest
     def exec(self, state):
-        state.unconditional_branch(state.current_state.head_frame().function.labels[self.dest])
+        state.jump(state.current_state.head_frame().function.labels[self.dest])
 
-    def type_check(self, context):
-        return None, ""
+    # def type_check(self, context):
+    #     return None, ""
 
     def __repr__(self):
         return f"goto {self.dest}"

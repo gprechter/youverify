@@ -40,7 +40,7 @@ class State(ABC):
         pass
 
     @abstractmethod
-    def assign_variable(self, var, val):
+    def store_variable(self, var: str, val: object):
         """
             This abstract method is invoked when the framework wants to assign a value to a variable.
 
@@ -51,7 +51,7 @@ class State(ABC):
         pass
 
     @abstractmethod
-    def get_variable(self, var):
+    def load_variable(self, var: str):
         """
             This abstract method is invoked when an identifier is evaluated and a variable is
             to be fetched from the state's variable store.
@@ -62,7 +62,7 @@ class State(ABC):
         pass
 
     @abstractmethod
-    def advance_pc(self, i):
+    def advance_pc(self, i: int):
         """
             This abstract method is invoked when the framework wants to advance the program counter.
 
@@ -72,29 +72,29 @@ class State(ABC):
         pass
 
     @abstractmethod
-    def unconditional_branch(self, pc):
+    def jump(self, destination: int):
         """
             This abstract method is invoked when the framework reaches an unconditional branching statement.
 
-        :param pc: The destination program counter for the branch.
+        :param destination: The destination program counter for the branch.
         :return: None
         """
         pass
 
     @abstractmethod
-    def conditional_branch(self, cond, pc):
+    def conditional_branch(self, cond: object, destination: int):
         """
             This abstract method is invoked when the framework reaches a conditional branching statement. Here,
             a developer would likely want to implement state splitting.
 
         :param cond: The condition guarding the branch.
-        :param pc: The destination program counter for the branch.
+        :param destination: The destination program counter for the branch.
         :return: None
         """
         pass
 
     @abstractmethod
-    def add_path_constraint(self, cond):
+    def assume(self, cond: object):
         """
             This abstract method is invoked when the framework wants to add an assumption to the current state.
 
@@ -113,20 +113,20 @@ class DefaultState(State):
     def current_statement(self):
         return self.current_state.current_statement
 
-    def assign_variable(self, var, val):
-        self.current_state.assign_variable(var, val)
+    def store_variable(self, var, val):
+        self.current_state.store_variable(var, val)
 
-    def get_variable(self, var):
-        return self.current_state.get_variable(var)
+    def load_variable(self, var):
+        return self.current_state.load_variable(var)
 
     def advance_pc(self, i=1):
         self.current_state = self.current_state.advance_pc(i)
 
-    def unconditional_branch(self, pc):
-        self.current_state = self.current_state.update_pc(pc)
+    def jump(self, destination):
+        self.current_state = self.current_state.update_pc(destination)
 
-    def conditional_branch(self, cond, pc):
-        self.current_state = self.current_state.split(cond, pc)
+    def conditional_branch(self, cond, destination):
+        self.current_state = self.current_state.split(cond, destination)
 
     def next_state(self):
         if self.current_state:
@@ -140,7 +140,7 @@ class DefaultState(State):
                     return True
         return False
 
-    def add_path_constraint(self, cond):
+    def assume(self, cond):
         self.current_state.path_cond = And(self.current_state.path_cond, cond)
 
 

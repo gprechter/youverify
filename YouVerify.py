@@ -97,7 +97,10 @@ def display_states_smt2(state):
         print("(set-option :produce-models true)")
         print('\n'.join(gen_declare_const(s.path_cond)))
         print(gen_assert(simplify(s.path_cond)))
-        display_model(s, s.head_frame().variables, get_model(s.path_cond))
+        model = get_model(s.path_cond)
+        print('\n', "---", "MODEL", "---", '\n')
+        display_model(s, s.head_frame().variables, model)
+
     if state.reports:
         print("REPORTS:")
         for i, r in enumerate(state.reports):
