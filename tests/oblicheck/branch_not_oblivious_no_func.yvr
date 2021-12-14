@@ -48,4 +48,4 @@ LABEL ENDCOND2: i = i + 1
 goto LOOP3
 LABEL END3: t = 0
 
-verify buf1_length == buf2_length
+verify buf2_length == 8

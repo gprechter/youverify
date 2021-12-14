@@ -1,6 +1,8 @@
 # YouVerify
 
-YouVerify is a simple imperative programming language based on the SMT-LIB set of theories and operators as a foundation. The YouVerify symbolic execution framework provides a symbolic execution engine on the YouVerify language, with the intention that all operators and code written with the YouVerify language can be symbolically executed using the companion symbolic execution engine. The symbolic execution engine exposes a comprehensive API allowing developers to prototype application specific symbolic execution algorithms.
+YouVerify is a simple imperative programming language based on the SMT-LIB set of theories and operators as a foundation. The YouVerify symbolic execution framework provides a symbolic execution engine on the YouVerify language, with the intention that all operators and code written with the YouVerify language can be symbolically executed using the companion symbolic execution engine. The symbolic execution engine exposes a comprehensive API allowing developers to prototype application specific symbolic execution algorithms. 
+
+[**DEMO**](https://youtu.be/jiDrGJQbbFw)
 
 ## Language Features
 
@@ -233,7 +235,13 @@ Only `ite`.
 <ATOMIC EXPRESSION> ? <ATOMIC EXPRESSION> : <ATOMIC EXPRESSION>
 ```
 
+## API
 
+The YouVerify framework comes packaged with an API consisting primarily of an abstract state object that is to be implemented and modified by developers to pototype symbolic execution modifications and algorithms. The API is invoked by the framework in the following manner:
+
+![API Flow Chart](docs/api-flow.svg)
+
+First, the `update_state` method is invoked by the framework. This tells the abstract state implementation to prepare the state representation and *freeze* it, not changing it until the method is called again. 
 
 ## Testing and Validation
 

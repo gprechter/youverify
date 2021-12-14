@@ -5,14 +5,14 @@ buf1_length: INT
 buf2: ARRAY{INT}
 buf2_length: INT
 i,k,t,t2: INT
-k = 5
+k = 8
 i = 0
 
-private_data = ARRAY[5]{$sym{INT}}
+private_data = ARRAY[8]{$sym{INT}}
 private_data_length = 0
-buf1 = ARRAY[5]{0}
+buf1 = ARRAY[8]{0}
 buf1_length = 0
-buf2 = ARRAY[5]{0}
+buf2 = ARRAY[8]{0}
 buf2_length = 0
 
 LABEL LOOP1: if i >= k goto END1

@@ -155,7 +155,7 @@ class ObliCheckState(State):
             else:
                 if is_merging:
                     ObliCheckState.merge_statements.append(i)
-        #ObliCheckState.verification_condition = self.head_frame.function.statements.pop()
+        ObliCheckState.verification_condition = self.head_frame.function.statements.pop()
 
 
 
