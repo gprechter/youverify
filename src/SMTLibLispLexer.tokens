@@ -1,0 +1,7 @@
+OPAREN=1
+CPAREN=2
+WHITESPACE=3
+VALUE=4
+'('=1
+')'=2
+' '=3
