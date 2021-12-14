@@ -8,7 +8,7 @@ Running YouVerify:
 
 Clone the repository:
 
-`https://github.com/gprechter/youverify.git`
+`git clone https://github.com/gprechter/youverify.git`
 
 Navigate to the cloned folder:
 
