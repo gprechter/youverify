@@ -6,7 +6,11 @@ Running YouVerify:
 
 First, activate the python virtual environment:
 
-`source venv/bin/activate`
+`python3 -m venv youverify`
+
+Next, install the dependencies:
+
+`python -m pip install -r requirements.txt`
 
 Next, run a file using YouVerify:
 
