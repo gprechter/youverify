@@ -14,11 +14,15 @@ Navigate to the cloned folder:
 
 `cd youverify`
 
-First, activate the python virtual environment:
+First, create a python virtual environment:
 
-`python3 -m venv youverify`
+`python3 -m venv venv`
 
-Next, install the dependencies:
+Then, activate the virtual environment any time you want to use YouVerify:
+
+`source venv/bin/activate`
+
+(ONLY the first time you install YouVerify) Next, install the dependencies:
 
 `python -m pip install -r requirements.txt`
 
