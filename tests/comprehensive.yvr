@@ -49,16 +49,15 @@ define play_game(buttons: ARRAY{BOOL}, map: ARRAY{BV[8]}) -> BV[16]:
 
 buttons: ARRAY{BOOL}
 level: ARRAY{BV[8]}
-final_score: INT
+max_level_length: INT
+is_below_max_length: BOOL
+level_sum, final_score: INT
 
-level = ARRAY[5]{BV{0, 8}}
-level[0] = BV{10, 8}
-level[1] = BV{16, 8}
-level[2] = BV{72, 8}
-level[4] = BV{2, 8}
-
-buttons = ARRAY[3]{false}
-buttons[0] = true
-buttons[1] = true
-
+level = $sym{level, ARRAY{BV[8]}}
+max_level_length = 5
+call is_below_max_length = below_max_length(level, max_level_length)
+call level_sum = sum(level, max_level_length)
+assume is_below_max_length
+assume level_sum == 100
+buttons = $sym{buttons, ARRAY{BOOL}}
 call final_score = play_game(buttons, level)
