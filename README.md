@@ -241,7 +241,11 @@ The YouVerify framework comes packaged with an API consisting primarily of an ab
 
 ![API Flow Chart](docs/api-flow.svg)
 
-First, the `update_state` method is invoked by the framework. This tells the abstract state implementation to prepare the state representation and *freeze* it, not changing it until the method is called again. 
+First, the `update_state` method is invoked by the framework. This tells the abstract state implementation to prepare the state representation and *freeze* it, not changing it until the method is called again.
+
+
+
+You can view the API documentation on GitHub [here](https://github.com/gprechter/youverify/blob/master/docs/latex/youverify.pdf). 
 
 ## Testing and Validation
 
