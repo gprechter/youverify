@@ -2,6 +2,16 @@
 
 YouVerify is a simple imperative programming language based on the SMT-LIB set of theories and operators as a foundation. The YouVerify symbolic execution framework provides a symbolic execution engine on the YouVerify language, with the intention that all operators and code written with the YouVerify language can be symbolically executed using the companion symbolic execution engine. The symbolic execution engine exposes a comprehensive API allowing developers to prototype application specific symbolic execution algorithms. 
 
+Running YouVerify:
+
+First, activate the python virtual environment:
+
+`source venv/bin/activate`
+
+Next, run a file using YouVerify:
+
+`python src/YouVerify.py tests/comprehensive.yvr`
+
 [**DEMO**](https://youtu.be/jiDrGJQbbFw)
 
 ## Language Features
