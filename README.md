@@ -76,7 +76,7 @@ level_sum: 100
 final_score: 85_16
 ```
 
-### Pluggin Inputs into YouVerify
+### Plugging Inputs into YouVerify and Running Concretely
 
 Return to the top level directory:
 
@@ -96,6 +96,8 @@ is_below_max_length: True
 level_sum: 100
 final_score: 85_16
 ```
+
+## DEMO VIDEO
 
 [**DEMO**](https://youtu.be/jiDrGJQbbFw)
 
