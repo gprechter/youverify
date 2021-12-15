@@ -4,7 +4,9 @@ YouVerify is a simple imperative programming language based on the SMT-LIB set o
 
 YouVerify requires **Python3**.
 
-Running YouVerify:
+## Running and Using YouVerify:
+
+### Setup
 
 Clone the repository:
 
@@ -26,9 +28,74 @@ Then, activate the virtual environment any time you want to use YouVerify:
 
 `python -m pip install -r requirements.txt`
 
-Next, run a file using YouVerify:
+### Running YouVerify
 
-`python src/YouVerify.py tests/comprehensive.yvr`
+Run a file using YouVerify:
+
+`python src/YouVerify.py --f tests/comprehensive.yvr`
+
+After YouVerify finishes running, the output of the run will be in the `out/<FILE NAME>` folder. In our case, go to:
+
+`cd out/comprehensive.yvr/`
+
+In there, there will be folders for each of the resulting program states after symbolic execution. Navigate to one of the numbered folders:
+
+`cd 12`
+
+Inside the folder you should find: `12.trace`, `12.state`, `12.pickle` (this final file is a binary used by YouVerify).
+
+The beginning of the `12.trace` file should look something like this, this file contains the trace of the execution path for that state:
+
+```
+0
+1
+2
+call below_max_length
+	0
+	1
+	2 LOOP
+...
+```
+The `12.state` file should look something like this (**NOTE:** the values may differ — depending on your SMT solver), this file shows the symbolic inputs synthesized by the SMT solver along with the values of the global variables at the end of the program execution:
+
+```
+SYMBOLIC INPUTS:
+
+FV0 <- 5
+level <- Array{Int, BV{8}}(...)[3 := 0_8][0 := 16_8][4 := 5_8][2 := 69_8]
+buttons <- Array{Int, Bool}(False)[1 := True]
+FV1 <- 3
+
+FINAL PROGRAM STATE:
+
+buttons: []->[False, True, False]
+level: []->[16_8, 10_8, 69_8, 0_8, 5_8]
+max_level_length: 5
+is_below_max_length: True
+level_sum: 100
+final_score: 85_16
+```
+
+### Pluggin Inputs into YouVerify
+
+Return to the top level directory:
+
+`cd ../../..`
+
+Use the following command to *plug in* state **12** and re-run the same program concretely:
+
+`python src/YouVerify.py --f tests/comprehensive.yvr --input 12`
+
+The final program state will be printed out in the console and should match the one found in the ouput from the symbolic execution:
+
+```
+buttons: []->[False, True, False]
+level: []->[16_8, 10_8, 69_8, 0_8, 5_8]
+max_level_length: 5
+is_below_max_length: True
+level_sum: 100
+final_score: 85_16
+```
 
 [**DEMO**](https://youtu.be/jiDrGJQbbFw)
 
