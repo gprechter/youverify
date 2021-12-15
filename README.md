@@ -7,7 +7,7 @@ YouVerify is a simple imperative programming language based on the SMT-LIB set o
 ## Contents
 [Running and Using YouVerify](#1)  
 [DEMO Video](#2)  
-[YouVerify IR Language Features](#3)  
+[YouVerify IR Language Features](#3) 
 [YouVerify's API](#4) 
 [Testing, Validation and Coverage](#5) 
 
