@@ -1,0 +1,40 @@
+define swap(arr: ARRAY{INT}, a: INT, b: INT):
+	temp: INT
+	temp = arr[a]
+	arr[a] = arr[b]
+	arr[b] = temp
+	return
+
+define partition(arr: ARRAY{INT}, begin: INT, end: INT, pivot: INT) -> INT:
+	piv, store, ix: INT
+	em1, val: INT
+	piv = arr[pivot]
+	em1 = end - 1
+	call swap(arr, pivot, em1)
+	store = begin
+	ix = begin
+	LABEL LOOP: if ix >= em1 goto END
+	val = arr[ix]
+	if val > piv goto ELSE
+	call swap(arr, store, ix)
+	store = store + 1
+	LABEL ELSE: ix = ix + 1
+	goto LOOP
+	LABEL END: call swap(arr, em1, store)
+	return store
+
+define qsort(arr: ARRAY{INT}, begin: INT, end: INT):
+	pivot, em1, pp1: INT
+	em1 = end - 1
+	if em1 <= begin goto END
+	pivot = begin
+	call pivot = partition(arr, begin, end, pivot)
+	call qsort(arr, begin, pivot)
+	pp1 = pivot + 1
+	call qsort(arr, pp1, end)
+	LABEL END: return
+
+arr: ARRAY{INT}
+arr = $sym{arr, ARRAY{INT}}
+
+call qsort(arr, 0, 5)

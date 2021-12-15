@@ -87,14 +87,17 @@ def display_model(state, variables, model, file, depth = 0):
                           model, file, depth = depth + 1)
         elif isinstance(v[1], YouVerifyArray):
             if v[1].length:
-                print(f"{'  ' * depth}{k}: []->{[simplify(model.get_value(v[1].get_array())).array_value_get(Int(i)) for i in range(simplify(model.get_value(v[1].length)).constant_value())]}", file=file)
+                print(f"{'  ' * depth}{k}: {[simplify(model.get_value(v[1].get_array())).array_value_get(Int(i)) for i in range(simplify(model.get_value(v[1].length)).constant_value())]}", file=file)
             else:
-                print(f"{'  ' * depth}{k}: []->{simplify(model.get_value(v[1].get_array()))}", file=file)
+                print(f"{'  ' * depth}{k}: {simplify(model.get_value(v[1].get_array()))}", file=file)
         else:
             print(f"{'  ' * depth}{k}: {model.get_value(v[1])}", file=file)
     #print("MODEL", model)
 
 def display_states_smt2(state, file_name, input):
+    print(f"Execution Completed: {len(state.sub_states)} valid path(s) explored")
+    if len(state.sub_states) > 1:
+        print("Writing output...")
     for i, s in enumerate(state.sub_states):
         #state_desc = f"{i}\t" + str({k: simplify_smt(v[1], v[0]) for k, v in s.head_frame().variables.items()})
 
@@ -143,6 +146,8 @@ def display_states_smt2(state, file_name, input):
             print("\nFINAL PROGRAM STATE:\n", file=f)
             display_model(s, s.head_frame().variables, model, f)
             f.close()
+    if len(state.sub_states) > 1:
+        print(f"Trace and final program state information is available here: ./out/{os.path.basename(file_name)}")
 
 def concrete_evaluation(states):
     state = states[0]

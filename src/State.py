@@ -212,11 +212,13 @@ class SubState:
         return self.frame_stack[-1]
 
     def push_frame(self, frame):
+        self.trace += "\t" * self.indentation
         self.trace += f"call {frame.function.name}\n"
         self.indentation += 1
         self.frame_stack.append(frame)
 
     def pop_frame(self, return_value):
+        self.trace += "\t" * self.indentation
         self.trace += f"return {self.head_frame().function.name}\n"
         self.indentation -= 1
         target = self.frame_stack.pop().return_target
