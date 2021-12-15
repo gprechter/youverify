@@ -1,6 +1,9 @@
 import sys
+import os
 import json
 from antlr4 import *
+import pickle
+import argparse
 
 from YouVerifyVisitorOld import YouVerifyVisitor
 from YouVerifyLexer import YouVerifyLexer
@@ -12,8 +15,14 @@ from AST import Program, Variable, array_to_length_map, YouVerifyArray, TCContex
 from State import SubState, Frame, DefaultState
 from SMTLibUtil import *
 
-def main(argv):
-    input_stream = FileStream(argv[1])
+def main(file, input):
+    input_stream = FileStream(file)
+    vars = {}
+    if input:
+        f = open(f"./out/{os.path.basename(file)}/{input}/{input}.pickle", "rb")
+        vars.update(pickle.load(f))
+        f.close()
+    DefaultState.inputs = vars
     lexer = YouVerifyLexer(input_stream)
     stream = CommonTokenStream(lexer)
     parser = YouVerifyParser(stream)
@@ -43,7 +52,6 @@ def main(argv):
         print('\033[91m' + "FAILED TO RUN BECAUSE OF TYPE ERRORS." + '\033[0m')
         return []
     '''
-
     def exec(program):
         state = DefaultState([SubState(TRUE(), [Frame(program, 0, {k: [v.name, None] for k, v in program.variables.copy().items()}, None)])])
         SubState.controller = state
@@ -63,7 +71,7 @@ def simplify_smt(value, type):
     else:
         return simplify(value)
 
-def display_model(state, variables, model, depth = 0):
+def display_model(state, variables, model, file, depth = 0):
     if not model:
         return
     for k, v in variables.items():
@@ -71,40 +79,70 @@ def display_model(state, variables, model, depth = 0):
             elems = SubState.records[v[0]].elements
             types = SubState.records[v[0]].types
             if model.get_value(v[1]).constant_value() == 0:
-                print(f"{'  ' * depth}{k}: {'null'}")
+                print(f"{'  ' * depth}{k}: {'null'}", file=file)
             else:
-                print(f"{'  ' * depth}{k}:")
+                print(f"{'  ' * depth}{k}:",file=file)
                 display_model(state,
                           {k: [types[elems.index(k)], v] for k, v in state.addr_map[model.get_value(v[1]).constant_value()].items()},
-                          model, depth = depth + 1)
+                          model, file, depth = depth + 1)
         elif isinstance(v[1], YouVerifyArray):
             if v[1].length:
-                print(f"{'  ' * depth}{k}: []->{[simplify(model.get_value(v[1].get_array())).array_value_get(Int(i)) for i in range(simplify(model.get_value(v[1].length)).constant_value())]}")
+                print(f"{'  ' * depth}{k}: []->{[simplify(model.get_value(v[1].get_array())).array_value_get(Int(i)) for i in range(simplify(model.get_value(v[1].length)).constant_value())]}", file=file)
             else:
-                print(f"{'  ' * depth}{k}: []->{simplify(model.get_value(v[1].get_array()))}")
+                print(f"{'  ' * depth}{k}: []->{simplify(model.get_value(v[1].get_array()))}", file=file)
         else:
-            print(f"{'  ' * depth}{k}: {model.get_value(v[1])}")
+            print(f"{'  ' * depth}{k}: {model.get_value(v[1])}", file=file)
     #print("MODEL", model)
 
-def display_states_smt2(state):
+def display_states_smt2(state, file_name, input):
     for i, s in enumerate(state.sub_states):
-        state_desc = f"{i}\t" + str({k: simplify_smt(v[1], v[0]) for k, v in s.head_frame().variables.items()})
-        print("" + "=" * 40 + "")
-        #print(state_desc)
-        print(i)
-        #print("Memory Map: ", state.addr_map)
-        print("=" * 40)
-        print("(set-option :produce-models true)")
-        print('\n'.join(gen_declare_const(s.path_cond)))
-        print(gen_assert(simplify(s.path_cond)))
-        model = get_model(s.path_cond)
-        print('\n', "---", "MODEL", "---", '\n')
-        display_model(s, s.head_frame().variables, model)
+        #state_desc = f"{i}\t" + str({k: simplify_smt(v[1], v[0]) for k, v in s.head_frame().variables.items()})
 
-    if state.reports:
-        print("REPORTS:")
-        for i, r in enumerate(state.reports):
-            print(i, r)
+        if input or len(state.sub_states) == 1:
+            display_model(s, s.head_frame().variables, get_model(s.path_cond), None)
+        else:
+            try:
+                os.mkdir('./out')
+            except FileExistsError:
+                pass
+            try:
+                os.mkdir(f"./out/{os.path.basename(file_name)}")
+            except FileExistsError:
+                pass
+            try:
+                os.mkdir(f"./out/{os.path.basename(file_name)}/{i}")
+            except FileExistsError:
+                pass
+            try:
+                f = open(f"./out/{os.path.basename(file_name)}/{i}/{i}.trace", "x")
+            except FileExistsError:
+                f = open(f"./out/{os.path.basename(file_name)}/{i}/{i}.trace", "w")
+            f.write(s.trace)
+            f.close()
+            model = get_model(s.path_cond)
+            vars = {}
+
+            for v in get_free_variables(s.path_cond):
+                if v.symbol_name() not in vars:
+                    vars[v.symbol_name()] = model.get_value(v)
+            try:
+                f = open(f"./out/{os.path.basename(file_name)}/{i}/{i}.pickle", "xb")
+            except FileExistsError:
+                f = open(f"./out/{os.path.basename(file_name)}/{i}/{i}.pickle", "wb")
+            pickle.dump(vars, f)
+            f.close()
+
+            try:
+                f = open(f"./out/{os.path.basename(file_name)}/{i}/{i}.state", "x")
+            except FileExistsError:
+                f = open(f"./out/{os.path.basename(file_name)}/{i}/{i}.state", "w")
+            if vars:
+                print("SYMBOLIC INPUTS:\n", file=f)
+                for k, v in vars.items():
+                    print(k, '<-', v, file=f)
+            print("\nFINAL PROGRAM STATE:\n", file=f)
+            display_model(s, s.head_frame().variables, model, f)
+            f.close()
 
 def concrete_evaluation(states):
     state = states[0]
@@ -114,4 +152,8 @@ def concrete_evaluation(states):
                        for k, v in state.head_frame().variables.items()})
 
 if __name__ == '__main__':
-    display_states_smt2(main(sys.argv))
+    parser = argparse.ArgumentParser(prog='PROG')
+    parser.add_argument('--f', type=str, help='foo help', dest='file')
+    parser.add_argument('--input', nargs='?', type=int, help='in help', dest='input')
+    args = parser.parse_args(sys.argv[1:])
+    display_states_smt2(main(args.file, args.input), args.file, args.input)

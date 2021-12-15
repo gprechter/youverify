@@ -1,6 +1,7 @@
 # Generated from YouVerify.g4 by ANTLR 4.9
 from antlr4 import *
 from AST import *
+from State import DefaultState
 from Mappings import YVR_SORT_TO_PYSMT, YVR_BINARY_OP_TO_PYSMT, YVR_BOOL_TO_PYSMT, YVR_UNARY_OP_TO_PYSMT, YVR_TERNARY_OP_TO_PYSMT
 if __name__ is not None and "." in __name__:
     from .YouVerifyParser import YouVerifyParser
@@ -9,6 +10,7 @@ else:
 
 from pysmt.shortcuts import Int, ArrayType, BV
 from pysmt.typing import BOOL, INT, BVType, _ArrayType
+
 
 # This class defines a complete generic visitor for a parse tree produced by YouVerifyParser.
 
@@ -193,8 +195,18 @@ class YouVerifyVisitor(ParseTreeVisitor):
     def visitNAMED_SYMBOL(self, ctx: YouVerifyParser.NAMED_SYMBOLContext):
         sort = self.visit(ctx.s)
         if isinstance(sort, _ArrayType):
-            return Value(YouVerifyArray(0, length=FreshSymbol(INT), array=[Symbol(ctx.identifier.text, sort)]), sort)
-        return Value(Symbol(ctx.identifier.text, sort), sort)
+            length = FreshSymbol(INT)
+            if length.symbol_name() in DefaultState.inputs:
+                length = DefaultState.inputs[length.symbol_name()]
+            array = Symbol(ctx.identifier.text, sort)
+            if array.symbol_name() in DefaultState.inputs:
+                array = DefaultState.inputs[array.symbol_name()]
+
+            return Value(YouVerifyArray(0, length=length, array=[array]), sort)
+        sym = Symbol(ctx.identifier.text, sort)
+        if sym.symbol_name() in DefaultState.inputs:
+            sym = DefaultState.inputs[sym.symbol_name()]
+        return Value(sym, sort)
 
     # Visit a parse tree produced by YouVerifyParser#UNARY.
     def visitUNARY(self, ctx:YouVerifyParser.UNARYContext):

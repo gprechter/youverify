@@ -104,6 +104,7 @@ class State(ABC):
         pass
 
 class DefaultState(State):
+    inputs = {}
     def __init__(self, sub_states):
         self.current_state = None
         self.sub_states = sub_states
@@ -143,7 +144,6 @@ class DefaultState(State):
     def assume(self, cond):
         self.current_state.path_cond = And(self.current_state.path_cond, cond)
 
-
 class SubState:
     records = {}
     controller = None
@@ -153,9 +153,14 @@ class SubState:
         self.base_addr = base_addr
         self.addr_map = addr_map
         self.concrete_symbolic_pointers = conc_sym_pointers
+        self.trace = ""
+        self.indentation = 0
 
     def __copy__(self):
-        return SubState(self.path_cond, deepcopy(self.frame_stack), self.base_addr, {k: copy(v) for k, v in self.addr_map.items()}, copy(self.concrete_symbolic_pointers))
+        new = SubState(self.path_cond, deepcopy(self.frame_stack), self.base_addr, {k: copy(v) for k, v in self.addr_map.items()}, copy(self.concrete_symbolic_pointers))
+        new.trace = self.trace
+        new.indentation = self.indentation
+        return new
 
     def store_variable(self, var, val):
         if var in self.head_frame().variables:
@@ -195,15 +200,25 @@ class SubState:
 
     @property
     def current_statement(self):
+        self.trace += "\t"*self.indentation
+        self.trace += f"{self.pc}"
+        inverted_labels = {v: k for k, v in self.head_frame().function.labels.items()}
+        if self.pc in inverted_labels:
+            self.trace += f" {inverted_labels[self.pc]}"
+        self.trace += "\n"
         return self.head_frame().function.statements[self.pc]
 
     def head_frame(self):
         return self.frame_stack[-1]
 
     def push_frame(self, frame):
+        self.trace += f"call {frame.function.name}\n"
+        self.indentation += 1
         self.frame_stack.append(frame)
 
     def pop_frame(self, return_value):
+        self.trace += f"return {self.head_frame().function.name}\n"
+        self.indentation -= 1
         target = self.frame_stack.pop().return_target
         if target is not None and return_value is not None:
             target(self.controller, return_value)

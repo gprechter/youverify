@@ -2,7 +2,7 @@ from pysmt.shortcuts import And, Or, Not, Symbol, TRUE, FALSE, is_sat, Array, GE
 from pysmt.shortcuts import Solver, simplify, Int, FreshSymbol, Plus, Store, Select, BV
 from pysmt.shortcuts import LE, LT, get_model
 from pysmt.typing import INT, BVType, BOOL, ArrayType, _BVType
-from State import SubState, Frame
+from State import SubState, Frame, DefaultState
 from copy import copy
 from Mappings import YVR_BUILTIN_OP_TO_PYSMT
 from TypeCheckingRules import both_same, unary_type_checking_rules, binary_type_checking_rules, both_records_or_null, builtin_type_checking_rules
@@ -121,7 +121,11 @@ class UniqueSymbol(Value):
     #     return self.type, ""
 
     def eval(self, state):
-        return FreshSymbol(self.type)
+        sym = FreshSymbol(self.type)
+        if sym.symbol_name() in DefaultState.inputs:
+            return DefaultState.inputs[sym.symbol_name()]
+        else:
+            return sym
 
     def __repr__(self):
         return "$sym"
