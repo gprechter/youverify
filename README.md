@@ -97,6 +97,12 @@ level_sum: 100
 final_score: 85_16
 ```
 
+## Cleaning Up
+
+Once done, simply deactivate the virtual environment:
+
+`deactivate`
+
 ## DEMO VIDEO
 
 [**DEMO**](https://youtu.be/jiDrGJQbbFw)
