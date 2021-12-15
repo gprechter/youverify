@@ -2,8 +2,16 @@
 
 YouVerify is a simple imperative programming language based on the SMT-LIB set of theories and operators as a foundation. The YouVerify symbolic execution framework provides a symbolic execution engine on the YouVerify language, with the intention that all operators and code written with the YouVerify language can be symbolically executed using the companion symbolic execution engine. The symbolic execution engine exposes a comprehensive API allowing developers to prototype application specific symbolic execution algorithms. 
 
-YouVerify requires **Python3**.
+**YouVerify requires Python3**.
 
+## Contents
+[Running and Using YouVerify](#1)  
+[DEMO Video](#2)  
+[YouVerify IR Language Features](#3)  
+[YouVerify's API](#4) 
+[Testing, Validation and Coverage](#5) 
+
+<a name="1"/>
 ## Running and Using YouVerify:
 
 ### Setup
@@ -103,11 +111,13 @@ Once done, simply deactivate the virtual environment:
 
 `deactivate`
 
+<a name="2"/>
 ## DEMO VIDEO
 
 [**DEMO**](https://youtu.be/jiDrGJQbbFw)
 
-## Language Features
+<a name="3"/>
+## YouVerify IR Language Features
 
 Each `YouVerify` program (file extension `.yvr`) is composed as follows, divided into two sections:
 
@@ -338,6 +348,7 @@ Only `ite`.
 <ATOMIC EXPRESSION> ? <ATOMIC EXPRESSION> : <ATOMIC EXPRESSION>
 ```
 
+<a name="4"/>
 ## API
 
 The YouVerify framework comes packaged with an API consisting primarily of an abstract state object that is to be implemented and modified by developers to pototype symbolic execution modifications and algorithms. The API is invoked by the framework in the following manner:
@@ -350,6 +361,7 @@ First, the `update_state` method is invoked by the framework. This tells the abs
 
 You can view the API documentation on GitHub [here](https://github.com/gprechter/youverify/blob/master/docs/latex/youverify.pdf). 
 
+<a name="5"/>
 ## Testing and Validation
 
  
