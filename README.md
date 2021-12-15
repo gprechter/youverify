@@ -12,6 +12,7 @@ YouVerify is a simple imperative programming language based on the SMT-LIB set o
 [Testing, Validation and Coverage](#5) 
 
 <a name="1"/>
+
 ## Running and Using YouVerify:
 
 ### Setup
@@ -112,11 +113,13 @@ Once done, simply deactivate the virtual environment:
 `deactivate`
 
 <a name="2"/>
+
 ## DEMO VIDEO
 
 [**DEMO**](https://youtu.be/jiDrGJQbbFw)
 
 <a name="3"/>
+
 ## YouVerify IR Language Features
 
 Each `YouVerify` program (file extension `.yvr`) is composed as follows, divided into two sections:
@@ -349,6 +352,7 @@ Only `ite`.
 ```
 
 <a name="4"/>
+
 ## API
 
 The YouVerify framework comes packaged with an API consisting primarily of an abstract state object that is to be implemented and modified by developers to pototype symbolic execution modifications and algorithms. The API is invoked by the framework in the following manner:
@@ -362,6 +366,7 @@ First, the `update_state` method is invoked by the framework. This tells the abs
 You can view the API documentation on GitHub [here](https://github.com/gprechter/youverify/blob/master/docs/latex/youverify.pdf). 
 
 <a name="5"/>
+
 ## Testing and Validation
 
  
