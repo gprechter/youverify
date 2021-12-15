@@ -15,12 +15,12 @@ INTEGER_YVR_TO_PYSMT_UNARY_OP = {
 
 def concrete_div(lhs, rhs):
     lhs, rhs = simplify(lhs), simplify(rhs)
-    assert lhs.is_constant() and rhs.is_constant() and rhs is not 0
+    #assert lhs.is_constant() and rhs.is_constant() and rhs is not 0
     return Int(int(lhs.constant_value() / rhs.constant_value()))
 
 def concrete_rem(lhs, rhs):
     lhs, rhs = simplify(lhs), simplify(rhs)
-    assert lhs.is_constant() and rhs.is_constant() and rhs is not 0
+    #assert lhs.is_constant() and rhs.is_constant() and rhs is not 0
     return Int(lhs.constant_value() % rhs.constant_value())
 
 INTEGER_YVR_TO_PYSMT_BINARY_OP = {
